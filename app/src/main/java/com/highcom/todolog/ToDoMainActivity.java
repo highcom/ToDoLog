@@ -14,6 +14,7 @@ import com.google.android.material.navigation.NavigationView;
 import com.highcom.todolog.ui.gallery.GalleryFragment;
 import com.highcom.todolog.ui.home.HomeFragment;
 import com.highcom.todolog.ui.slideshow.SlideshowFragment;
+import com.highcom.todolog.ui.todolist.ToDoListFragment;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBarDrawerToggle;
@@ -23,8 +24,9 @@ import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 
-public class MainActivity extends AppCompatActivity {
+public class ToDoMainActivity extends AppCompatActivity {
 
+    private Fragment toDoListFragment = new ToDoListFragment(this);
     private static final String lists[] = { "TASK1", "TASK2", "TASK3"};
 
     @Override
@@ -65,8 +67,7 @@ public class MainActivity extends AppCompatActivity {
                 FragmentManager fragmentManager = getSupportFragmentManager();
                 switch (i) {
                     case 0:
-                        Fragment galleryFragment = new GalleryFragment();
-                        fragmentManager.beginTransaction().replace(R.id.nav_host_fragment, galleryFragment).commit();
+                        fragmentManager.beginTransaction().replace(R.id.nav_host_fragment, toDoListFragment).commit();
                         break;
                     case 1:
                         Fragment homeFragment = new HomeFragment();
