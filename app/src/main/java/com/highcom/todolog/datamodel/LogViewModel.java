@@ -8,22 +8,22 @@ import androidx.lifecycle.LiveData;
 
 import java.util.List;
 
-public class ToDoViewModel extends AndroidViewModel {
+public class LogViewModel extends AndroidViewModel {
     private ToDoLogRepository mRepository;
 
-    private LiveData<List<ToDo>> mToDoList;
+    private LiveData<List<Log>> mLogList;
 
-    public ToDoViewModel(@NonNull Application application) {
+    public LogViewModel(@NonNull Application application) {
         super(application);
         mRepository = ToDoLogRepository.getInstance(application);
-        mToDoList = mRepository.getToDoList();
+        mLogList = mRepository.getLogList();
     }
 
-    public LiveData<List<ToDo>> getToDoList() {
-        return mToDoList;
+    public LiveData<List<Log>> getLogList() {
+        return mLogList;
     }
 
-    void insert(ToDo todo) {
-        mRepository.insert(todo);
+    void insert(Log log) {
+        mRepository.insert(log);
     }
 }

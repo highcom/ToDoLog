@@ -8,22 +8,24 @@ import androidx.room.Room;
 import androidx.room.RoomDatabase;
 import androidx.sqlite.db.SupportSQLiteDatabase;
 
+import java.sql.Date;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
-@Database(entities = {ToDo.class}, version = 1, exportSchema = false)
-abstract class ToDoRoomDatabase extends RoomDatabase {
+@Database(entities = {ToDo.class, Log.class}, version = 1, exportSchema = false)
+abstract class ToDoLogRoomDatabase extends RoomDatabase {
     abstract ToDoDao toDoDao();
+    abstract LogDao logDao();
 
-    private static volatile ToDoRoomDatabase INSTANCE;
+    private static volatile ToDoLogRoomDatabase INSTANCE;
     private static final int NUMBER_OF_THREADS = 4;
     static final ExecutorService databaseWriteExtractor = Executors.newFixedThreadPool(NUMBER_OF_THREADS);
 
-    static ToDoRoomDatabase getDatabase(final Context context) {
+    static ToDoLogRoomDatabase getDatabase(final Context context) {
         if (INSTANCE == null) {
-            synchronized (ToDoRoomDatabase.class) {
+            synchronized (ToDoLogRoomDatabase.class) {
                 if (INSTANCE == null) {
-                    INSTANCE = Room.databaseBuilder(context.getApplicationContext(), ToDoRoomDatabase.class, "todo_database")
+                    INSTANCE = Room.databaseBuilder(context.getApplicationContext(), ToDoLogRoomDatabase.class, "todolog_database")
                             .addCallback(sRoomDatabaseCallback)
                             .build();
                 }
@@ -38,11 +40,17 @@ abstract class ToDoRoomDatabase extends RoomDatabase {
             super.onCreate(db);
 
             databaseWriteExtractor.execute(() -> {
-                ToDoDao dao = INSTANCE.toDoDao();
-                dao.deleteAll();
+                ToDoDao todoDao = INSTANCE.toDoDao();
+                todoDao.deleteAll();
 
                 ToDo todo = new ToDo(1, 1, "TASK1", "作業内容1", "2021/2/1 20:00 update");
-                dao.insert(todo);
+                todoDao.insert(todo);
+
+                LogDao logDao = INSTANCE.logDao();
+                logDao.deleteAll();
+
+                Log log = new Log(1, 1, new Date(System.currentTimeMillis()).toString(), "regist");
+                logDao.insert(log);
             });
         }
     };

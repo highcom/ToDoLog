@@ -9,7 +9,7 @@ import androidx.recyclerview.widget.ListAdapter;
 import com.highcom.todolog.datamodel.ToDo;
 
 public class ToDoListAdapter extends ListAdapter<ToDo, ToDoViewHolder> {
-    protected ToDoListAdapter(@NonNull DiffUtil.ItemCallback<ToDo> diffCallback) {
+    public ToDoListAdapter(@NonNull DiffUtil.ItemCallback<ToDo> diffCallback) {
         super(diffCallback);
     }
 
@@ -25,7 +25,7 @@ public class ToDoListAdapter extends ListAdapter<ToDo, ToDoViewHolder> {
         holder.bind(current.getContents(), current.getLog());
     }
 
-    static class ToDoDiff extends DiffUtil.ItemCallback<ToDo> {
+    public static class ToDoDiff extends DiffUtil.ItemCallback<ToDo> {
 
         @Override
         public boolean areItemsTheSame(@NonNull ToDo oldItem, @NonNull ToDo newItem) {
