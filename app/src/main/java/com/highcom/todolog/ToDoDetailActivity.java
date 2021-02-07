@@ -32,7 +32,13 @@ public class ToDoDetailActivity extends AppCompatActivity {
         Spinner statusSpinner = findViewById(R.id.detail_status_spinner);
         ArrayAdapter<String> statusAdapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item);
         statusAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        statusAdapter.addAll(statusItems);
         statusSpinner.setAdapter(statusAdapter);
+        if (2 > statusSpinner.getCount()) {
+            statusSpinner.setSelection(1);
+        } else {
+            statusSpinner.setSelection(2); // 初期選択位置の設定
+        }
         statusSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
@@ -48,7 +54,13 @@ public class ToDoDetailActivity extends AppCompatActivity {
         Spinner taskGroupSpinner = findViewById(R.id.detail_taskgroup_spinner);
         ArrayAdapter<String> taskGroupAdapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item);
         taskGroupAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        taskGroupAdapter.addAll(groupItems);
         taskGroupSpinner.setAdapter(taskGroupAdapter);
+        if (2 > taskGroupSpinner.getCount()) {
+            taskGroupSpinner.setSelection(1);
+        } else {
+            taskGroupSpinner.setSelection(2); // 初期選択位置の設定
+        }
         taskGroupSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
