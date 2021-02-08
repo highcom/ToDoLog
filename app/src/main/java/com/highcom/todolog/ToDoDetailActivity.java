@@ -86,7 +86,8 @@ public class ToDoDetailActivity extends AppCompatActivity {
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
 
         mLogViewModel = new ViewModelProvider(this).get(LogViewModel.class);
-        mLogViewModel.getLogList().observe(this, loglist -> {
+        // 選択されたToDoに対応するLogを出すようにする
+        mLogViewModel.getLogListByTodoId(1).observe(this, loglist -> {
             adapter.submitList(loglist);
         });
     }

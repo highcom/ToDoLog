@@ -23,6 +23,10 @@ public class ToDoViewModel extends AndroidViewModel {
         return mToDoList;
     }
 
+    public LiveData<List<ToDo>> getToDoListByTaskGroup(String group) {
+        return mRepository.getTodoListByTaskGroup(group);
+    }
+
     void insert(ToDo todo) {
         mRepository.insert(todo);
     }

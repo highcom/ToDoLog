@@ -37,8 +37,16 @@ public class ToDoLogRepository {
         return mToDoList;
     }
 
+    LiveData<List<ToDo>> getTodoListByTaskGroup(String group) {
+        return mTodoDao.getToDoListByTaskGroup(group);
+    }
+
     LiveData<List<Log>> getLogList() {
         return mLogList;
+    }
+
+    LiveData<List<Log>> getLogListByTodoId(int todoId) {
+        return mLogDao.getLogByTodoId(todoId);
     }
 
     void insert(ToDo todo) {

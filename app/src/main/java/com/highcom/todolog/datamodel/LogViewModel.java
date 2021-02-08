@@ -23,6 +23,10 @@ public class LogViewModel extends AndroidViewModel {
         return mLogList;
     }
 
+    public LiveData<List<Log>> getLogListByTodoId(int todoId) {
+        return mRepository.getLogListByTodoId(todoId);
+    }
+
     void insert(Log log) {
         mRepository.insert(log);
     }

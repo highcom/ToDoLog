@@ -18,11 +18,16 @@ import com.highcom.todolog.datamodel.ToDoViewModel;
 
 public class ToDoListFragment extends Fragment {
 
+    private String mSelectGroup;
     private LifecycleOwner mOwner;
     private ToDoViewModel mToDoViewModel;
 
     public ToDoListFragment(LifecycleOwner owner) {
         this.mOwner = owner;
+    }
+
+    public void setSelectGroup(String group) {
+        mSelectGroup = group;
     }
 
     @Nullable
@@ -40,7 +45,7 @@ public class ToDoListFragment extends Fragment {
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
 
         mToDoViewModel = new ViewModelProvider(this).get(ToDoViewModel.class);
-        mToDoViewModel.getToDoList().observe(this.mOwner, todolist -> {
+        mToDoViewModel.getToDoListByTaskGroup(mSelectGroup).observe(this.mOwner, todolist -> {
             adapter.submitList(todolist);
         });
     }

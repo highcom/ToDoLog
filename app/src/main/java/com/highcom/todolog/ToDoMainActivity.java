@@ -24,7 +24,7 @@ import androidx.appcompat.widget.Toolbar;
 
 public class ToDoMainActivity extends AppCompatActivity {
 
-    private Fragment toDoListFragment;
+    private ToDoListFragment toDoListFragment;
     private static final String lists[] = { "TASK1", "TASK2", "TASK3"};
 
     @Override
@@ -69,15 +69,16 @@ public class ToDoMainActivity extends AppCompatActivity {
                 FragmentManager fragmentManager = getSupportFragmentManager();
                 switch (i) {
                     case 0:
-                        fragmentManager.beginTransaction().replace(R.id.nav_host_fragment, toDoListFragment).commit();
+                        toDoListFragment.setSelectGroup("TASK1");
                         break;
                     case 1:
-                        fragmentManager.beginTransaction().replace(R.id.nav_host_fragment, toDoListFragment).commit();
+                        toDoListFragment.setSelectGroup("TASK2");
                         break;
                     case 2:
-                        fragmentManager.beginTransaction().replace(R.id.nav_host_fragment, toDoListFragment).commit();
+                        toDoListFragment.setSelectGroup("TASK3");
                         break;
                 }
+                fragmentManager.beginTransaction().replace(R.id.nav_host_fragment, toDoListFragment).commit();
                 drawer.closeDrawers();
             }
         });

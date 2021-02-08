@@ -44,15 +44,20 @@ abstract class ToDoLogRoomDatabase extends RoomDatabase {
             databaseWriteExtractor.execute(() -> {
                 ToDoDao todoDao = INSTANCE.toDoDao();
                 todoDao.deleteAll();
-
-                ToDo todo = new ToDo(1, 1, "TASK1", "作業内容1", "2021/2/1 20:00 update");
-                todoDao.insert(todo);
+                todoDao.insert(new ToDo(1, 1, "TASK1", "作業内容1", "2021/2/1 20:00 update"));
+                todoDao.insert(new ToDo(2, 1, "TASK1", "作業内容2", "2021/2/2 20:00 update"));
+                todoDao.insert(new ToDo(3, 2, "TASK1", "作業内容3", "2021/2/3 20:00 update"));
+                todoDao.insert(new ToDo(4, 1, "TASK2", "作業内容4", "2021/2/4 20:00 update"));
+                todoDao.insert(new ToDo(5, 1, "TASK3", "作業内容5", "2021/2/5 20:00 update"));
 
                 LogDao logDao = INSTANCE.logDao();
                 logDao.deleteAll();
-
-                Log log = new Log(1, 1, new Date(System.currentTimeMillis()), "regist");
-                logDao.insert(log);
+                logDao.insert(new Log(1, 1, new Date(System.currentTimeMillis()), "regist"));
+                logDao.insert(new Log(2, 1, new Date(System.currentTimeMillis()), "modify"));
+                logDao.insert(new Log(3, 2, new Date(System.currentTimeMillis()), "regist"));
+                logDao.insert(new Log(4, 3, new Date(System.currentTimeMillis()), "regist"));
+                logDao.insert(new Log(5, 4, new Date(System.currentTimeMillis()), "regist"));
+                logDao.insert(new Log(6, 5, new Date(System.currentTimeMillis()), "regist"));
             });
         }
     };
