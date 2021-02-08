@@ -12,9 +12,6 @@ import android.widget.ListView;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.android.material.navigation.NavigationView;
-import com.highcom.todolog.ui.gallery.GalleryFragment;
-import com.highcom.todolog.ui.home.HomeFragment;
-import com.highcom.todolog.ui.slideshow.SlideshowFragment;
 import com.highcom.todolog.ui.todolist.ToDoListFragment;
 
 import androidx.annotation.NonNull;
@@ -27,13 +24,15 @@ import androidx.appcompat.widget.Toolbar;
 
 public class ToDoMainActivity extends AppCompatActivity {
 
-    private Fragment toDoListFragment = new ToDoListFragment(this);
+    private Fragment toDoListFragment;
     private static final String lists[] = { "TASK1", "TASK2", "TASK3"};
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        toDoListFragment = new ToDoListFragment(this);
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         FloatingActionButton fab = findViewById(R.id.fab);
@@ -73,12 +72,10 @@ public class ToDoMainActivity extends AppCompatActivity {
                         fragmentManager.beginTransaction().replace(R.id.nav_host_fragment, toDoListFragment).commit();
                         break;
                     case 1:
-                        Fragment homeFragment = new HomeFragment();
-                        fragmentManager.beginTransaction().replace(R.id.nav_host_fragment, homeFragment).commit();
+                        fragmentManager.beginTransaction().replace(R.id.nav_host_fragment, toDoListFragment).commit();
                         break;
                     case 2:
-                        Fragment slideshowFragment = new SlideshowFragment();
-                        fragmentManager.beginTransaction().replace(R.id.nav_host_fragment, slideshowFragment).commit();
+                        fragmentManager.beginTransaction().replace(R.id.nav_host_fragment, toDoListFragment).commit();
                         break;
                 }
                 drawer.closeDrawers();
