@@ -5,7 +5,7 @@ import androidx.room.ColumnInfo;
 import androidx.room.Entity;
 import androidx.room.PrimaryKey;
 
-import java.sql.Date;;
+import java.sql.Date;
 
 @Entity(tableName = "log_table")
 public class Log {
@@ -19,14 +19,14 @@ public class Log {
     private int mTodoId;
 
     @ColumnInfo(name = "date")
-    private String mDate;
+    private Date mDate;
 
     @ColumnInfo(name = "operation")
     private String mOperation;
 
     public Log(@NonNull int logId,
                @NonNull int todoId,
-               String date,
+               Date date,
                String operation) {
         this.mLogId = logId;
         this.mTodoId = todoId;
@@ -42,7 +42,7 @@ public class Log {
         return mTodoId;
     }
 
-    public String getDate() {
+    public Date getDate() {
         return mDate;
     }
 
@@ -58,7 +58,7 @@ public class Log {
         this.mLogId = todoid;
     }
 
-    public void setDate(String date) {
+    public void setDate(Date date) {
         this.mDate = date;
     }
 

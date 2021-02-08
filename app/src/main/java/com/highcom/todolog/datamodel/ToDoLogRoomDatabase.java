@@ -6,6 +6,7 @@ import androidx.annotation.NonNull;
 import androidx.room.Database;
 import androidx.room.Room;
 import androidx.room.RoomDatabase;
+import androidx.room.TypeConverters;
 import androidx.sqlite.db.SupportSQLiteDatabase;
 
 import java.sql.Date;
@@ -13,6 +14,7 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
 @Database(entities = {ToDo.class, Log.class}, version = 1, exportSchema = false)
+@TypeConverters({DataConverters.class})
 abstract class ToDoLogRoomDatabase extends RoomDatabase {
     abstract ToDoDao toDoDao();
     abstract LogDao logDao();
@@ -49,7 +51,7 @@ abstract class ToDoLogRoomDatabase extends RoomDatabase {
                 LogDao logDao = INSTANCE.logDao();
                 logDao.deleteAll();
 
-                Log log = new Log(1, 1, new Date(System.currentTimeMillis()).toString(), "regist");
+                Log log = new Log(1, 1, new Date(System.currentTimeMillis()), "regist");
                 logDao.insert(log);
             });
         }

@@ -22,8 +22,8 @@ public class LogViewHolder extends RecyclerView.ViewHolder {
         mOperationLog = (TextView) itemView.findViewById(R.id.todolog_operation);
     }
 
-    public void bind(String date, String log) {
-        mDateLog.setText(date);
+    public void bind(Date date, String log) {
+        mDateLog.setText(date.toString());
         mOperationLog.setText(log);
     }
 
