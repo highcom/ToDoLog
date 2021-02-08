@@ -1,13 +1,17 @@
 package com.highcom.todolog;
 
 import android.os.Bundle;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Spinner;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
 import androidx.lifecycle.LifecycleOwner;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -29,15 +33,18 @@ public class ToDoDetailActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_tododetail);
 
+        setTitle("Detail");
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+
         Spinner statusSpinner = findViewById(R.id.detail_status_spinner);
         ArrayAdapter<String> statusAdapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item);
         statusAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         statusAdapter.addAll(statusItems);
         statusSpinner.setAdapter(statusAdapter);
         if (2 > statusSpinner.getCount()) {
-            statusSpinner.setSelection(1);
+            statusSpinner.setSelection(0);
         } else {
-            statusSpinner.setSelection(2); // 初期選択位置の設定
+            statusSpinner.setSelection(1); // 初期選択位置の設定
         }
         statusSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
@@ -56,8 +63,8 @@ public class ToDoDetailActivity extends AppCompatActivity {
         taskGroupAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         taskGroupAdapter.addAll(groupItems);
         taskGroupSpinner.setAdapter(taskGroupAdapter);
-        if (2 > taskGroupSpinner.getCount()) {
-            taskGroupSpinner.setSelection(1);
+        if (3 > taskGroupSpinner.getCount()) {
+            taskGroupSpinner.setSelection(0);
         } else {
             taskGroupSpinner.setSelection(2); // 初期選択位置の設定
         }
@@ -82,5 +89,24 @@ public class ToDoDetailActivity extends AppCompatActivity {
         mLogViewModel.getLogList().observe(this, loglist -> {
             adapter.submitList(loglist);
         });
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.activity_detail_menu, menu);
+        return super.onCreateOptionsMenu(menu);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                finish();
+                break;
+            case R.id.detail_done:
+                finish();
+                break;
+        }
+        return super.onOptionsItemSelected(item);
     }
 }

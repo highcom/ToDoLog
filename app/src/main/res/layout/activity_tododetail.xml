@@ -7,17 +7,6 @@
 
     <LinearLayout
         android:orientation="horizontal"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center_horizontal">
-        <include
-            layout="@layout/app_bar_tododetail"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent" />
-    </LinearLayout>
-
-    <LinearLayout
-        android:orientation="horizontal"
         android:layout_marginTop="30dp"
         android:layout_marginBottom="30dp"
         android:layout_width="match_parent"
