@@ -15,9 +15,6 @@ import android.view.GestureDetector;
 import android.view.MotionEvent;
 import android.view.View;
 
-import com.highcom.todolog.ui.todolist.ToDoListFragment;
-import com.highcom.todolog.ui.todolist.ToDoViewHolder;
-
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedList;

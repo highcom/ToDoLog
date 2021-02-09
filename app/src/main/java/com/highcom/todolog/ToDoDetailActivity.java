@@ -11,14 +11,11 @@ import android.widget.Spinner;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.widget.Toolbar;
-import androidx.lifecycle.LifecycleOwner;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.highcom.todolog.datamodel.LogViewModel;
-import com.highcom.todolog.datamodel.ToDoViewModel;
 import com.highcom.todolog.ui.loglist.LogListAdapter;
 
 public class ToDoDetailActivity extends AppCompatActivity {
