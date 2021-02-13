@@ -49,6 +49,10 @@ public class ToDoLogRepository {
         return mLogDao.getLogByTodoId(todoId);
     }
 
+    LiveData<Log> getLogByTodoIdLatest(int todoId) {
+        return mLogDao.getLogByTodoIdLatest(todoId);
+    }
+
     void insert(ToDo todo) {
         ToDoLogRoomDatabase.databaseWriteExtractor.execute(() -> {
             mTodoDao.insert(todo);

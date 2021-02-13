@@ -27,6 +27,10 @@ public class ToDoViewModel extends AndroidViewModel {
         return mRepository.getTodoListByTaskGroup(group);
     }
 
+    public LiveData<Log> getLogByTodoIdLatest(int todoId) {
+        return mRepository.getLogByTodoIdLatest(todoId);
+    }
+
     void insert(ToDo todo) {
         mRepository.insert(todo);
     }

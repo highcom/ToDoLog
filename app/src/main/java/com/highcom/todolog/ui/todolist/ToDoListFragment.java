@@ -17,6 +17,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.highcom.todolog.R;
 import com.highcom.todolog.ToDoDetailActivity;
+import com.highcom.todolog.datamodel.ToDo;
 import com.highcom.todolog.datamodel.ToDoViewModel;
 import com.highcom.todolog.ui.DividerItemDecoration;
 import com.highcom.todolog.ui.SimpleCallbackHelper;
@@ -57,7 +58,15 @@ public class ToDoListFragment extends Fragment implements SimpleCallbackHelper.S
 
         mToDoViewModel = new ViewModelProvider(this).get(ToDoViewModel.class);
         mToDoViewModel.getToDoListByTaskGroup(mSelectGroup).observe(this.mOwner, todolist -> {
+            // Todoの一覧が読み込まれたらバインドする
             adapter.submitList(todolist);
+            // 各ToDoに対して、Logデータの最新情報で更新して、変更通知をする
+            for ( ToDo todo : todolist) {
+                mToDoViewModel.getLogByTodoIdLatest(todo.getTodoId()).observe(this.mOwner, log -> {
+                    todo.setLog(log.getDate().toString() + " " + log.getOperation());
+                    adapter.notifyDataSetChanged();
+                });
+            }
         });
 
         final float scale = getResources().getDisplayMetrics().density;
