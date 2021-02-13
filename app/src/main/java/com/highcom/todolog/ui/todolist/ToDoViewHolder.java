@@ -12,6 +12,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.highcom.todolog.R;
 
 public class ToDoViewHolder extends RecyclerView.ViewHolder {
+    private int mTodoId;
     private ImageButton mCheckButton;
     private TextView mTodoContents;
     private TextView mTodoLog;
@@ -26,7 +27,8 @@ public class ToDoViewHolder extends RecyclerView.ViewHolder {
         mRearrangeButton = (ImageButton) itemView.findViewById(R.id.rearrange_button);
     }
 
-    public void bind(String contents, String log) {
+    public void bind(int todoId, String contents, String log) {
+        mTodoId = todoId;
         mTodoContents.setText(contents);
         mTodoLog.setText(log);
     }
@@ -34,5 +36,9 @@ public class ToDoViewHolder extends RecyclerView.ViewHolder {
     static ToDoViewHolder create(ViewGroup parent) {
         View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.row_todolist, parent, false);
         return new ToDoViewHolder(view);
+    }
+
+    public int getTodoId() {
+        return mTodoId;
     }
 }

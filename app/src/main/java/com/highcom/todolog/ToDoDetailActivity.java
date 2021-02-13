@@ -1,11 +1,13 @@
 package com.highcom.todolog;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.EditText;
 import android.widget.Spinner;
 
 import androidx.annotation.NonNull;
@@ -20,6 +22,7 @@ import com.highcom.todolog.ui.loglist.LogListAdapter;
 
 public class ToDoDetailActivity extends AppCompatActivity {
 
+    private EditText detailContents;
     private final String[] statusItems = {"ToDo", "Done"};
     private final String[] groupItems = {"TASK1", "TASK2", "TASK3"};
 
@@ -33,16 +36,16 @@ public class ToDoDetailActivity extends AppCompatActivity {
         setTitle("Detail");
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
+        Intent intent = getIntent();
+        int todoId = intent.getIntExtra("TODO_ID", -1);
+
+        detailContents = findViewById(R.id.detail_contents_edit);
+
         Spinner statusSpinner = findViewById(R.id.detail_status_spinner);
         ArrayAdapter<String> statusAdapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item);
         statusAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         statusAdapter.addAll(statusItems);
         statusSpinner.setAdapter(statusAdapter);
-        if (2 > statusSpinner.getCount()) {
-            statusSpinner.setSelection(0);
-        } else {
-            statusSpinner.setSelection(1); // 初期選択位置の設定
-        }
         statusSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
@@ -60,11 +63,6 @@ public class ToDoDetailActivity extends AppCompatActivity {
         taskGroupAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         taskGroupAdapter.addAll(groupItems);
         taskGroupSpinner.setAdapter(taskGroupAdapter);
-        if (3 > taskGroupSpinner.getCount()) {
-            taskGroupSpinner.setSelection(0);
-        } else {
-            taskGroupSpinner.setSelection(2); // 初期選択位置の設定
-        }
         taskGroupSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
@@ -83,8 +81,20 @@ public class ToDoDetailActivity extends AppCompatActivity {
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
 
         mLogViewModel = new ViewModelProvider(this).get(LogViewModel.class);
+
+        mLogViewModel.getToDo(todoId).observe(this, toDo -> {
+            detailContents.setText(toDo.getContents());
+            statusSpinner.setSelection(toDo.getState());
+            for (int num = 0; num < groupItems.length; num++) {
+                if (groupItems[num].equals(toDo.getTaskGroup())) {
+                    taskGroupSpinner.setSelection(num);
+                    break;
+                }
+            }
+        });
+
         // 選択されたToDoに対応するLogを出すようにする
-        mLogViewModel.getLogListByTodoId(1).observe(this, loglist -> {
+        mLogViewModel.getLogListByTodoId(todoId).observe(this, loglist -> {
             adapter.submitList(loglist);
         });
     }

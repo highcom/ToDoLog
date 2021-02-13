@@ -17,6 +17,9 @@ public interface ToDoDao {
     @Query("SELECT * FROM todo_table WHERE task_group = :group")
     LiveData<List<ToDo>> getToDoListByTaskGroup(String group);
 
+    @Query("SELECT * FROM todo_table WHERE todo_id = :id")
+    LiveData<ToDo> getToDo(int id);
+
     @Insert(onConflict = OnConflictStrategy.IGNORE)
     void insert(ToDo todo);
 

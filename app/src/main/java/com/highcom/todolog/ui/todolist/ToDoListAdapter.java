@@ -22,7 +22,7 @@ public class ToDoListAdapter extends ListAdapter<ToDo, ToDoViewHolder> {
     @Override
     public void onBindViewHolder(@NonNull ToDoViewHolder holder, int position) {
         ToDo current = getItem(position);
-        holder.bind(current.getContents(), current.getLog());
+        holder.bind(current.getTodoId(), current.getContents(), current.getLog());
     }
 
     public static class ToDoDiff extends DiffUtil.ItemCallback<ToDo> {

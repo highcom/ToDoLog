@@ -90,6 +90,7 @@ public class ToDoListFragment extends Fragment implements SimpleCallbackHelper.S
                         (RecyclerView.ViewHolder) viewHolder,
                         (holder, pos) -> {
                             Intent intent = new Intent(getContext(), ToDoDetailActivity.class);
+                            intent.putExtra("TODO_ID", ((ToDoViewHolder)holder).getTodoId());
                             startActivity(intent);
                         }
                 ));
