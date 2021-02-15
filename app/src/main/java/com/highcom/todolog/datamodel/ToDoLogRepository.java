@@ -41,6 +41,10 @@ public class ToDoLogRepository {
         return mTodoDao.getToDoListByTaskGroup(group);
     }
 
+    LiveData<List<String>> getDistinctToDoTaskGroup() {
+        return mTodoDao.getDistinctToDoTaskGroup();
+    }
+
     LiveData<List<Log>> getLogList() {
         return mLogList;
     }

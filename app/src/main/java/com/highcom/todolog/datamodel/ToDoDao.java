@@ -17,6 +17,9 @@ public interface ToDoDao {
     @Query("SELECT * FROM todo_table WHERE task_group = :group")
     LiveData<List<ToDo>> getToDoListByTaskGroup(String group);
 
+    @Query("SELECT DISTINCT task_group FROM todo_table")
+    LiveData<List<String>> getDistinctToDoTaskGroup();
+
     @Query("SELECT * FROM todo_table WHERE todo_id = :id")
     LiveData<ToDo> getToDo(int id);
 
