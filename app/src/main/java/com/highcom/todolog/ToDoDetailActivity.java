@@ -33,7 +33,7 @@ public class ToDoDetailActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_tododetail);
 
-        setTitle("Detail");
+        setTitle(getString(R.string.detail_title));
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         Intent intent = getIntent();

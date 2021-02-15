@@ -75,7 +75,7 @@ public class ToDoListFragment extends Fragment implements SimpleCallbackHelper.S
             @Override
             public void instantiateUnderlayButton(RecyclerView.ViewHolder viewHolder, List<UnderlayButton> underlayButtons) {
                 underlayButtons.add(new SimpleCallbackHelper.UnderlayButton(
-                        "削除",
+                        getString(R.string.swipe_button_delete),
                         0,
                         Color.parseColor("#FF3C30"),
                         (RecyclerView.ViewHolder) viewHolder,
@@ -84,7 +84,7 @@ public class ToDoListFragment extends Fragment implements SimpleCallbackHelper.S
                         }
                 ));
                 underlayButtons.add(new SimpleCallbackHelper.UnderlayButton(
-                        "詳細",
+                        getString(R.string.swipe_button_detail),
                         0,
                         Color.parseColor("#C7C7CB"),
                         (RecyclerView.ViewHolder) viewHolder,

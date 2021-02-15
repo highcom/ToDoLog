@@ -7,10 +7,13 @@
     <string name="nav_header_desc">Navigation header</string>
     <string name="action_settings">Settings</string>
 
-    <string name="menu_home">Home</string>
-    <string name="menu_gallery">Gallery</string>
-    <string name="menu_slideshow">Slideshow</string>
-
     <string name="drawer_open">Open</string>
     <string name="drawer_close">Close</string>
+
+    <string name="swipe_button_delete">Delete</string>
+    <string name="swipe_button_detail">Detail</string>
+
+    <string name="detail_title">Detail</string>
+    <string name="detail_status">Status</string>
+    <string name="detail_taskgroup">Group</string>
 </resources>

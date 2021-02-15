@@ -1,0 +1,19 @@
+<resources>
+    <string name="app_name">ToDo記録</string>
+    <string name="navigation_drawer_open">Open navigation drawer</string>
+    <string name="navigation_drawer_close">Close navigation drawer</string>
+    <string name="nav_header_title">Android Studio</string>
+    <string name="nav_header_subtitle">android.studio@android.com</string>
+    <string name="nav_header_desc">Navigation header</string>
+    <string name="action_settings">設定</string>
+
+    <string name="drawer_open">開く</string>
+    <string name="drawer_close">閉じる</string>
+
+    <string name="swipe_button_delete">削除</string>
+    <string name="swipe_button_detail">詳細</string>
+
+    <string name="detail_title">詳細</string>
+    <string name="detail_status">状態</string>
+    <string name="detail_taskgroup">グループ</string>
+</resources>
