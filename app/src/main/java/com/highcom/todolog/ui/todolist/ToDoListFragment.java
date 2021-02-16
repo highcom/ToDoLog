@@ -63,8 +63,10 @@ public class ToDoListFragment extends Fragment implements SimpleCallbackHelper.S
             // 各ToDoに対して、Logデータの最新情報で更新して、変更通知をする
             for ( ToDo todo : todolist) {
                 mToDoViewModel.getLogByTodoIdLatest(todo.getTodoId()).observe(this.mOwner, log -> {
-                    todo.setLog(log.getDate().toString() + " " + log.getOperation());
-                    adapter.notifyDataSetChanged();
+                    if (log != null) {
+                        todo.setLog(log.getDate().toString() + " " + log.getOperation());
+                        adapter.notifyDataSetChanged();
+                    }
                 });
             }
         });
@@ -80,7 +82,7 @@ public class ToDoListFragment extends Fragment implements SimpleCallbackHelper.S
                         Color.parseColor("#FF3C30"),
                         (RecyclerView.ViewHolder) viewHolder,
                         (holder, pos) -> {
-                            // 削除処理を実装する
+                            mToDoViewModel.deleteToDoByTodoId(((ToDoViewHolder)holder).getTodoId());
                         }
                 ));
                 underlayButtons.add(new SimpleCallbackHelper.UnderlayButton(

@@ -2,6 +2,7 @@ package com.highcom.todolog.datamodel;
 
 import androidx.lifecycle.LiveData;
 import androidx.room.Dao;
+import androidx.room.Delete;
 import androidx.room.Insert;
 import androidx.room.OnConflictStrategy;
 import androidx.room.Query;
@@ -25,6 +26,9 @@ public interface ToDoDao {
 
     @Insert(onConflict = OnConflictStrategy.IGNORE)
     void insert(ToDo todo);
+
+    @Query("DELETE FROM todo_table WHERE todo_id = :id")
+    void deleteByTodoId(int id);
 
     @Query("DELETE FROM todo_table")
     void deleteAll();

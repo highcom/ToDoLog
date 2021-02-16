@@ -61,6 +61,18 @@ public class ToDoLogRepository {
         return mLogDao.getLogByTodoIdLatest(todoId);
     }
 
+    void deleteToDoByTodoId(int todoId) {
+        ToDoLogRoomDatabase.databaseWriteExtractor.execute(() -> {
+            mTodoDao.deleteByTodoId(todoId);
+        });
+    }
+
+    void deleteLogByTodoId(int todoId) {
+        ToDoLogRoomDatabase.databaseWriteExtractor.execute(() -> {
+            mLogDao.deleteLogByTodoId(todoId);
+        });
+    }
+
     void insert(ToDo todo) {
         ToDoLogRoomDatabase.databaseWriteExtractor.execute(() -> {
             mTodoDao.insert(todo);

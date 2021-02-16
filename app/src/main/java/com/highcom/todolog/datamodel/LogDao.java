@@ -22,6 +22,9 @@ public interface LogDao {
     @Insert(onConflict = OnConflictStrategy.IGNORE)
     void insert(Log log);
 
+    @Query("DELETE FROM log_table WHERE todo_id = :id")
+    void deleteLogByTodoId(int id);
+
     @Query("DELETE FROM log_table")
     void deleteAll();
 }
