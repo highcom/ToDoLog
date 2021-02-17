@@ -17,14 +17,18 @@ import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.highcom.todolog.datamodel.Group;
+import com.highcom.todolog.datamodel.GroupViewModel;
 import com.highcom.todolog.datamodel.LogViewModel;
 import com.highcom.todolog.ui.loglist.LogListAdapter;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class ToDoDetailActivity extends AppCompatActivity {
 
     private EditText detailContents;
     private final String[] statusItems = {"ToDo", "Done"};
-    private final String[] groupItems = {"TASK1", "TASK2", "TASK3"};
 
     private LogViewModel mLogViewModel;
 
@@ -35,6 +39,8 @@ public class ToDoDetailActivity extends AppCompatActivity {
 
         setTitle(getString(R.string.detail_title));
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+
+        mLogViewModel = new ViewModelProvider(this).get(LogViewModel.class);
 
         Intent intent = getIntent();
         int todoId = intent.getIntExtra("TODO_ID", -1);
@@ -61,7 +67,6 @@ public class ToDoDetailActivity extends AppCompatActivity {
         Spinner taskGroupSpinner = findViewById(R.id.detail_taskgroup_spinner);
         ArrayAdapter<String> taskGroupAdapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item);
         taskGroupAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        taskGroupAdapter.addAll(groupItems);
         taskGroupSpinner.setAdapter(taskGroupAdapter);
         taskGroupSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
@@ -80,22 +85,26 @@ public class ToDoDetailActivity extends AppCompatActivity {
         recyclerView.setAdapter(adapter);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
 
-        mLogViewModel = new ViewModelProvider(this).get(LogViewModel.class);
-
+        // ToDoのデータを読み込んで、各エリアにデータをセットする
         mLogViewModel.getToDo(todoId).observe(this, toDo -> {
             detailContents.setText(toDo.getContents());
-            statusSpinner.setSelection(toDo.getState());
-            for (int num = 0; num < groupItems.length; num++) {
-                if (groupItems[num].equals(toDo.getTaskGroup())) {
-                    taskGroupSpinner.setSelection(num);
-                    break;
+            statusSpinner.setSelection(toDo.getState() - 1);
+            mLogViewModel.getGroupList().observe(this, groupList -> {
+                List<String> groupNames = new ArrayList<>();
+                for (Group group : groupList) groupNames.add(group.getGroupName());
+                taskGroupAdapter.addAll(groupNames);
+                for (int num = 0; num < groupList.size(); num++) {
+                    if (groupList.get(num).getGroupId() == toDo.getGroupId()) {
+                        taskGroupSpinner.setSelection(num);
+                        break;
+                    }
                 }
-            }
+            });
         });
 
         // 選択されたToDoに対応するLogを出すようにする
-        mLogViewModel.getLogListByTodoId(todoId).observe(this, loglist -> {
-            adapter.submitList(loglist);
+        mLogViewModel.getLogListByTodoId(todoId).observe(this, logList -> {
+            adapter.submitList(logList);
         });
     }
 

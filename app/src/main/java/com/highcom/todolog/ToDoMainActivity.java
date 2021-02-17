@@ -10,6 +10,8 @@ import android.widget.ListView;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.android.material.navigation.NavigationView;
+import com.highcom.todolog.datamodel.Group;
+import com.highcom.todolog.datamodel.GroupViewModel;
 import com.highcom.todolog.datamodel.ToDoViewModel;
 import com.highcom.todolog.ui.todolist.ToDoListFragment;
 
@@ -21,11 +23,14 @@ import androidx.appcompat.widget.Toolbar;
 import androidx.lifecycle.LifecycleOwner;
 import androidx.lifecycle.ViewModelProvider;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class ToDoMainActivity extends AppCompatActivity {
 
     private LifecycleOwner lifecycleOwner = this;
     private ToDoListFragment toDoListFragment;
-    private ToDoViewModel mToDoViewModel;
+    private GroupViewModel mGroupViewModel;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -57,19 +62,25 @@ public class ToDoMainActivity extends AppCompatActivity {
             }
         });
 
-        // 初期表示のFragmentを設定する
         toDoListFragment = new ToDoListFragment(lifecycleOwner);
-        toDoListFragment.setSelectGroup("TASK1");
-        getSupportFragmentManager().beginTransaction().replace(R.id.nav_host_fragment, toDoListFragment).commit();
 
         ListView listView = findViewById(R.id.task_list_view_inside_nav);
-        mToDoViewModel = new ViewModelProvider(this).get(ToDoViewModel.class);
-        mToDoViewModel.getDistinctToDoTaskGroup().observe(this, taskGroupList -> {
-            ArrayAdapter<String> arrayAdapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, taskGroupList);
+        mGroupViewModel = new ViewModelProvider(this).get(GroupViewModel.class);
+
+        // 初期表示のFragmentを設定する
+        mGroupViewModel.getFirstGroup().observe(this, firstGroup -> {
+            toDoListFragment.setSelectGroup(firstGroup.getGroupId());
+            getSupportFragmentManager().beginTransaction().replace(R.id.nav_host_fragment, toDoListFragment).commit();
+        });
+        // Drawerに表示するListを瀬亭する
+        mGroupViewModel.getGroupList().observe(this, groupList -> {
+            List<String> groupNames = new ArrayList<>();
+            for (Group group : groupList) groupNames.add(group.getGroupName());
+            ArrayAdapter<String> arrayAdapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, groupNames);
             listView.setAdapter(arrayAdapter);
             listView.setOnItemClickListener((adapterView, view, i, l) -> {
                 toDoListFragment = new ToDoListFragment(lifecycleOwner);
-                toDoListFragment.setSelectGroup(taskGroupList.get(i));
+                toDoListFragment.setSelectGroup(groupList.get(i).getGroupId());
                 getSupportFragmentManager().beginTransaction().replace(R.id.nav_host_fragment, toDoListFragment).commit();
                 drawer.closeDrawers();
             });

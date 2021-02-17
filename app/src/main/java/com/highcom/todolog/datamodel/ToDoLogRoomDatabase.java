@@ -13,9 +13,10 @@ import java.sql.Date;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
-@Database(entities = {ToDo.class, Log.class}, version = 1, exportSchema = false)
+@Database(entities = {Group.class, ToDo.class, Log.class}, version = 1, exportSchema = false)
 @TypeConverters({DataConverters.class})
 abstract class ToDoLogRoomDatabase extends RoomDatabase {
+    abstract GroupDao groupDao();
     abstract ToDoDao toDoDao();
     abstract LogDao logDao();
 
@@ -42,6 +43,13 @@ abstract class ToDoLogRoomDatabase extends RoomDatabase {
             super.onCreate(db);
 
             databaseWriteExtractor.execute(() -> {
+                GroupDao groupDao = INSTANCE.groupDao();
+                groupDao.deleteAll();
+                groupDao.insert(new Group(1, 2, "GROUP1"));
+                groupDao.insert(new Group(2, 3, "GROUP2"));
+                groupDao.insert(new Group(3, 4, "GROUP3"));
+                groupDao.insert(new Group(4, 1, "GROUP4"));
+
                 LogDao logDao = INSTANCE.logDao();
                 logDao.deleteAll();
                 logDao.insert(new Log(1, 1, new Date(System.currentTimeMillis()), "regist"));
@@ -56,13 +64,13 @@ abstract class ToDoLogRoomDatabase extends RoomDatabase {
 
                 ToDoDao todoDao = INSTANCE.toDoDao();
                 todoDao.deleteAll();
-                todoDao.insert(new ToDo(1, 1, "TASK1", "作業内容1", 7));
-                todoDao.insert(new ToDo(2, 1, "TASK1", "作業内容2", 3));
-                todoDao.insert(new ToDo(3, 2, "TASK1", "作業内容3", 4));
-                todoDao.insert(new ToDo(4, 1, "TASK2", "作業内容4", 5));
-                todoDao.insert(new ToDo(5, 1, "TASK3", "作業内容5", 6));
-                todoDao.insert(new ToDo(6, 2, "TASK1", "作業内容6", 8));
-                todoDao.insert(new ToDo(7, 1, "TASK4", "作業内容7", 9));
+                todoDao.insert(new ToDo(1, 1, 1, "作業内容1", 7));
+                todoDao.insert(new ToDo(2, 1, 1, "作業内容2", 3));
+                todoDao.insert(new ToDo(3, 2, 1, "作業内容3", 4));
+                todoDao.insert(new ToDo(4, 1, 2, "作業内容4", 5));
+                todoDao.insert(new ToDo(5, 1, 3, "作業内容5", 6));
+                todoDao.insert(new ToDo(6, 2, 1, "作業内容6", 8));
+                todoDao.insert(new ToDo(7, 1, 4, "作業内容7", 9));
 
             });
         }

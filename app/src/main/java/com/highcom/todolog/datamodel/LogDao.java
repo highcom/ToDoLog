@@ -10,9 +10,6 @@ import java.util.List;
 
 @Dao
 public interface LogDao {
-    @Query("SELECT * FROM log_table ORDER BY log_id ASC")
-    LiveData<List<Log>> getLogList();
-
     @Query("SELECT * FROM log_table WHERE todo_id = :id")
     LiveData<List<Log>> getLogByTodoId(int id);
 

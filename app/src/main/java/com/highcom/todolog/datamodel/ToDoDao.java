@@ -12,16 +12,9 @@ import java.util.List;
 
 @Dao
 public interface ToDoDao {
-
-    @Query("SELECT * FROM todo_table ORDER BY todo_id ASC")
-    LiveData<List<ToDo>> getToDoList();
-
     @Transaction
-    @Query("SELECT * FROM todo_table WHERE task_group = :group")
-    LiveData<List<ToDoAndLog>> getToDoListByTaskGroup(String group);
-
-    @Query("SELECT DISTINCT task_group FROM todo_table")
-    LiveData<List<String>> getDistinctToDoTaskGroup();
+    @Query("SELECT * FROM todo_table WHERE group_id = :groupId")
+    LiveData<List<ToDoAndLog>> getToDoListByTaskGroup(int groupId);
 
     @Query("SELECT * FROM todo_table WHERE todo_id = :id")
     LiveData<ToDo> getToDo(int id);

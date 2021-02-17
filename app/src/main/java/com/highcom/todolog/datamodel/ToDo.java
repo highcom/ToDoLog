@@ -17,8 +17,8 @@ public class ToDo {
     private int mState;
 
     @NonNull
-    @ColumnInfo(name = "task_group")
-    private String mTaskGroup;
+    @ColumnInfo(name = "group_id")
+    private int mGroupId;
 
     @ColumnInfo(name = "contents")
     private String mContents;
@@ -28,12 +28,12 @@ public class ToDo {
 
     public ToDo(@NonNull int todoId,
                 @NonNull int state,
-                @NonNull String taskGroup,
+                @NonNull int groupId,
                 String contents,
                 int latestLogId) {
         this.mTodoId = todoId;
         this.mState = state;
-        this.mTaskGroup = taskGroup;
+        this.mGroupId = groupId;
         this.mContents = contents;
         this.mLatestLogId = latestLogId;
     }
@@ -47,8 +47,8 @@ public class ToDo {
         return this.mState;
     }
 
-    public String getTaskGroup() {
-        return this.mTaskGroup;
+    public int getGroupId() {
+        return this.mGroupId;
     }
 
     public String getContents() {
@@ -68,8 +68,8 @@ public class ToDo {
         this.mState = state;
     }
 
-    public void setTaskGroup(String taskGroup) {
-        this.mTaskGroup = taskGroup;
+    public void setTaskGroup(int groupId) {
+        this.mGroupId = groupId;
     }
 
     public void setContents(String contents) {

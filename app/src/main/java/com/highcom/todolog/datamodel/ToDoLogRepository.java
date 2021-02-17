@@ -9,10 +9,11 @@ import java.util.List;
 public class ToDoLogRepository {
     private static ToDoLogRepository instance;
 
+    private GroupDao mGroupDao;
     private ToDoDao mTodoDao;
     private LogDao mLogDao;
-    private LiveData<List<ToDo>> mToDoList;
-    private LiveData<List<Log>> mLogList;
+    private LiveData<List<Group>> mGroupList;
+    private LiveData<Group> mFirstGroup;
 
     public static ToDoLogRepository getInstance(Application application) {
         if (instance == null) {
@@ -27,26 +28,23 @@ public class ToDoLogRepository {
 
     private ToDoLogRepository(Application application) {
         ToDoLogRoomDatabase db = ToDoLogRoomDatabase.getDatabase(application);
+        mGroupDao = db.groupDao();
+        mGroupList = mGroupDao.getGroupList();
+        mFirstGroup = mGroupDao.getFirstGroup();
         mTodoDao = db.toDoDao();
-        mToDoList = mTodoDao.getToDoList();
         mLogDao = db.logDao();
-        mLogList = mLogDao.getLogList();
     }
 
-    LiveData<List<ToDo>> getToDoList() {
-        return mToDoList;
+    LiveData<List<Group>> getGroupList() {
+        return mGroupList;
     }
 
-    LiveData<List<ToDoAndLog>> getTodoListByTaskGroup(String group) {
-        return mTodoDao.getToDoListByTaskGroup(group);
+    LiveData<Group> getFirstGroup() {
+        return mFirstGroup;
     }
 
-    LiveData<List<String>> getDistinctToDoTaskGroup() {
-        return mTodoDao.getDistinctToDoTaskGroup();
-    }
-
-    LiveData<List<Log>> getLogList() {
-        return mLogList;
+    LiveData<List<ToDoAndLog>> getTodoListByTaskGroup(int groupId) {
+        return mTodoDao.getToDoListByTaskGroup(groupId);
     }
 
     LiveData<List<Log>> getLogListByTodoId(int todoId) {
@@ -57,15 +55,9 @@ public class ToDoLogRepository {
         return mTodoDao.getToDo(todoId);
     }
 
-    void deleteToDoByTodoId(int todoId) {
+    void insert(Group group) {
         ToDoLogRoomDatabase.databaseWriteExtractor.execute(() -> {
-            mTodoDao.deleteByTodoId(todoId);
-        });
-    }
-
-    void deleteLogByTodoId(int todoId) {
-        ToDoLogRoomDatabase.databaseWriteExtractor.execute(() -> {
-            mLogDao.deleteLogByTodoId(todoId);
+            mGroupDao.insert(group);
         });
     }
 
@@ -78,6 +70,18 @@ public class ToDoLogRepository {
     void insert(Log log) {
         ToDoLogRoomDatabase.databaseWriteExtractor.execute(() -> {
             mLogDao.insert(log);
+        });
+    }
+
+    void deleteToDoByTodoId(int todoId) {
+        ToDoLogRoomDatabase.databaseWriteExtractor.execute(() -> {
+            mTodoDao.deleteByTodoId(todoId);
+        });
+    }
+
+    void deleteLogByTodoId(int todoId) {
+        ToDoLogRoomDatabase.databaseWriteExtractor.execute(() -> {
+            mLogDao.deleteLogByTodoId(todoId);
         });
     }
 }

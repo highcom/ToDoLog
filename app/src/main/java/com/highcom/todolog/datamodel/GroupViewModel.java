@@ -8,29 +8,27 @@ import androidx.lifecycle.LiveData;
 
 import java.util.List;
 
-public class LogViewModel extends AndroidViewModel {
+public class GroupViewModel extends AndroidViewModel {
     private ToDoLogRepository mRepository;
     private LiveData<List<Group>> mGroupList;
+    private LiveData<Group> mFirstGroup;
 
-    public LogViewModel(@NonNull Application application) {
+    public GroupViewModel(@NonNull Application application) {
         super(application);
         mRepository = ToDoLogRepository.getInstance(application);
         mGroupList = mRepository.getGroupList();
-    }
-
-    public LiveData<List<Log>> getLogListByTodoId(int todoId) {
-        return mRepository.getLogListByTodoId(todoId);
-    }
-
-    public LiveData<ToDo> getToDo(int todoId) {
-        return mRepository.getToDo(todoId);
+        mFirstGroup = mRepository.getFirstGroup();
     }
 
     public LiveData<List<Group>> getGroupList() {
         return mGroupList;
     }
 
-    public void insert(Log log) {
-        mRepository.insert(log);
+    public LiveData<Group> getFirstGroup() {
+        return mFirstGroup;
+    }
+
+    public void insert(Group group) {
+        mRepository.insert(group);
     }
 }

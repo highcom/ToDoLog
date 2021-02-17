@@ -26,7 +26,7 @@ import java.util.List;
 
 public class ToDoListFragment extends Fragment implements SimpleCallbackHelper.SimpleCallbackListener{
 
-    private String mSelectGroup;
+    private int mSelectGroupId;
     private LifecycleOwner mOwner;
     private ToDoViewModel mToDoViewModel;
     private SimpleCallbackHelper simpleCallbackHelper;
@@ -35,8 +35,8 @@ public class ToDoListFragment extends Fragment implements SimpleCallbackHelper.S
         this.mOwner = owner;
     }
 
-    public void setSelectGroup(String group) {
-        mSelectGroup = group;
+    public void setSelectGroup(int groupId) {
+        mSelectGroupId = groupId;
     }
 
     @Nullable
@@ -57,7 +57,7 @@ public class ToDoListFragment extends Fragment implements SimpleCallbackHelper.S
         recyclerView.addItemDecoration(itemDecoration);
 
         mToDoViewModel = new ViewModelProvider(this).get(ToDoViewModel.class);
-        mToDoViewModel.getToDoListByTaskGroup(mSelectGroup).observe(this.mOwner, toDoAndLog -> {
+        mToDoViewModel.getToDoListByTaskGroup(mSelectGroupId).observe(this.mOwner, toDoAndLog -> {
             // Todoの一覧が読み込まれたらバインドする
             adapter.submitList(toDoAndLog);
         });
