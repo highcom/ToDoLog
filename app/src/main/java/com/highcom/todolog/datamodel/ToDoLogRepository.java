@@ -37,7 +37,7 @@ public class ToDoLogRepository {
         return mToDoList;
     }
 
-    LiveData<List<ToDo>> getTodoListByTaskGroup(String group) {
+    LiveData<List<ToDoAndLog>> getTodoListByTaskGroup(String group) {
         return mTodoDao.getToDoListByTaskGroup(group);
     }
 
@@ -55,10 +55,6 @@ public class ToDoLogRepository {
 
     LiveData<ToDo> getToDo(int todoId) {
         return mTodoDao.getToDo(todoId);
-    }
-
-    LiveData<Log> getLogByTodoIdLatest(int todoId) {
-        return mLogDao.getLogByTodoIdLatest(todoId);
     }
 
     void deleteToDoByTodoId(int todoId) {

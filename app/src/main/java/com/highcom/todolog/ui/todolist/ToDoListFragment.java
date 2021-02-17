@@ -57,18 +57,9 @@ public class ToDoListFragment extends Fragment implements SimpleCallbackHelper.S
         recyclerView.addItemDecoration(itemDecoration);
 
         mToDoViewModel = new ViewModelProvider(this).get(ToDoViewModel.class);
-        mToDoViewModel.getToDoListByTaskGroup(mSelectGroup).observe(this.mOwner, todolist -> {
+        mToDoViewModel.getToDoListByTaskGroup(mSelectGroup).observe(this.mOwner, toDoAndLog -> {
             // Todoの一覧が読み込まれたらバインドする
-            adapter.submitList(todolist);
-            // 各ToDoに対して、Logデータの最新情報で更新して、変更通知をする
-            for ( ToDo todo : todolist) {
-                mToDoViewModel.getLogByTodoIdLatest(todo.getTodoId()).observe(this.mOwner, log -> {
-                    if (log != null) {
-                        todo.setLog(log.getDate().toString() + " " + log.getOperation());
-                        adapter.notifyDataSetChanged();
-                    }
-                });
-            }
+            adapter.submitList(toDoAndLog);
         });
 
         final float scale = getResources().getDisplayMetrics().density;

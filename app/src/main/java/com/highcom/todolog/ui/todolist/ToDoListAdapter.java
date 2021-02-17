@@ -7,9 +7,10 @@ import androidx.recyclerview.widget.DiffUtil;
 import androidx.recyclerview.widget.ListAdapter;
 
 import com.highcom.todolog.datamodel.ToDo;
+import com.highcom.todolog.datamodel.ToDoAndLog;
 
-public class ToDoListAdapter extends ListAdapter<ToDo, ToDoViewHolder> {
-    public ToDoListAdapter(@NonNull DiffUtil.ItemCallback<ToDo> diffCallback) {
+public class ToDoListAdapter extends ListAdapter<ToDoAndLog, ToDoViewHolder> {
+    public ToDoListAdapter(@NonNull DiffUtil.ItemCallback<ToDoAndLog> diffCallback) {
         super(diffCallback);
     }
 
@@ -21,20 +22,21 @@ public class ToDoListAdapter extends ListAdapter<ToDo, ToDoViewHolder> {
 
     @Override
     public void onBindViewHolder(@NonNull ToDoViewHolder holder, int position) {
-        ToDo current = getItem(position);
-        holder.bind(current.getTodoId(), current.getContents(), current.getLog());
+        ToDoAndLog current = getItem(position);
+        String logInfo = current.log.getDate().toString() + " " + current.log.getOperation();
+        holder.bind(current.toDo.getTodoId(), current.toDo.getContents(), logInfo);
     }
 
-    public static class ToDoDiff extends DiffUtil.ItemCallback<ToDo> {
+    public static class ToDoDiff extends DiffUtil.ItemCallback<ToDoAndLog> {
 
         @Override
-        public boolean areItemsTheSame(@NonNull ToDo oldItem, @NonNull ToDo newItem) {
+        public boolean areItemsTheSame(@NonNull ToDoAndLog oldItem, @NonNull ToDoAndLog newItem) {
             return oldItem == newItem;
         }
 
         @Override
-        public boolean areContentsTheSame(@NonNull ToDo oldItem, @NonNull ToDo newItem) {
-            return oldItem.getLog().equals(newItem.getLog());
+        public boolean areContentsTheSame(@NonNull ToDoAndLog oldItem, @NonNull ToDoAndLog newItem) {
+            return oldItem.log.getDate().equals(newItem.log.getDate());
         }
     }
 }

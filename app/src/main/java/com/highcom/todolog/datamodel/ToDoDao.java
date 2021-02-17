@@ -6,6 +6,7 @@ import androidx.room.Delete;
 import androidx.room.Insert;
 import androidx.room.OnConflictStrategy;
 import androidx.room.Query;
+import androidx.room.Transaction;
 
 import java.util.List;
 
@@ -15,8 +16,9 @@ public interface ToDoDao {
     @Query("SELECT * FROM todo_table ORDER BY todo_id ASC")
     LiveData<List<ToDo>> getToDoList();
 
+    @Transaction
     @Query("SELECT * FROM todo_table WHERE task_group = :group")
-    LiveData<List<ToDo>> getToDoListByTaskGroup(String group);
+    LiveData<List<ToDoAndLog>> getToDoListByTaskGroup(String group);
 
     @Query("SELECT DISTINCT task_group FROM todo_table")
     LiveData<List<String>> getDistinctToDoTaskGroup();

@@ -16,9 +16,6 @@ public interface LogDao {
     @Query("SELECT * FROM log_table WHERE todo_id = :id")
     LiveData<List<Log>> getLogByTodoId(int id);
 
-    @Query("SELECT * FROM log_table WHERE todo_id = :id ORDER BY log_id DESC LIMIT 1")
-    LiveData<Log> getLogByTodoIdLatest(int id);
-
     @Insert(onConflict = OnConflictStrategy.IGNORE)
     void insert(Log log);
 

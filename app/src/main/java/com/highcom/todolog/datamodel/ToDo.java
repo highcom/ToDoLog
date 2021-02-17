@@ -23,19 +23,19 @@ public class ToDo {
     @ColumnInfo(name = "contents")
     private String mContents;
 
-    @ColumnInfo(name = "log")
-    private String mLog;
+    @ColumnInfo(name = "latest_log_id")
+    private int mLatestLogId;
 
     public ToDo(@NonNull int todoId,
                 @NonNull int state,
                 @NonNull String taskGroup,
                 String contents,
-                String log) {
+                int latestLogId) {
         this.mTodoId = todoId;
         this.mState = state;
         this.mTaskGroup = taskGroup;
         this.mContents = contents;
-        this.mLog = log;
+        this.mLatestLogId = latestLogId;
     }
 
     @NonNull
@@ -55,8 +55,8 @@ public class ToDo {
         return this.mContents;
     }
 
-    public String getLog() {
-        return this.mLog;
+    public int getLatestLogId() {
+        return this.mLatestLogId;
     }
 
     @NonNull
@@ -76,7 +76,7 @@ public class ToDo {
         this.mContents = contents;
     }
 
-    public void setLog(String log) {
-        this.mLog = log;
+    public void setLatestLogId(int latestLogId) {
+        this.mLatestLogId = latestLogId;
     }
 }
