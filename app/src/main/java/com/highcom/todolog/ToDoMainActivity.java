@@ -26,9 +26,10 @@ import androidx.lifecycle.ViewModelProvider;
 import java.util.ArrayList;
 import java.util.List;
 
+import static com.highcom.todolog.ui.todolist.ToDoListFragment.SELECT_GROUP;
+
 public class ToDoMainActivity extends AppCompatActivity {
 
-    private LifecycleOwner lifecycleOwner = this;
     private ToDoListFragment toDoListFragment;
     private GroupViewModel mGroupViewModel;
 
@@ -62,16 +63,20 @@ public class ToDoMainActivity extends AppCompatActivity {
             }
         });
 
-        toDoListFragment = new ToDoListFragment(lifecycleOwner);
+        toDoListFragment = new ToDoListFragment();
 
         ListView listView = findViewById(R.id.task_list_view_inside_nav);
         mGroupViewModel = new ViewModelProvider(this).get(GroupViewModel.class);
 
-        // 初期表示のFragmentを設定する
-        mGroupViewModel.getFirstGroup().observe(this, firstGroup -> {
-            toDoListFragment.setSelectGroup(firstGroup.getGroupId());
-            getSupportFragmentManager().beginTransaction().replace(R.id.nav_host_fragment, toDoListFragment).commit();
-        });
+        if (savedInstanceState == null) {
+            // 初期表示のFragmentを設定する
+            mGroupViewModel.getFirstGroup().observe(this, firstGroup -> {
+                Bundle args = new Bundle();
+                args.putInt(SELECT_GROUP, firstGroup.getGroupId());
+                toDoListFragment.setArguments(args);
+                getSupportFragmentManager().beginTransaction().replace(R.id.nav_host_fragment, toDoListFragment).commit();
+            });
+        }
         // Drawerに表示するListを瀬亭する
         mGroupViewModel.getGroupList().observe(this, groupList -> {
             List<String> groupNames = new ArrayList<>();
@@ -79,8 +84,10 @@ public class ToDoMainActivity extends AppCompatActivity {
             ArrayAdapter<String> arrayAdapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, groupNames);
             listView.setAdapter(arrayAdapter);
             listView.setOnItemClickListener((adapterView, view, i, l) -> {
-                toDoListFragment = new ToDoListFragment(lifecycleOwner);
-                toDoListFragment.setSelectGroup(groupList.get(i).getGroupId());
+                toDoListFragment = new ToDoListFragment();
+                Bundle args = new Bundle();
+                args.putInt(SELECT_GROUP, groupList.get(i).getGroupId());
+                toDoListFragment.setArguments(args);
                 getSupportFragmentManager().beginTransaction().replace(R.id.nav_host_fragment, toDoListFragment).commit();
                 drawer.closeDrawers();
             });

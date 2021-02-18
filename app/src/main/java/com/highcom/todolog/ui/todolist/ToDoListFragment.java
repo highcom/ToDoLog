@@ -26,17 +26,16 @@ import java.util.List;
 
 public class ToDoListFragment extends Fragment implements SimpleCallbackHelper.SimpleCallbackListener{
 
+    public static final String SELECT_GROUP = "selectGroup";
     private int mSelectGroupId;
-    private LifecycleOwner mOwner;
     private ToDoViewModel mToDoViewModel;
     private SimpleCallbackHelper simpleCallbackHelper;
 
-    public ToDoListFragment(LifecycleOwner owner) {
-        this.mOwner = owner;
-    }
-
-    public void setSelectGroup(int groupId) {
-        mSelectGroupId = groupId;
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        Bundle args = getArguments();
+        mSelectGroupId = args.getInt(SELECT_GROUP);
     }
 
     @Nullable
@@ -54,7 +53,7 @@ public class ToDoListFragment extends Fragment implements SimpleCallbackHelper.S
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
 
         mToDoViewModel = new ViewModelProvider(this).get(ToDoViewModel.class);
-        mToDoViewModel.getToDoListByTaskGroup(mSelectGroupId).observe(this.mOwner, toDoAndLog -> {
+        mToDoViewModel.getToDoListByTaskGroup(mSelectGroupId).observe(getViewLifecycleOwner(), toDoAndLog -> {
             // Todoの一覧が読み込まれたらバインドする
             adapter.submitList(toDoAndLog);
         });
