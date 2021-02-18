@@ -9,6 +9,9 @@ import androidx.recyclerview.widget.ListAdapter;
 import com.highcom.todolog.datamodel.ToDo;
 import com.highcom.todolog.datamodel.ToDoAndLog;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+
 public class ToDoListAdapter extends ListAdapter<ToDoAndLog, ToDoViewHolder> {
     public ToDoListAdapter(@NonNull DiffUtil.ItemCallback<ToDoAndLog> diffCallback) {
         super(diffCallback);
@@ -23,8 +26,8 @@ public class ToDoListAdapter extends ListAdapter<ToDoAndLog, ToDoViewHolder> {
     @Override
     public void onBindViewHolder(@NonNull ToDoViewHolder holder, int position) {
         ToDoAndLog current = getItem(position);
-        String logInfo = current.log.getDate().toString() + " " + current.log.getOperation();
-        holder.bind(current.toDo.getTodoId(), current.toDo.getContents(), logInfo);
+        final DateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
+        holder.bind(current.toDo.getTodoId(), current.toDo.getContents(), dateFormat.format(current.log.getDate()), current.log.getOperation());
     }
 
     public static class ToDoDiff extends DiffUtil.ItemCallback<ToDoAndLog> {

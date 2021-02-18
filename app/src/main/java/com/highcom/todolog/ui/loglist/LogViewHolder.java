@@ -11,6 +11,8 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.highcom.todolog.R;
 
 import java.sql.Date;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 
 public class LogViewHolder extends RecyclerView.ViewHolder {
     private TextView mDateLog;
@@ -23,7 +25,8 @@ public class LogViewHolder extends RecyclerView.ViewHolder {
     }
 
     public void bind(Date date, String log) {
-        mDateLog.setText(date.toString());
+        final DateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
+        mDateLog.setText(dateFormat.format(date));
         mOperationLog.setText(log);
     }
 

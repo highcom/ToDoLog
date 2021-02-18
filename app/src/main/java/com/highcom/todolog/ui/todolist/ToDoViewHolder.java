@@ -15,7 +15,8 @@ public class ToDoViewHolder extends RecyclerView.ViewHolder {
     private int mTodoId;
     private ImageButton mCheckButton;
     private TextView mTodoContents;
-    private TextView mTodoLog;
+    private TextView mTodoLogDate;
+    private TextView mTodoLogOperation;
     private ImageButton mRearrangeButton;
 
 
@@ -23,14 +24,16 @@ public class ToDoViewHolder extends RecyclerView.ViewHolder {
         super(itemView);
         mCheckButton = (ImageButton) itemView.findViewById(R.id.check_button);
         mTodoContents = (TextView) itemView.findViewById(R.id.todo_contents);
-        mTodoLog = (TextView) itemView.findViewById(R.id.todo_log);
+        mTodoLogDate = (TextView) itemView.findViewById(R.id.todo_log_date);
+        mTodoLogOperation = (TextView) itemView.findViewById(R.id.todo_log_operation);
         mRearrangeButton = (ImageButton) itemView.findViewById(R.id.rearrange_button);
     }
 
-    public void bind(int todoId, String contents, String log) {
+    public void bind(int todoId, String contents, String logDate, String logOperation) {
         mTodoId = todoId;
         mTodoContents.setText(contents);
-        mTodoLog.setText(log);
+        mTodoLogDate.setText(logDate);
+        mTodoLogOperation.setText(logOperation);
     }
 
     static ToDoViewHolder create(ViewGroup parent) {

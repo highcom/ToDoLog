@@ -52,9 +52,6 @@ public class ToDoListFragment extends Fragment implements SimpleCallbackHelper.S
         ToDoListAdapter adapter = new ToDoListAdapter(new ToDoListAdapter.ToDoDiff());
         recyclerView.setAdapter(adapter);
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
-        // セル間に区切り線を実装する
-        RecyclerView.ItemDecoration itemDecoration = new DividerItemDecoration(getContext(), DividerItemDecoration.VERTICAL_LIST);
-        recyclerView.addItemDecoration(itemDecoration);
 
         mToDoViewModel = new ViewModelProvider(this).get(ToDoViewModel.class);
         mToDoViewModel.getToDoListByTaskGroup(mSelectGroupId).observe(this.mOwner, toDoAndLog -> {

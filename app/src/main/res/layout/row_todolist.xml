@@ -1,18 +1,23 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:tools="http://schemas.android.com/tools"
+    android:background="@color/white"
     android:layout_width="match_parent"
-android:layout_height="wrap_content"
-android:orientation="horizontal" xmlns:android="http://schemas.android.com/apk/res/android"
-android:weightSum="1">
+    android:layout_height="50dp"
+    android:layout_marginLeft="10dp"
+    android:layout_marginRight="10dp"
+    android:layout_marginTop="4dp"
+    android:orientation="horizontal"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:weightSum="1">
 
     <ImageButton
         android:layout_width="50dp"
         android:layout_height="match_parent"
         android:focusableInTouchMode="false"
-        android:layout_marginLeft="2dp"
-        android:layout_marginTop="2dp"
-        android:layout_marginRight="2dp"
-        android:layout_marginBottom="2dp"
+        android:layout_marginLeft="5dp"
+        android:layout_marginTop="10dp"
+        android:layout_marginRight="5dp"
+        android:layout_marginBottom="10dp"
         android:adjustViewBounds="true"
         android:background="@null"
         android:scaleType="centerInside"
@@ -28,30 +33,41 @@ android:weightSum="1">
         android:layout_marginRight="3dp" >
         <TextView
             android:id="@+id/todo_contents"
-            android:layout_marginLeft="3dp"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:gravity="center_vertical"
             android:layout_weight="1"
-            android:text="ここにTODO内容を記載する"
-            android:textSize="18dp" />
-        <TextView
-            android:id="@+id/todo_log"
+            android:textSize="14dp" />
+        <LinearLayout
+            android:orientation="horizontal"
             android:layout_width="match_parent"
+            android:layout_height="wrap_content" >
+        <TextView
+            android:id="@+id/todo_log_date"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:singleLine="true"
-            android:text="0000/00/00 update" >
-        </TextView>
+            android:text="0000/00/00 00:00:00"
+            android:layout_marginBottom="2dp" />
+        <TextView
+            android:id="@+id/todo_log_operation"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="10dp"
+            android:singleLine="true"
+            android:text="regist"
+            android:layout_marginBottom="2dp" />
+        </LinearLayout>
     </LinearLayout>
 
     <ImageButton
         android:layout_width="50dp"
         android:layout_height="match_parent"
         android:focusableInTouchMode="false"
-        android:layout_marginLeft="2dp"
-        android:layout_marginTop="2dp"
-        android:layout_marginRight="2dp"
-        android:layout_marginBottom="2dp"
+        android:layout_marginLeft="5dp"
+        android:layout_marginTop="10dp"
+        android:layout_marginRight="5dp"
+        android:layout_marginBottom="10dp"
         android:adjustViewBounds="true"
         android:background="@null"
         android:scaleType="centerInside"
