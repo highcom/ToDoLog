@@ -2,6 +2,8 @@ package com.highcom.todolog;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -18,17 +20,32 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.highcom.todolog.datamodel.Group;
-import com.highcom.todolog.datamodel.GroupViewModel;
+import com.highcom.todolog.datamodel.Log;
 import com.highcom.todolog.datamodel.LogViewModel;
+import com.highcom.todolog.datamodel.ToDo;
 import com.highcom.todolog.ui.loglist.LogListAdapter;
 
+import java.sql.Date;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
-public class ToDoDetailActivity extends AppCompatActivity {
+public class ToDoDetailActivity extends AppCompatActivity implements TextWatcher {
 
-    private EditText detailContents;
-    private final String[] statusItems = {"ToDo", "Done"};
+    private class StatusItem {
+        int mId;
+        int mName;
+
+        public StatusItem(int id, int name) {
+            mId = id;
+            mName = name;
+        }
+    }
+    private ToDo mEditToDo;
+    private EditText mDetailContents;
+    private Map<Integer, StatusItem> mStatusList;
+    private List<Group> mGroupList;
 
     private LogViewModel mLogViewModel;
 
@@ -40,22 +57,31 @@ public class ToDoDetailActivity extends AppCompatActivity {
         setTitle(getString(R.string.detail_title));
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
+        mStatusList = new HashMap<>();
+        mStatusList.put(0, new StatusItem(1, R.string.detail_status_todo));
+        mStatusList.put(1, new StatusItem(2, R.string.detail_status_done));
+
+
         mLogViewModel = new ViewModelProvider(this).get(LogViewModel.class);
 
         Intent intent = getIntent();
         int todoId = intent.getIntExtra("TODO_ID", -1);
 
-        detailContents = findViewById(R.id.detail_contents_edit);
+        mDetailContents = findViewById(R.id.detail_contents_edit);
+        mDetailContents.addTextChangedListener(this);
 
+        // 状態選択スピナーの設定をする
         Spinner statusSpinner = findViewById(R.id.detail_status_spinner);
         ArrayAdapter<String> statusAdapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item);
         statusAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        statusAdapter.addAll(statusItems);
+        for (StatusItem item : mStatusList.values()) {
+            statusAdapter.add(getString(item.mName));
+        }
         statusSpinner.setAdapter(statusAdapter);
         statusSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
-
+                mEditToDo.setState(mStatusList.get(i).mId);
             }
 
             @Override
@@ -64,6 +90,7 @@ public class ToDoDetailActivity extends AppCompatActivity {
             }
         });
 
+        // グループ選択スピナーの設定をする
         Spinner taskGroupSpinner = findViewById(R.id.detail_taskgroup_spinner);
         ArrayAdapter<String> taskGroupAdapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item);
         taskGroupAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
@@ -71,7 +98,7 @@ public class ToDoDetailActivity extends AppCompatActivity {
         taskGroupSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
-
+                mEditToDo.setGroupId(mGroupList.get(i).getGroupId());
             }
 
             @Override
@@ -87,9 +114,13 @@ public class ToDoDetailActivity extends AppCompatActivity {
 
         // ToDoのデータを読み込んで、各エリアにデータをセットする
         mLogViewModel.getToDo(todoId).observe(this, toDo -> {
-            detailContents.setText(toDo.getContents());
+            if (toDo == null) return;
+            mEditToDo = toDo;
+            mDetailContents.setText(toDo.getContents());
             statusSpinner.setSelection(toDo.getState() - 1);
+            // グループリストの作成とToDoデータから現在選択されているデータを設定
             mLogViewModel.getGroupList().observe(this, groupList -> {
+                mGroupList = groupList;
                 List<String> groupNames = new ArrayList<>();
                 for (Group group : groupList) groupNames.add(group.getGroupName());
                 taskGroupAdapter.addAll(groupNames);
@@ -121,9 +152,27 @@ public class ToDoDetailActivity extends AppCompatActivity {
                 finish();
                 break;
             case R.id.detail_done:
+                mLogViewModel.update(mEditToDo);
+                // ToDo:operationの内容は差分比較と優先度を決める
+                mLogViewModel.insert(new Log(0, mEditToDo.getTodoId(), new Date(System.currentTimeMillis()), "modify"));
                 finish();
                 break;
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+    }
+
+    @Override
+    public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+    }
+
+    @Override
+    public void afterTextChanged(Editable editable) {
+        mEditToDo.setContents(editable.toString());
     }
 }

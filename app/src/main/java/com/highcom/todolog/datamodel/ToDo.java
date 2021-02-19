@@ -68,7 +68,7 @@ public class ToDo {
         this.mState = state;
     }
 
-    public void setTaskGroup(int groupId) {
+    public void setGroupId(int groupId) {
         this.mGroupId = groupId;
     }
 

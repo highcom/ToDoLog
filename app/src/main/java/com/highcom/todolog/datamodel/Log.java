@@ -9,7 +9,7 @@ import java.sql.Date;
 
 @Entity(tableName = "log_table")
 public class Log {
-    @PrimaryKey
+    @PrimaryKey(autoGenerate = true)
     @NonNull
     @ColumnInfo(name = "log_id")
     private int mLogId;

@@ -12,7 +12,6 @@ import com.google.android.material.snackbar.Snackbar;
 import com.google.android.material.navigation.NavigationView;
 import com.highcom.todolog.datamodel.Group;
 import com.highcom.todolog.datamodel.GroupViewModel;
-import com.highcom.todolog.datamodel.ToDoViewModel;
 import com.highcom.todolog.ui.todolist.ToDoListFragment;
 
 import androidx.annotation.NonNull;
@@ -20,7 +19,6 @@ import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
-import androidx.lifecycle.LifecycleOwner;
 import androidx.lifecycle.ViewModelProvider;
 
 import java.util.ArrayList;
@@ -71,6 +69,7 @@ public class ToDoMainActivity extends AppCompatActivity {
         if (savedInstanceState == null) {
             // 初期表示のFragmentを設定する
             mGroupViewModel.getFirstGroup().observe(this, firstGroup -> {
+                if (firstGroup == null) return;
                 Bundle args = new Bundle();
                 args.putInt(SELECT_GROUP, firstGroup.getGroupId());
                 toDoListFragment.setArguments(args);

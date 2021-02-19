@@ -16,4 +16,6 @@
     <string name="detail_title">Detail</string>
     <string name="detail_status">Status</string>
     <string name="detail_taskgroup">Group</string>
+    <string name="detail_status_todo">ToDo</string>
+    <string name="detail_status_done">Done</string>
 </resources>

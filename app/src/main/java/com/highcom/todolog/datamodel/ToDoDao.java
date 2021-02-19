@@ -7,6 +7,7 @@ import androidx.room.Insert;
 import androidx.room.OnConflictStrategy;
 import androidx.room.Query;
 import androidx.room.Transaction;
+import androidx.room.Update;
 
 import java.util.List;
 
@@ -18,6 +19,9 @@ public interface ToDoDao {
 
     @Query("SELECT * FROM todo_table WHERE todo_id = :id")
     LiveData<ToDo> getToDo(int id);
+
+    @Update(onConflict = OnConflictStrategy.REPLACE)
+    void update(ToDo todo);
 
     @Insert(onConflict = OnConflictStrategy.IGNORE)
     void insert(ToDo todo);

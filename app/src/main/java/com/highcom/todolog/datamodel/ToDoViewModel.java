@@ -25,6 +25,10 @@ public class ToDoViewModel extends AndroidViewModel {
         mRepository.deleteLogByTodoId(todoId);
     }
 
+    public void update(ToDo todo) {
+        mRepository.update(todo);
+    }
+
     public void insert(ToDo todo) {
         mRepository.insert(todo);
     }

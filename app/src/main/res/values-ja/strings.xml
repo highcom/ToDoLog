@@ -16,4 +16,6 @@
     <string name="detail_title">詳細</string>
     <string name="detail_status">状態</string>
     <string name="detail_taskgroup">グループ</string>
+    <string name="detail_status_todo">ToDo</string>
+    <string name="detail_status_done">済</string>
 </resources>
