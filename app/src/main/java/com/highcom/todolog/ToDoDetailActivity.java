@@ -31,6 +31,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import static com.highcom.todolog.datamodel.ToDoViewModel.STATUS_DONE;
+import static com.highcom.todolog.datamodel.ToDoViewModel.STATUS_TODO;
+
 public class ToDoDetailActivity extends AppCompatActivity implements TextWatcher {
 
     private class StatusItem {
@@ -58,8 +61,8 @@ public class ToDoDetailActivity extends AppCompatActivity implements TextWatcher
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         mStatusList = new HashMap<>();
-        mStatusList.put(0, new StatusItem(1, R.string.detail_status_todo));
-        mStatusList.put(1, new StatusItem(2, R.string.detail_status_done));
+        mStatusList.put(0, new StatusItem(STATUS_TODO, R.string.detail_status_todo));
+        mStatusList.put(1, new StatusItem(STATUS_DONE, R.string.detail_status_done));
 
 
         mLogViewModel = new ViewModelProvider(this).get(LogViewModel.class);

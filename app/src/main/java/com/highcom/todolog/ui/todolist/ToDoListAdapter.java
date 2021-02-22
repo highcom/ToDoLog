@@ -26,8 +26,7 @@ public class ToDoListAdapter extends ListAdapter<ToDoAndLog, ToDoViewHolder> {
     @Override
     public void onBindViewHolder(@NonNull ToDoViewHolder holder, int position) {
         ToDoAndLog current = getItem(position);
-        final DateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
-        holder.bind(current.toDo.getTodoId(), current.toDo.getContents(), dateFormat.format(current.log.getDate()), current.log.getOperation());
+        holder.bind(current);
     }
 
     public static class ToDoDiff extends DiffUtil.ItemCallback<ToDoAndLog> {

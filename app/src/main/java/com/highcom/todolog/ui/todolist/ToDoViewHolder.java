@@ -10,6 +10,12 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.highcom.todolog.R;
+import com.highcom.todolog.datamodel.ToDoAndLog;
+
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+
+import static com.highcom.todolog.datamodel.ToDoViewModel.STATUS_TODO;
 
 public class ToDoViewHolder extends RecyclerView.ViewHolder {
     private int mTodoId;
@@ -29,11 +35,14 @@ public class ToDoViewHolder extends RecyclerView.ViewHolder {
         mRearrangeButton = (ImageButton) itemView.findViewById(R.id.rearrange_button);
     }
 
-    public void bind(int todoId, String contents, String logDate, String logOperation) {
-        mTodoId = todoId;
-        mTodoContents.setText(contents);
-        mTodoLogDate.setText(logDate);
-        mTodoLogOperation.setText(logOperation);
+    public void bind(ToDoAndLog toDoAndLog) {
+        final DateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
+        mTodoId = toDoAndLog.toDo.getTodoId();
+        if (toDoAndLog.toDo.getState() == STATUS_TODO) mCheckButton.setImageResource(R.drawable.ic_todo_uncheck);
+        else mCheckButton.setImageResource(R.drawable.ic_todo_check);
+        mTodoContents.setText(toDoAndLog.toDo.getContents());
+        mTodoLogDate.setText(dateFormat.format(toDoAndLog.log.getDate()));
+        mTodoLogOperation.setText(toDoAndLog.log.getOperation());
     }
 
     static ToDoViewHolder create(ViewGroup parent) {
