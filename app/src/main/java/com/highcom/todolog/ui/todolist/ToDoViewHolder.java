@@ -3,6 +3,7 @@ package com.highcom.todolog.ui.todolist;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.TextView;
 
@@ -20,19 +21,20 @@ import static com.highcom.todolog.datamodel.ToDoViewModel.STATUS_TODO;
 public class ToDoViewHolder extends RecyclerView.ViewHolder {
     private ToDoAndLog mToDoAndLog;
     private ImageButton mCheckButton;
-    private TextView mTodoContents;
+    private EditText mTodoContents;
     private TextView mTodoLogDate;
     private TextView mTodoLogOperation;
     private ImageButton mRearrangeButton;
 
     public interface ToDoViewHolderListener {
-        void onToDoViewHolderClicked(ToDoAndLog toDoAndLog);
+        void onToDoCheckButtonClicked(ToDoAndLog toDoAndLog);
+        void onToDoContentsClicked(View view);
     }
 
     public ToDoViewHolder(@NonNull View itemView, ToDoViewHolderListener toDoViewHolderListener) {
         super(itemView);
         mCheckButton = (ImageButton) itemView.findViewById(R.id.check_button);
-        mTodoContents = (TextView) itemView.findViewById(R.id.todo_contents);
+        mTodoContents = (EditText) itemView.findViewById(R.id.todo_contents);
         mTodoLogDate = (TextView) itemView.findViewById(R.id.todo_log_date);
         mTodoLogOperation = (TextView) itemView.findViewById(R.id.todo_log_operation);
         mRearrangeButton = (ImageButton) itemView.findViewById(R.id.rearrange_button);
@@ -40,7 +42,14 @@ public class ToDoViewHolder extends RecyclerView.ViewHolder {
         mCheckButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                toDoViewHolderListener.onToDoViewHolderClicked(mToDoAndLog);
+                toDoViewHolderListener.onToDoCheckButtonClicked(mToDoAndLog);
+            }
+        });
+
+        mTodoContents.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                toDoViewHolderListener.onToDoContentsClicked(view);
             }
         });
     }

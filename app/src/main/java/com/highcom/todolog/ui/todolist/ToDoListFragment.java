@@ -1,11 +1,13 @@
 package com.highcom.todolog.ui.todolist;
 
+import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.InputMethodManager;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -102,7 +104,12 @@ public class ToDoListFragment extends Fragment implements SimpleCallbackHelper.S
     }
 
     @Override
-    public void onToDoListAdapterClicked(ToDoAndLog toDoAndLog) {
+    public void onToDoCheckButtonClicked(ToDoAndLog toDoAndLog) {
+        // 内容編集中にチェックボックスが押下された場合は、キーボードを閉じる
+        InputMethodManager inputMethodManager = (InputMethodManager)getContext().getSystemService(Context.INPUT_METHOD_SERVICE);
+        inputMethodManager.hideSoftInputFromWindow(getView().getWindowToken(), InputMethodManager.HIDE_NOT_ALWAYS);
+        getView().requestFocus();
+
         // ToDo:operationの内容は差分比較と優先度を決める
         mToDoViewModel.insert(new Log(0, toDoAndLog.toDo.getTodoId(), new Date(System.currentTimeMillis()), "modify"));
 
@@ -115,5 +122,16 @@ public class ToDoListFragment extends Fragment implements SimpleCallbackHelper.S
             toDo.setLatestLogId(logId);
             mToDoViewModel.update(toDo);
         });
+    }
+
+    @Override
+    public void onToDoContentsClicked(View view) {
+        view.setFocusable(true);
+        view.setFocusableInTouchMode(true);
+        view.requestFocus();
+        InputMethodManager inputMethodManager = (InputMethodManager)getContext().getSystemService(Context.INPUT_METHOD_SERVICE);
+        if (inputMethodManager != null) {
+            inputMethodManager.showSoftInput(view, 0);
+        }
     }
 }

@@ -1,5 +1,6 @@
 package com.highcom.todolog.ui.todolist;
 
+import android.view.View;
 import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
@@ -12,7 +13,8 @@ public class ToDoListAdapter extends ListAdapter<ToDoAndLog, ToDoViewHolder> imp
 
     private ToDoListAdapterListener mToDoListAdapterListener;
     public interface ToDoListAdapterListener {
-        void onToDoListAdapterClicked(ToDoAndLog toDoAndLog);
+        void onToDoCheckButtonClicked(ToDoAndLog toDoAndLog);
+        void onToDoContentsClicked(View view);
     }
 
     public ToDoListAdapter(@NonNull DiffUtil.ItemCallback<ToDoAndLog> diffCallback, ToDoListAdapterListener toDoListAdapterListener) {
@@ -33,8 +35,13 @@ public class ToDoListAdapter extends ListAdapter<ToDoAndLog, ToDoViewHolder> imp
     }
 
     @Override
-    public void onToDoViewHolderClicked(ToDoAndLog toDoAndLog) {
-        mToDoListAdapterListener.onToDoListAdapterClicked(toDoAndLog);
+    public void onToDoCheckButtonClicked(ToDoAndLog toDoAndLog) {
+        mToDoListAdapterListener.onToDoCheckButtonClicked(toDoAndLog);
+    }
+
+    @Override
+    public void onToDoContentsClicked(View view) {
+        mToDoListAdapterListener.onToDoContentsClicked(view);
     }
 
     public static class ToDoDiff extends DiffUtil.ItemCallback<ToDoAndLog> {
