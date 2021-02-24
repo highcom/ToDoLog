@@ -51,6 +51,10 @@ public class ToDoLogRepository {
         return mLogDao.getLogByTodoId(todoId);
     }
 
+    LiveData<Integer> getLogIdByTodoIdLatest(int todoId) {
+        return mLogDao.getLogIdByTodoIdLatest(todoId);
+    }
+
     LiveData<ToDo> getToDo(int todoId) {
         return mTodoDao.getToDo(todoId);
     }

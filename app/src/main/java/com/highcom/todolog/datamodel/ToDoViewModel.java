@@ -23,6 +23,10 @@ public class ToDoViewModel extends AndroidViewModel {
         return mRepository.getTodoListByTaskGroup(groupId);
     }
 
+    public LiveData<Integer> getLogIdByTodoIdLatest(int todoId) {
+        return mRepository.getLogIdByTodoIdLatest(todoId);
+    }
+
     public void deleteToDoByTodoId(int todoId) {
         mRepository.deleteToDoByTodoId(todoId);
         mRepository.deleteLogByTodoId(todoId);
@@ -34,5 +38,9 @@ public class ToDoViewModel extends AndroidViewModel {
 
     public void insert(ToDo todo) {
         mRepository.insert(todo);
+    }
+
+    public void insert(Log log) {
+        mRepository.insert(log);
     }
 }

@@ -1,6 +1,7 @@
 package com.highcom.todolog.datamodel;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.room.ColumnInfo;
 import androidx.room.Entity;
 import androidx.room.PrimaryKey;
@@ -36,6 +37,19 @@ public class ToDo {
         this.mGroupId = groupId;
         this.mContents = contents;
         this.mLatestLogId = latestLogId;
+    }
+
+    @Override
+    public boolean equals(@Nullable Object obj) {
+        ToDo toDo = (ToDo)obj;
+        if (this.getTodoId() == toDo.getTodoId()
+                && this.getState() == toDo.getState()
+                && this.getGroupId() == toDo.getGroupId()
+                && this.getContents().equals(toDo.getContents())
+                && this.getLatestLogId() == toDo.getLatestLogId()) {
+            return true;
+        }
+        return false;
     }
 
     @NonNull

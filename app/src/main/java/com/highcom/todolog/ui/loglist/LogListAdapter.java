@@ -29,13 +29,12 @@ public class LogListAdapter extends ListAdapter<Log, LogViewHolder> {
 
         @Override
         public boolean areItemsTheSame(@NonNull Log oldItem, @NonNull Log newItem) {
-            return oldItem == newItem;
+            return oldItem.getLogId() == newItem.getLogId();
         }
 
         @Override
         public boolean areContentsTheSame(@NonNull Log oldItem, @NonNull Log newItem) {
-            // 後で実装する
-            return false;
+            return oldItem.equals(newItem);
         }
     }
 }

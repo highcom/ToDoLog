@@ -1,6 +1,7 @@
 package com.highcom.todolog.datamodel;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.room.ColumnInfo;
 import androidx.room.Entity;
 import androidx.room.PrimaryKey;
@@ -32,6 +33,18 @@ public class Log {
         this.mTodoId = todoId;
         this.mDate = date;
         this.mOperation = operation;
+    }
+
+    @Override
+    public boolean equals(@Nullable Object obj) {
+        Log log = (Log)obj;
+        if (this.getLogId() == log.getLogId()
+                && this.getTodoId() == log.getTodoId()
+                && this.getDate().equals(log.getDate())
+                && this.getOperation().equals(log.getOperation())) {
+            return true;
+        }
+        return false;
     }
 
     public int getLogId() {

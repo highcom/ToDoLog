@@ -6,21 +6,24 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.DiffUtil;
 import androidx.recyclerview.widget.ListAdapter;
 
-import com.highcom.todolog.datamodel.ToDo;
 import com.highcom.todolog.datamodel.ToDoAndLog;
 
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
+public class ToDoListAdapter extends ListAdapter<ToDoAndLog, ToDoViewHolder> implements ToDoViewHolder.ToDoViewHolderListener {
 
-public class ToDoListAdapter extends ListAdapter<ToDoAndLog, ToDoViewHolder> {
-    public ToDoListAdapter(@NonNull DiffUtil.ItemCallback<ToDoAndLog> diffCallback) {
+    private ToDoListAdapterListener mToDoListAdapterListener;
+    public interface ToDoListAdapterListener {
+        void onToDoListAdapterClicked(ToDoAndLog toDoAndLog);
+    }
+
+    public ToDoListAdapter(@NonNull DiffUtil.ItemCallback<ToDoAndLog> diffCallback, ToDoListAdapterListener toDoListAdapterListener) {
         super(diffCallback);
+        mToDoListAdapterListener = toDoListAdapterListener;
     }
 
     @NonNull
     @Override
     public ToDoViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        return ToDoViewHolder.create(parent);
+        return ToDoViewHolder.create(parent, this);
     }
 
     @Override
@@ -29,16 +32,21 @@ public class ToDoListAdapter extends ListAdapter<ToDoAndLog, ToDoViewHolder> {
         holder.bind(current);
     }
 
+    @Override
+    public void onToDoViewHolderClicked(ToDoAndLog toDoAndLog) {
+        mToDoListAdapterListener.onToDoListAdapterClicked(toDoAndLog);
+    }
+
     public static class ToDoDiff extends DiffUtil.ItemCallback<ToDoAndLog> {
 
         @Override
         public boolean areItemsTheSame(@NonNull ToDoAndLog oldItem, @NonNull ToDoAndLog newItem) {
-            return oldItem == newItem;
+            return oldItem.toDo.getTodoId() == newItem.toDo.getTodoId();
         }
 
         @Override
         public boolean areContentsTheSame(@NonNull ToDoAndLog oldItem, @NonNull ToDoAndLog newItem) {
-            return oldItem.log.getDate().equals(newItem.log.getDate());
+            return oldItem.toDo.equals(newItem.toDo);
         }
     }
 }

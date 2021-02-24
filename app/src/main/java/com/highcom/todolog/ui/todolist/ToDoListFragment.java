@@ -10,21 +10,25 @@ import android.view.ViewGroup;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
-import androidx.lifecycle.LifecycleOwner;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.highcom.todolog.R;
 import com.highcom.todolog.ToDoDetailActivity;
+import com.highcom.todolog.datamodel.Log;
 import com.highcom.todolog.datamodel.ToDo;
+import com.highcom.todolog.datamodel.ToDoAndLog;
 import com.highcom.todolog.datamodel.ToDoViewModel;
-import com.highcom.todolog.ui.DividerItemDecoration;
 import com.highcom.todolog.ui.SimpleCallbackHelper;
 
+import java.sql.Date;
 import java.util.List;
 
-public class ToDoListFragment extends Fragment implements SimpleCallbackHelper.SimpleCallbackListener{
+import static com.highcom.todolog.datamodel.ToDoViewModel.STATUS_DONE;
+import static com.highcom.todolog.datamodel.ToDoViewModel.STATUS_TODO;
+
+public class ToDoListFragment extends Fragment implements SimpleCallbackHelper.SimpleCallbackListener, ToDoListAdapter.ToDoListAdapterListener {
 
     public static final String SELECT_GROUP = "selectGroup";
     private int mSelectGroupId;
@@ -48,7 +52,7 @@ public class ToDoListFragment extends Fragment implements SimpleCallbackHelper.S
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         RecyclerView recyclerView = (RecyclerView) view.findViewById(R.id.todo_list_view);
-        ToDoListAdapter adapter = new ToDoListAdapter(new ToDoListAdapter.ToDoDiff());
+        ToDoListAdapter adapter = new ToDoListAdapter(new ToDoListAdapter.ToDoDiff(), this);
         recyclerView.setAdapter(adapter);
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
 
@@ -95,5 +99,21 @@ public class ToDoListFragment extends Fragment implements SimpleCallbackHelper.S
     @Override
     public void clearSimpleCallbackView(@NonNull RecyclerView recyclerView, @NonNull RecyclerView.ViewHolder viewHolder) {
 
+    }
+
+    @Override
+    public void onToDoListAdapterClicked(ToDoAndLog toDoAndLog) {
+        // ToDo:operationの内容は差分比較と優先度を決める
+        mToDoViewModel.insert(new Log(0, toDoAndLog.toDo.getTodoId(), new Date(System.currentTimeMillis()), "modify"));
+
+        // insetしたLogIdでToDoもupdateする
+        mToDoViewModel.getLogIdByTodoIdLatest(toDoAndLog.toDo.getTodoId()).observe(getViewLifecycleOwner(), logId -> {
+            // ToDo状態と済状態をトグルする
+            ToDo toDo = new ToDo(toDoAndLog.toDo.getTodoId(), toDoAndLog.toDo.getState(), toDoAndLog.toDo.getGroupId(), toDoAndLog.toDo.getContents(), toDoAndLog.toDo.getLatestLogId());
+            if (toDo.getState() == STATUS_TODO) toDo.setState(STATUS_DONE);
+            else toDo.setState(STATUS_TODO);
+            toDo.setLatestLogId(logId);
+            mToDoViewModel.update(toDo);
+        });
     }
 }
