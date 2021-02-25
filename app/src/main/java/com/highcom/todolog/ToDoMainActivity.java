@@ -26,8 +26,9 @@ import java.util.List;
 
 import static com.highcom.todolog.ui.todolist.ToDoListFragment.SELECT_GROUP;
 
-public class ToDoMainActivity extends AppCompatActivity {
+public class ToDoMainActivity extends AppCompatActivity implements ToDoListFragment.ToDoListFragmentListener {
 
+    private FloatingActionButton fab;
     private ToDoListFragment toDoListFragment;
     private GroupViewModel mGroupViewModel;
 
@@ -38,7 +39,7 @@ public class ToDoMainActivity extends AppCompatActivity {
 
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-        FloatingActionButton fab = findViewById(R.id.fab);
+        fab = findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -61,7 +62,7 @@ public class ToDoMainActivity extends AppCompatActivity {
             }
         });
 
-        toDoListFragment = new ToDoListFragment();
+        toDoListFragment = new ToDoListFragment(this);
 
         ListView listView = findViewById(R.id.task_list_view_inside_nav);
         mGroupViewModel = new ViewModelProvider(this).get(GroupViewModel.class);
@@ -83,7 +84,7 @@ public class ToDoMainActivity extends AppCompatActivity {
             ArrayAdapter<String> arrayAdapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, groupNames);
             listView.setAdapter(arrayAdapter);
             listView.setOnItemClickListener((adapterView, view, i, l) -> {
-                toDoListFragment = new ToDoListFragment();
+                toDoListFragment = new ToDoListFragment(this);
                 Bundle args = new Bundle();
                 args.putInt(SELECT_GROUP, groupList.get(i).getGroupId());
                 toDoListFragment.setArguments(args);
@@ -99,5 +100,15 @@ public class ToDoMainActivity extends AppCompatActivity {
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.main, menu);
         return true;
+    }
+
+    @Override
+    public void onToDoContentsClicked() {
+        fab.hide();
+    }
+
+    @Override
+    public void onToDoContentsOutOfFocused() {
+        fab.show();
     }
 }

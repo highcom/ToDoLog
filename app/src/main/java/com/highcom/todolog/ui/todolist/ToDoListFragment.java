@@ -37,6 +37,16 @@ public class ToDoListFragment extends Fragment implements SimpleCallbackHelper.S
     private ToDoViewModel mToDoViewModel;
     private SimpleCallbackHelper simpleCallbackHelper;
 
+    private ToDoListFragmentListener mToDoListFragmentListener;
+    public interface ToDoListFragmentListener {
+        void onToDoContentsClicked();
+        void onToDoContentsOutOfFocused();
+    }
+
+    public ToDoListFragment(ToDoListFragmentListener toDoListFragmentListener) {
+        mToDoListFragmentListener = toDoListFragmentListener;
+    }
+
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -126,6 +136,7 @@ public class ToDoListFragment extends Fragment implements SimpleCallbackHelper.S
 
     @Override
     public void onToDoContentsClicked(View view) {
+        mToDoListFragmentListener.onToDoContentsClicked();
         view.setFocusable(true);
         view.setFocusableInTouchMode(true);
         view.requestFocus();
@@ -133,5 +144,21 @@ public class ToDoListFragment extends Fragment implements SimpleCallbackHelper.S
         if (inputMethodManager != null) {
             inputMethodManager.showSoftInput(view, 0);
         }
+    }
+
+    @Override
+    public void onToDoContentsOutOfFocused(ToDoAndLog toDoAndLog, String contents, boolean changed) {
+        mToDoListFragmentListener.onToDoContentsOutOfFocused();
+        // 内容が変更されていない場合には更新をしない
+        if (!changed) return;
+        // ToDo:operationの内容は差分比較と優先度を決める
+        mToDoViewModel.insert(new Log(0, toDoAndLog.toDo.getTodoId(), new Date(System.currentTimeMillis()), "modify"));
+        // insetしたLogIdでToDoもupdateする
+        mToDoViewModel.getLogIdByTodoIdLatest(toDoAndLog.toDo.getTodoId()).observe(getViewLifecycleOwner(), logId -> {
+            ToDo toDo = new ToDo(toDoAndLog.toDo.getTodoId(), toDoAndLog.toDo.getState(), toDoAndLog.toDo.getGroupId(), toDoAndLog.toDo.getContents(), toDoAndLog.toDo.getLatestLogId());
+            toDo.setLatestLogId(logId);
+            toDo.setContents(contents);
+            mToDoViewModel.update(toDo);
+        });
     }
 }

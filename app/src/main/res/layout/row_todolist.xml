@@ -11,13 +11,10 @@
     android:weightSum="1">
 
     <ImageButton
-        android:layout_width="50dp"
+        android:layout_width="30dp"
         android:layout_height="match_parent"
         android:focusableInTouchMode="false"
-        android:layout_marginLeft="5dp"
-        android:layout_marginTop="10dp"
-        android:layout_marginRight="5dp"
-        android:layout_marginBottom="10dp"
+        android:layout_margin="10dp"
         android:adjustViewBounds="true"
         android:background="@null"
         android:scaleType="centerInside"
@@ -64,13 +61,10 @@
     </LinearLayout>
 
     <ImageButton
-        android:layout_width="50dp"
+        android:layout_width="30dp"
         android:layout_height="match_parent"
         android:focusableInTouchMode="false"
-        android:layout_marginLeft="5dp"
-        android:layout_marginTop="10dp"
-        android:layout_marginRight="5dp"
-        android:layout_marginBottom="10dp"
+        android:layout_margin="10dp"
         android:adjustViewBounds="true"
         android:background="@null"
         android:scaleType="centerInside"
