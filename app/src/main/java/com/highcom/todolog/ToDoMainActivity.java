@@ -26,7 +26,7 @@ import java.util.List;
 
 import static com.highcom.todolog.ui.todolist.ToDoListFragment.SELECT_GROUP;
 
-public class ToDoMainActivity extends AppCompatActivity implements ToDoListFragment.ToDoListFragmentListener {
+public class ToDoMainActivity extends AppCompatActivity {
 
     private FloatingActionButton fab;
     private ToDoListFragment toDoListFragment;
@@ -62,7 +62,7 @@ public class ToDoMainActivity extends AppCompatActivity implements ToDoListFragm
             }
         });
 
-        toDoListFragment = new ToDoListFragment(this);
+        toDoListFragment = new ToDoListFragment();
 
         ListView listView = findViewById(R.id.task_list_view_inside_nav);
         mGroupViewModel = new ViewModelProvider(this).get(GroupViewModel.class);
@@ -84,7 +84,7 @@ public class ToDoMainActivity extends AppCompatActivity implements ToDoListFragm
             ArrayAdapter<String> arrayAdapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, groupNames);
             listView.setAdapter(arrayAdapter);
             listView.setOnItemClickListener((adapterView, view, i, l) -> {
-                toDoListFragment = new ToDoListFragment(this);
+                toDoListFragment = new ToDoListFragment();
                 Bundle args = new Bundle();
                 args.putInt(SELECT_GROUP, groupList.get(i).getGroupId());
                 toDoListFragment.setArguments(args);
@@ -102,13 +102,11 @@ public class ToDoMainActivity extends AppCompatActivity implements ToDoListFragm
         return true;
     }
 
-    @Override
-    public void onToDoContentsClicked() {
+    public void hideFloatingButton() {
         fab.hide();
     }
 
-    @Override
-    public void onToDoContentsOutOfFocused() {
+    public void showFloatingButton() {
         fab.show();
     }
 }

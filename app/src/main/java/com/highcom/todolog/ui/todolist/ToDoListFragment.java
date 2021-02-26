@@ -18,6 +18,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.highcom.todolog.R;
 import com.highcom.todolog.ToDoDetailActivity;
+import com.highcom.todolog.ToDoMainActivity;
 import com.highcom.todolog.datamodel.Log;
 import com.highcom.todolog.datamodel.ToDo;
 import com.highcom.todolog.datamodel.ToDoAndLog;
@@ -37,14 +38,14 @@ public class ToDoListFragment extends Fragment implements SimpleCallbackHelper.S
     private ToDoViewModel mToDoViewModel;
     private SimpleCallbackHelper simpleCallbackHelper;
 
-    private ToDoListFragmentListener mToDoListFragmentListener;
-    public interface ToDoListFragmentListener {
-        void onToDoContentsClicked();
-        void onToDoContentsOutOfFocused();
+    @Override
+    public void onSaveInstanceState(@NonNull Bundle outState) {
+        super.onSaveInstanceState(outState);
     }
 
-    public ToDoListFragment(ToDoListFragmentListener toDoListFragmentListener) {
-        mToDoListFragmentListener = toDoListFragmentListener;
+    @Override
+    public void onViewStateRestored(@Nullable Bundle savedInstanceState) {
+        super.onViewStateRestored(savedInstanceState);
     }
 
     @Override
@@ -136,7 +137,7 @@ public class ToDoListFragment extends Fragment implements SimpleCallbackHelper.S
 
     @Override
     public void onToDoContentsClicked(View view) {
-        mToDoListFragmentListener.onToDoContentsClicked();
+        ((ToDoMainActivity)getContext()).hideFloatingButton();
         view.setFocusable(true);
         view.setFocusableInTouchMode(true);
         view.requestFocus();
@@ -148,7 +149,7 @@ public class ToDoListFragment extends Fragment implements SimpleCallbackHelper.S
 
     @Override
     public void onToDoContentsOutOfFocused(ToDoAndLog toDoAndLog, String contents, boolean changed) {
-        mToDoListFragmentListener.onToDoContentsOutOfFocused();
+        ((ToDoMainActivity)getContext()).showFloatingButton();
         // 内容が変更されていない場合には更新をしない
         if (!changed) return;
         // ToDo:operationの内容は差分比較と優先度を決める
