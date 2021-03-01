@@ -2,7 +2,6 @@ package com.highcom.todolog.datamodel;
 
 import androidx.lifecycle.LiveData;
 import androidx.room.Dao;
-import androidx.room.Delete;
 import androidx.room.Insert;
 import androidx.room.OnConflictStrategy;
 import androidx.room.Query;
@@ -18,16 +17,19 @@ public interface ToDoDao {
     LiveData<List<ToDoAndLog>> getToDoListByTaskGroup(int groupId);
 
     @Query("SELECT * FROM todo_table WHERE todo_id = :id")
-    LiveData<ToDo> getToDo(int id);
+    LiveData<ToDo> getToDo(long id);
+
+    @Query("SELECT * FROM todo_table WHERE todo_id = :id")
+    ToDo getToDoSync(long id);
 
     @Update(onConflict = OnConflictStrategy.REPLACE)
     void update(ToDo todo);
 
     @Insert(onConflict = OnConflictStrategy.IGNORE)
-    void insert(ToDo todo);
+    long insert(ToDo todo);
 
     @Query("DELETE FROM todo_table WHERE todo_id = :id")
-    void deleteByTodoId(int id);
+    void deleteByTodoId(long id);
 
     @Query("DELETE FROM todo_table")
     void deleteAll();

@@ -70,9 +70,9 @@ public class ToDoListFragment extends Fragment implements SimpleCallbackHelper.S
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
 
         mToDoViewModel = new ViewModelProvider(this).get(ToDoViewModel.class);
-        mToDoViewModel.getToDoListByTaskGroup(mSelectGroupId).observe(getViewLifecycleOwner(), toDoAndLog -> {
+        mToDoViewModel.getToDoListByTaskGroup(mSelectGroupId).observe(getViewLifecycleOwner(), toDoAndLogList -> {
             // Todoの一覧が読み込まれたらバインドする
-            adapter.submitList(toDoAndLog);
+            adapter.submitList(toDoAndLogList);
         });
 
         final float scale = getResources().getDisplayMetrics().density;
@@ -114,6 +114,12 @@ public class ToDoListFragment extends Fragment implements SimpleCallbackHelper.S
 
     }
 
+    public void addNewToDoAndLog() {
+        ToDo todo = new ToDo(0, STATUS_TODO, mSelectGroupId, "", 0);
+        Log log = new Log(0, 0, new Date(System.currentTimeMillis()), "regist");
+        mToDoViewModel.insertToDoAndLog(todo, log);
+    }
+
     @Override
     public void onToDoCheckButtonClicked(ToDoAndLog toDoAndLog) {
         // 内容編集中にチェックボックスが押下された場合は、キーボードを閉じる
@@ -137,19 +143,29 @@ public class ToDoListFragment extends Fragment implements SimpleCallbackHelper.S
 
     @Override
     public void onToDoContentsClicked(View view) {
-        ((ToDoMainActivity)getContext()).hideFloatingButton();
-        view.setFocusable(true);
-        view.setFocusableInTouchMode(true);
-        view.requestFocus();
-        InputMethodManager inputMethodManager = (InputMethodManager)getContext().getSystemService(Context.INPUT_METHOD_SERVICE);
-        if (inputMethodManager != null) {
-            inputMethodManager.showSoftInput(view, 0);
-        }
+        view.post(() -> {
+            ((ToDoMainActivity)getContext()).hideFloatingButton();
+            view.setFocusable(true);
+            view.setFocusableInTouchMode(true);
+            view.requestFocus();
+            InputMethodManager inputMethodManager = (InputMethodManager)getContext().getSystemService(Context.INPUT_METHOD_SERVICE);
+            if (inputMethodManager != null) {
+                inputMethodManager.showSoftInput(view, 0);
+            }
+        });
     }
 
     @Override
-    public void onToDoContentsOutOfFocused(ToDoAndLog toDoAndLog, String contents, boolean changed) {
+    public void onToDoContentsOutOfFocused(View view, ToDoAndLog toDoAndLog, String contents, boolean changed) {
         ((ToDoMainActivity)getContext()).showFloatingButton();
+        view.setFocusable(false);
+        view.setFocusableInTouchMode(false);
+        view.requestFocus();
+        // 内容が空白の場合には削除する
+        if (contents.equals("")) {
+            mToDoViewModel.deleteToDoByTodoId(toDoAndLog.toDo.getTodoId());
+            return;
+        }
         // 内容が変更されていない場合には更新をしない
         if (!changed) return;
         // ToDo:operationの内容は差分比較と優先度を決める

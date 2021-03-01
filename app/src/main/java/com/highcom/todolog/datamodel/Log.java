@@ -13,11 +13,11 @@ public class Log {
     @PrimaryKey(autoGenerate = true)
     @NonNull
     @ColumnInfo(name = "log_id")
-    private int mLogId;
+    private long mLogId;
 
     @NonNull
     @ColumnInfo(name = "todo_id")
-    private int mTodoId;
+    private long mTodoId;
 
     @ColumnInfo(name = "date")
     private Date mDate;
@@ -25,8 +25,8 @@ public class Log {
     @ColumnInfo(name = "operation")
     private String mOperation;
 
-    public Log(@NonNull int logId,
-               @NonNull int todoId,
+    public Log(@NonNull long logId,
+               @NonNull long todoId,
                Date date,
                String operation) {
         this.mLogId = logId;
@@ -47,11 +47,11 @@ public class Log {
         return false;
     }
 
-    public int getLogId() {
+    public long getLogId() {
         return mLogId;
     }
 
-    public int getTodoId() {
+    public long getTodoId() {
         return mTodoId;
     }
 
@@ -67,8 +67,8 @@ public class Log {
         this.mLogId = logid;
     }
 
-    public void setTodoId(int todoid) {
-        this.mLogId = todoid;
+    public void setTodoId(long todoid) {
+        this.mTodoId = todoid;
     }
 
     public void setDate(Date date) {

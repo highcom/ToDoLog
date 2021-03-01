@@ -68,7 +68,7 @@ public class ToDoDetailActivity extends AppCompatActivity implements TextWatcher
         mLogViewModel = new ViewModelProvider(this).get(LogViewModel.class);
 
         Intent intent = getIntent();
-        int todoId = intent.getIntExtra("TODO_ID", -1);
+        long todoId = intent.getLongExtra("TODO_ID", -1);
 
         mDetailContents = findViewById(R.id.detail_contents_edit);
         mDetailContents.addTextChangedListener(this);

@@ -11,16 +11,16 @@ import java.util.List;
 @Dao
 public interface LogDao {
     @Query("SELECT * FROM log_table WHERE todo_id = :id")
-    LiveData<List<Log>> getLogByTodoId(int id);
+    LiveData<List<Log>> getLogByTodoId(long id);
 
     @Query("SELECT log_id FROM log_table WHERE todo_id = :id ORDER BY log_id DESC LIMIT 1")
-    LiveData<Integer> getLogIdByTodoIdLatest(int id);
+    LiveData<Integer> getLogIdByTodoIdLatest(long id);
 
     @Insert(onConflict = OnConflictStrategy.IGNORE)
-    void insert(Log log);
+    long insert(Log log);
 
     @Query("DELETE FROM log_table WHERE todo_id = :id")
-    void deleteLogByTodoId(int id);
+    void deleteLogByTodoId(long id);
 
     @Query("DELETE FROM log_table")
     void deleteAll();

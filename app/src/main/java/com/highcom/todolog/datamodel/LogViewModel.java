@@ -18,11 +18,11 @@ public class LogViewModel extends AndroidViewModel {
         mGroupList = mRepository.getGroupList();
     }
 
-    public LiveData<List<Log>> getLogListByTodoId(int todoId) {
+    public LiveData<List<Log>> getLogListByTodoId(long todoId) {
         return mRepository.getLogListByTodoId(todoId);
     }
 
-    public LiveData<ToDo> getToDo(int todoId) {
+    public LiveData<ToDo> getToDo(long todoId) {
         return mRepository.getToDo(todoId);
     }
 

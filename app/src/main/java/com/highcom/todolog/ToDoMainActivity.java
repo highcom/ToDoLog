@@ -40,13 +40,7 @@ public class ToDoMainActivity extends AppCompatActivity {
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         fab = findViewById(R.id.fab);
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
-            }
-        });
+        fab.setOnClickListener(view -> toDoListFragment.addNewToDoAndLog());
         DrawerLayout drawer = findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle actionBarDrawerToggle =
                 new ActionBarDrawerToggle(
@@ -67,6 +61,7 @@ public class ToDoMainActivity extends AppCompatActivity {
         ListView listView = findViewById(R.id.task_list_view_inside_nav);
         mGroupViewModel = new ViewModelProvider(this).get(GroupViewModel.class);
 
+        // TODO:初期起動時は前回最後に選択したグループで起動するように変更する
         if (savedInstanceState == null) {
             // 初期表示のFragmentを設定する
             mGroupViewModel.getFirstGroup().observe(this, firstGroup -> {

@@ -47,21 +47,32 @@ public class ToDoLogRepository {
         return mTodoDao.getToDoListByTaskGroup(groupId);
     }
 
-    LiveData<List<Log>> getLogListByTodoId(int todoId) {
+    LiveData<List<Log>> getLogListByTodoId(long todoId) {
         return mLogDao.getLogByTodoId(todoId);
     }
 
-    LiveData<Integer> getLogIdByTodoIdLatest(int todoId) {
+    LiveData<Integer> getLogIdByTodoIdLatest(long todoId) {
         return mLogDao.getLogIdByTodoIdLatest(todoId);
     }
 
-    LiveData<ToDo> getToDo(int todoId) {
+    LiveData<ToDo> getToDo(long todoId) {
         return mTodoDao.getToDo(todoId);
     }
 
     void update(ToDo todo) {
         ToDoLogRoomDatabase.databaseWriteExtractor.execute(() -> {
             mTodoDao.update(todo);
+        });
+    }
+
+    void insertToDoAndLog(ToDo todo, Log log) {
+        ToDoLogRoomDatabase.databaseWriteExtractor.execute(() -> {
+            long toDoRowId = mTodoDao.insert(todo);
+            log.setTodoId(toDoRowId);
+            long logRowId = mLogDao.insert(log);
+            ToDo insertedToDo = mTodoDao.getToDoSync(toDoRowId);
+            insertedToDo.setLatestLogId(logRowId);
+            mTodoDao.update(insertedToDo);
         });
     }
 
@@ -83,13 +94,13 @@ public class ToDoLogRepository {
         });
     }
 
-    void deleteToDoByTodoId(int todoId) {
+    void deleteToDoByTodoId(long todoId) {
         ToDoLogRoomDatabase.databaseWriteExtractor.execute(() -> {
             mTodoDao.deleteByTodoId(todoId);
         });
     }
 
-    void deleteLogByTodoId(int todoId) {
+    void deleteLogByTodoId(long todoId) {
         ToDoLogRoomDatabase.databaseWriteExtractor.execute(() -> {
             mLogDao.deleteLogByTodoId(todoId);
         });

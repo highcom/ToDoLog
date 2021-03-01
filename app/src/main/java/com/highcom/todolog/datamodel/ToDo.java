@@ -8,10 +8,10 @@ import androidx.room.PrimaryKey;
 
 @Entity(tableName = "todo_table")
 public class ToDo {
-    @PrimaryKey
+    @PrimaryKey(autoGenerate = true)
     @NonNull
     @ColumnInfo(name = "todo_id")
-    private int mTodoId;
+    private long mTodoId;
 
     @NonNull
     @ColumnInfo(name = "state")
@@ -25,13 +25,13 @@ public class ToDo {
     private String mContents;
 
     @ColumnInfo(name = "latest_log_id")
-    private int mLatestLogId;
+    private long mLatestLogId;
 
-    public ToDo(@NonNull int todoId,
+    public ToDo(@NonNull long todoId,
                 @NonNull int state,
                 @NonNull int groupId,
                 String contents,
-                int latestLogId) {
+                long latestLogId) {
         this.mTodoId = todoId;
         this.mState = state;
         this.mGroupId = groupId;
@@ -53,7 +53,7 @@ public class ToDo {
     }
 
     @NonNull
-    public int getTodoId() {
+    public long getTodoId() {
         return this.mTodoId;
     }
 
@@ -69,12 +69,12 @@ public class ToDo {
         return this.mContents;
     }
 
-    public int getLatestLogId() {
+    public long getLatestLogId() {
         return this.mLatestLogId;
     }
 
     @NonNull
-    public void setTodoId(int todoId) {
+    public void setTodoId(long todoId) {
         this.mTodoId = todoId;
     }
 
@@ -90,7 +90,7 @@ public class ToDo {
         this.mContents = contents;
     }
 
-    public void setLatestLogId(int latestLogId) {
+    public void setLatestLogId(long latestLogId) {
         this.mLatestLogId = latestLogId;
     }
 }

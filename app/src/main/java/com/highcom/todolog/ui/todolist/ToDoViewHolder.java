@@ -31,7 +31,7 @@ public class ToDoViewHolder extends RecyclerView.ViewHolder {
     public interface ToDoViewHolderListener {
         void onToDoCheckButtonClicked(ToDoAndLog toDoAndLog);
         void onToDoContentsClicked(View view);
-        void onToDoContentsOutOfFocused(ToDoAndLog toDoAndLog, String contents, boolean changed);
+        void onToDoContentsOutOfFocused(View view, ToDoAndLog toDoAndLog, String contents, boolean changed);
     }
 
     public ToDoViewHolder(@NonNull View itemView, ToDoViewHolderListener toDoViewHolderListener) {
@@ -48,22 +48,29 @@ public class ToDoViewHolder extends RecyclerView.ViewHolder {
             if (b) {
                 // フォーカスが当たった時に編集前状態の内容ほ保持しておく
                 mBackupToDoContents = mTodoContents.getText().toString();
+                toDoViewHolderListener.onToDoContentsClicked(view);
             } else {
                 // フォーカスが外れた時に内容が変更されていたら更新する
                 boolean changed = !mTodoContents.getText().toString().equals(mBackupToDoContents);
-                toDoViewHolderListener.onToDoContentsOutOfFocused(mToDoAndLog, mTodoContents.getText().toString(), changed);
+                toDoViewHolderListener.onToDoContentsOutOfFocused(view, mToDoAndLog, mTodoContents.getText().toString(), changed);
             }
         });
     }
 
     public void bind(ToDoAndLog toDoAndLog) {
         mToDoAndLog = toDoAndLog;
+        if (toDoAndLog.toDo == null || toDoAndLog.log == null) return;
         if (mToDoAndLog.toDo.getState() == STATUS_TODO) mCheckButton.setImageResource(R.drawable.ic_todo_uncheck);
         else mCheckButton.setImageResource(R.drawable.ic_todo_check);
         mTodoContents.setText(toDoAndLog.toDo.getContents());
         final DateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
         mTodoLogDate.setText(dateFormat.format(toDoAndLog.log.getDate()));
         mTodoLogOperation.setText(toDoAndLog.log.getOperation());
+
+        // 内容が空の場合、新規に作成されたものなので編集状態にする
+        if (toDoAndLog.toDo.getContents().equals("")) {
+            mTodoContents.performClick();
+        }
     }
 
     static ToDoViewHolder create(ViewGroup parent, ToDoViewHolderListener toDoViewHolderListener) {
@@ -71,7 +78,7 @@ public class ToDoViewHolder extends RecyclerView.ViewHolder {
         return new ToDoViewHolder(view, toDoViewHolderListener);
     }
 
-    public int getTodoId() {
+    public long getTodoId() {
         return mToDoAndLog.toDo.getTodoId();
     }
 }
