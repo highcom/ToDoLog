@@ -7,6 +7,7 @@ import androidx.recyclerview.widget.DiffUtil;
 import androidx.recyclerview.widget.ListAdapter;
 
 import com.highcom.todolog.datamodel.Log;
+import com.highcom.todolog.datamodel.StringsResource;
 
 public class LogListAdapter extends ListAdapter<Log, LogViewHolder> {
     public LogListAdapter(@NonNull DiffUtil.ItemCallback<Log> diffCallback) {
@@ -22,7 +23,7 @@ public class LogListAdapter extends ListAdapter<Log, LogViewHolder> {
     @Override
     public void onBindViewHolder(@NonNull LogViewHolder holder, int position) {
         Log current = getItem(position);
-        holder.bind(current.getDate(), current.getOperation());
+        holder.bind(current.getDate(), StringsResource.get().mLogOperationItems.get(current.getOperation()));
     }
 
     public static class LogDiff extends DiffUtil.ItemCallback<Log> {

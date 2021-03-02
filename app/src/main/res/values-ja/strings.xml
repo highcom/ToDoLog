@@ -14,8 +14,14 @@
     <string name="swipe_button_detail">詳細</string>
 
     <string name="detail_title">詳細</string>
-    <string name="detail_status">状態</string>
+    <string name="detail_status">ステータス</string>
     <string name="detail_taskgroup">グループ</string>
     <string name="detail_status_todo">ToDo</string>
-    <string name="detail_status_done">済</string>
+    <string name="detail_status_done">完了</string>
+
+    <string name="log_create_new">新規作成</string>
+    <string name="log_change_status_todo">完了からToDoへ変更</string>
+    <string name="log_change_status_done">ToDoから完了へ変更</string>
+    <string name="log_change_group">グループ変更</string>
+    <string name="log_change_contents">内容変更</string>
 </resources>

@@ -10,6 +10,12 @@ import java.sql.Date;
 
 @Entity(tableName = "log_table")
 public class Log {
+    public static final int LOG_CREATE_NEW = 1;
+    public static final int LOG_CHANGE_STATUS_TODO = 2;
+    public static final int LOG_CHANGE_STATUS_DONE = 3;
+    public static final int LOG_CHANGE_GROUP = 4;
+    public static final int LOG_CHANGE_CONTENTS = 5;
+
     @PrimaryKey(autoGenerate = true)
     @NonNull
     @ColumnInfo(name = "log_id")
@@ -23,12 +29,12 @@ public class Log {
     private Date mDate;
 
     @ColumnInfo(name = "operation")
-    private String mOperation;
+    private int mOperation;
 
     public Log(@NonNull long logId,
                @NonNull long todoId,
                Date date,
-               String operation) {
+               int operation) {
         this.mLogId = logId;
         this.mTodoId = todoId;
         this.mDate = date;
@@ -41,7 +47,7 @@ public class Log {
         if (this.getLogId() == log.getLogId()
                 && this.getTodoId() == log.getTodoId()
                 && this.getDate().equals(log.getDate())
-                && this.getOperation().equals(log.getOperation())) {
+                && this.getOperation() == log.getOperation()) {
             return true;
         }
         return false;
@@ -59,7 +65,7 @@ public class Log {
         return mDate;
     }
 
-    public String getOperation() {
+    public int getOperation() {
         return mOperation;
     }
 
@@ -75,7 +81,7 @@ public class Log {
         this.mDate = date;
     }
 
-    public void setOperation(String operation) {
+    public void setOperation(int operation) {
         this.mOperation = operation;
     }
 }

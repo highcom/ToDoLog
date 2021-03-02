@@ -8,6 +8,9 @@ import androidx.room.PrimaryKey;
 
 @Entity(tableName = "todo_table")
 public class ToDo {
+    public static final int STATUS_TODO = 1;
+    public static final int STATUS_DONE = 2;
+
     @PrimaryKey(autoGenerate = true)
     @NonNull
     @ColumnInfo(name = "todo_id")

@@ -22,32 +22,18 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.highcom.todolog.datamodel.Group;
 import com.highcom.todolog.datamodel.Log;
 import com.highcom.todolog.datamodel.LogViewModel;
+import com.highcom.todolog.datamodel.StringsResource;
 import com.highcom.todolog.datamodel.ToDo;
 import com.highcom.todolog.ui.loglist.LogListAdapter;
 
 import java.sql.Date;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
-
-import static com.highcom.todolog.datamodel.ToDoViewModel.STATUS_DONE;
-import static com.highcom.todolog.datamodel.ToDoViewModel.STATUS_TODO;
 
 public class ToDoDetailActivity extends AppCompatActivity implements TextWatcher {
 
-    private class StatusItem {
-        int mId;
-        int mName;
-
-        public StatusItem(int id, int name) {
-            mId = id;
-            mName = name;
-        }
-    }
     private ToDo mEditToDo;
     private EditText mDetailContents;
-    private Map<Integer, StatusItem> mStatusList;
     private List<Group> mGroupList;
 
     private LogViewModel mLogViewModel;
@@ -59,11 +45,6 @@ public class ToDoDetailActivity extends AppCompatActivity implements TextWatcher
 
         setTitle(getString(R.string.detail_title));
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-
-        mStatusList = new HashMap<>();
-        mStatusList.put(0, new StatusItem(STATUS_TODO, R.string.detail_status_todo));
-        mStatusList.put(1, new StatusItem(STATUS_DONE, R.string.detail_status_done));
-
 
         mLogViewModel = new ViewModelProvider(this).get(LogViewModel.class);
 
@@ -77,14 +58,14 @@ public class ToDoDetailActivity extends AppCompatActivity implements TextWatcher
         Spinner statusSpinner = findViewById(R.id.detail_status_spinner);
         ArrayAdapter<String> statusAdapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item);
         statusAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        for (StatusItem item : mStatusList.values()) {
-            statusAdapter.add(getString(item.mName));
+        for (StringsResource.StatusItem item : StringsResource.get().mStatusItems.values()) {
+            statusAdapter.add(item.mName);
         }
         statusSpinner.setAdapter(statusAdapter);
         statusSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
-                mEditToDo.setState(mStatusList.get(i).mId);
+                mEditToDo.setState(StringsResource.get().mStatusItems.get(i).mId);
             }
 
             @Override
@@ -157,7 +138,7 @@ public class ToDoDetailActivity extends AppCompatActivity implements TextWatcher
             case R.id.detail_done:
                 mLogViewModel.update(mEditToDo);
                 // ToDo:operationの内容は差分比較と優先度を決める
-                mLogViewModel.insert(new Log(0, mEditToDo.getTodoId(), new Date(System.currentTimeMillis()), "modify"));
+                mLogViewModel.insert(new Log(0, mEditToDo.getTodoId(), new Date(System.currentTimeMillis()), Log.LOG_CHANGE_CONTENTS));
                 finish();
                 break;
         }

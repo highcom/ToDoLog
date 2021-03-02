@@ -52,15 +52,15 @@ abstract class ToDoLogRoomDatabase extends RoomDatabase {
 
                 LogDao logDao = INSTANCE.logDao();
                 logDao.deleteAll();
-                logDao.insert(new Log(1, 1, new Date(System.currentTimeMillis()), "regist"));
-                logDao.insert(new Log(2, 1, new Date(System.currentTimeMillis()), "modify"));
-                logDao.insert(new Log(7, 1, new Date(System.currentTimeMillis()), "modify"));
-                logDao.insert(new Log(3, 2, new Date(System.currentTimeMillis()), "regist"));
-                logDao.insert(new Log(4, 3, new Date(System.currentTimeMillis()), "regist"));
-                logDao.insert(new Log(5, 4, new Date(System.currentTimeMillis()), "regist"));
-                logDao.insert(new Log(6, 5, new Date(System.currentTimeMillis()), "regist"));
-                logDao.insert(new Log(8, 6, new Date(System.currentTimeMillis()), "regist"));
-                logDao.insert(new Log(9, 7, new Date(System.currentTimeMillis()), "regist"));
+                logDao.insert(new Log(1, 1, new Date(System.currentTimeMillis()), Log.LOG_CREATE_NEW));
+                logDao.insert(new Log(2, 1, new Date(System.currentTimeMillis()), Log.LOG_CHANGE_CONTENTS));
+                logDao.insert(new Log(7, 1, new Date(System.currentTimeMillis()), Log.LOG_CHANGE_CONTENTS));
+                logDao.insert(new Log(3, 2, new Date(System.currentTimeMillis()), Log.LOG_CREATE_NEW));
+                logDao.insert(new Log(4, 3, new Date(System.currentTimeMillis()), Log.LOG_CREATE_NEW));
+                logDao.insert(new Log(5, 4, new Date(System.currentTimeMillis()), Log.LOG_CREATE_NEW));
+                logDao.insert(new Log(6, 5, new Date(System.currentTimeMillis()), Log.LOG_CREATE_NEW));
+                logDao.insert(new Log(8, 6, new Date(System.currentTimeMillis()), Log.LOG_CREATE_NEW));
+                logDao.insert(new Log(9, 7, new Date(System.currentTimeMillis()), Log.LOG_CREATE_NEW));
 
                 ToDoDao todoDao = INSTANCE.toDoDao();
                 todoDao.deleteAll();

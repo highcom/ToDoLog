@@ -9,9 +9,6 @@ import androidx.lifecycle.LiveData;
 import java.util.List;
 
 public class ToDoViewModel extends AndroidViewModel {
-    public static final int STATUS_TODO = 1;
-    public static final int STATUS_DONE = 2;
-
     private ToDoLogRepository mRepository;
 
     public ToDoViewModel(@NonNull Application application) {

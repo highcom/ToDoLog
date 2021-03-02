@@ -28,9 +28,6 @@ import com.highcom.todolog.ui.SimpleCallbackHelper;
 import java.sql.Date;
 import java.util.List;
 
-import static com.highcom.todolog.datamodel.ToDoViewModel.STATUS_DONE;
-import static com.highcom.todolog.datamodel.ToDoViewModel.STATUS_TODO;
-
 public class ToDoListFragment extends Fragment implements SimpleCallbackHelper.SimpleCallbackListener, ToDoListAdapter.ToDoListAdapterListener {
 
     public static final String SELECT_GROUP = "selectGroup";
@@ -115,8 +112,8 @@ public class ToDoListFragment extends Fragment implements SimpleCallbackHelper.S
     }
 
     public void addNewToDoAndLog() {
-        ToDo todo = new ToDo(0, STATUS_TODO, mSelectGroupId, "", 0);
-        Log log = new Log(0, 0, new Date(System.currentTimeMillis()), "regist");
+        ToDo todo = new ToDo(0, ToDo.STATUS_TODO, mSelectGroupId, "", 0);
+        Log log = new Log(0, 0, new Date(System.currentTimeMillis()), Log.LOG_CREATE_NEW);
         mToDoViewModel.insertToDoAndLog(todo, log);
     }
 
@@ -127,15 +124,15 @@ public class ToDoListFragment extends Fragment implements SimpleCallbackHelper.S
         inputMethodManager.hideSoftInputFromWindow(getView().getWindowToken(), InputMethodManager.HIDE_NOT_ALWAYS);
         getView().requestFocus();
 
-        // ToDo:operationの内容は差分比較と優先度を決める
-        mToDoViewModel.insert(new Log(0, toDoAndLog.toDo.getTodoId(), new Date(System.currentTimeMillis()), "modify"));
+        // TODO:TODOとDONEをちゃんと分ける
+        mToDoViewModel.insert(new Log(0, toDoAndLog.toDo.getTodoId(), new Date(System.currentTimeMillis()), Log.LOG_CHANGE_STATUS_TODO));
 
         // insetしたLogIdでToDoもupdateする
         mToDoViewModel.getLogIdByTodoIdLatest(toDoAndLog.toDo.getTodoId()).observe(getViewLifecycleOwner(), logId -> {
             // ToDo状態と済状態をトグルする
             ToDo toDo = new ToDo(toDoAndLog.toDo.getTodoId(), toDoAndLog.toDo.getState(), toDoAndLog.toDo.getGroupId(), toDoAndLog.toDo.getContents(), toDoAndLog.toDo.getLatestLogId());
-            if (toDo.getState() == STATUS_TODO) toDo.setState(STATUS_DONE);
-            else toDo.setState(STATUS_TODO);
+            if (toDo.getState() == ToDo.STATUS_TODO) toDo.setState(ToDo.STATUS_DONE);
+            else toDo.setState(ToDo.STATUS_TODO);
             toDo.setLatestLogId(logId);
             mToDoViewModel.update(toDo);
         });
@@ -169,7 +166,7 @@ public class ToDoListFragment extends Fragment implements SimpleCallbackHelper.S
         // 内容が変更されていない場合には更新をしない
         if (!changed) return;
         // ToDo:operationの内容は差分比較と優先度を決める
-        mToDoViewModel.insert(new Log(0, toDoAndLog.toDo.getTodoId(), new Date(System.currentTimeMillis()), "modify"));
+        mToDoViewModel.insert(new Log(0, toDoAndLog.toDo.getTodoId(), new Date(System.currentTimeMillis()), Log.LOG_CHANGE_CONTENTS));
         // insetしたLogIdでToDoもupdateする
         mToDoViewModel.getLogIdByTodoIdLatest(toDoAndLog.toDo.getTodoId()).observe(getViewLifecycleOwner(), logId -> {
             ToDo toDo = new ToDo(toDoAndLog.toDo.getTodoId(), toDoAndLog.toDo.getState(), toDoAndLog.toDo.getGroupId(), toDoAndLog.toDo.getContents(), toDoAndLog.toDo.getLatestLogId());

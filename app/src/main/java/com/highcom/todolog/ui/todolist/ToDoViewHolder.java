@@ -11,12 +11,12 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.highcom.todolog.R;
+import com.highcom.todolog.datamodel.StringsResource;
+import com.highcom.todolog.datamodel.ToDo;
 import com.highcom.todolog.datamodel.ToDoAndLog;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
-
-import static com.highcom.todolog.datamodel.ToDoViewModel.STATUS_TODO;
 
 public class ToDoViewHolder extends RecyclerView.ViewHolder {
     private ToDoAndLog mToDoAndLog;
@@ -60,12 +60,12 @@ public class ToDoViewHolder extends RecyclerView.ViewHolder {
     public void bind(ToDoAndLog toDoAndLog) {
         mToDoAndLog = toDoAndLog;
         if (toDoAndLog.toDo == null || toDoAndLog.log == null) return;
-        if (mToDoAndLog.toDo.getState() == STATUS_TODO) mCheckButton.setImageResource(R.drawable.ic_todo_uncheck);
+        if (mToDoAndLog.toDo.getState() == ToDo.STATUS_TODO) mCheckButton.setImageResource(R.drawable.ic_todo_uncheck);
         else mCheckButton.setImageResource(R.drawable.ic_todo_check);
         mTodoContents.setText(toDoAndLog.toDo.getContents());
         final DateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
         mTodoLogDate.setText(dateFormat.format(toDoAndLog.log.getDate()));
-        mTodoLogOperation.setText(toDoAndLog.log.getOperation());
+        mTodoLogOperation.setText(StringsResource.get().mLogOperationItems.get(toDoAndLog.log.getOperation()));
 
         // 内容が空の場合、新規に作成されたものなので編集状態にする
         if (toDoAndLog.toDo.getContents().equals("")) {

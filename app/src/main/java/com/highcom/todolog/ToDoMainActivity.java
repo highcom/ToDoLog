@@ -2,16 +2,15 @@ package com.highcom.todolog;
 
 import android.os.Bundle;
 import android.view.MenuItem;
-import android.view.View;
 import android.view.Menu;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
-import com.google.android.material.snackbar.Snackbar;
 import com.google.android.material.navigation.NavigationView;
 import com.highcom.todolog.datamodel.Group;
 import com.highcom.todolog.datamodel.GroupViewModel;
+import com.highcom.todolog.datamodel.StringsResource;
 import com.highcom.todolog.ui.todolist.ToDoListFragment;
 
 import androidx.annotation.NonNull;
@@ -36,6 +35,8 @@ public class ToDoMainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        StringsResource.create(this);
 
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
