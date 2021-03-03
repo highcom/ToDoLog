@@ -1,6 +1,8 @@
 package com.highcom.todolog;
 
+import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.view.MenuItem;
 import android.view.Menu;
 import android.widget.ArrayAdapter;
@@ -30,12 +32,15 @@ public class ToDoMainActivity extends AppCompatActivity {
     private FloatingActionButton fab;
     private ToDoListFragment toDoListFragment;
     private GroupViewModel mGroupViewModel;
+    private SharedPreferences mPreferences;
+    private int mSelectGroup;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        mPreferences = PreferenceManager.getDefaultSharedPreferences(this);
         StringsResource.create(this);
 
         Toolbar toolbar = findViewById(R.id.toolbar);
@@ -62,27 +67,44 @@ public class ToDoMainActivity extends AppCompatActivity {
         ListView listView = findViewById(R.id.task_list_view_inside_nav);
         mGroupViewModel = new ViewModelProvider(this).get(GroupViewModel.class);
 
-        // TODO:初期起動時は前回最後に選択したグループで起動するように変更する
         if (savedInstanceState == null) {
-            // 初期表示のFragmentを設定する
-            mGroupViewModel.getFirstGroup().observe(this, firstGroup -> {
-                if (firstGroup == null) return;
+            mSelectGroup = mPreferences.getInt(SELECT_GROUP, 0);
+            if (mSelectGroup != 0) {
+                // 前回選択していたグループを設定する
                 Bundle args = new Bundle();
-                args.putInt(SELECT_GROUP, firstGroup.getGroupId());
+                args.putInt(SELECT_GROUP, mSelectGroup);
                 toDoListFragment.setArguments(args);
                 getSupportFragmentManager().beginTransaction().replace(R.id.nav_host_fragment, toDoListFragment).commit();
-            });
+            } else {
+                // 初期表示のFragmentを設定する
+                mGroupViewModel.getFirstGroup().observe(this, firstGroup -> {
+                    if (firstGroup == null) return;
+                    mSelectGroup = firstGroup.getGroupId();
+                    Bundle args = new Bundle();
+                    args.putInt(SELECT_GROUP, mSelectGroup);
+                    toDoListFragment.setArguments(args);
+                    getSupportFragmentManager().beginTransaction().replace(R.id.nav_host_fragment, toDoListFragment).commit();
+                });
+            }
         }
-        // Drawerに表示するListを瀬亭する
+        // Drawerに表示するListを設定する
         mGroupViewModel.getGroupList().observe(this, groupList -> {
             List<String> groupNames = new ArrayList<>();
-            for (Group group : groupList) groupNames.add(group.getGroupName());
+            for (Group group : groupList) {
+                groupNames.add(group.getGroupName());
+                if (group.getGroupId() == mSelectGroup) {
+                    setTitle(group.getGroupName());
+                }
+            }
             ArrayAdapter<String> arrayAdapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, groupNames);
             listView.setAdapter(arrayAdapter);
             listView.setOnItemClickListener((adapterView, view, i, l) -> {
+                setTitle(groupList.get(i).getGroupName());
+                int selectGroup = groupList.get(i).getGroupId();
+                mPreferences.edit().putInt(SELECT_GROUP, selectGroup).apply();
                 toDoListFragment = new ToDoListFragment();
                 Bundle args = new Bundle();
-                args.putInt(SELECT_GROUP, groupList.get(i).getGroupId());
+                args.putInt(SELECT_GROUP, selectGroup);
                 toDoListFragment.setArguments(args);
                 getSupportFragmentManager().beginTransaction().replace(R.id.nav_host_fragment, toDoListFragment).commit();
                 drawer.closeDrawers();
