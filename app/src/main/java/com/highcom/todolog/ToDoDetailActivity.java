@@ -32,6 +32,7 @@ import java.util.List;
 
 public class ToDoDetailActivity extends AppCompatActivity implements TextWatcher {
 
+    private ToDo mBackupToDo;
     private ToDo mEditToDo;
     private EditText mDetailContents;
     private List<Group> mGroupList;
@@ -99,7 +100,8 @@ public class ToDoDetailActivity extends AppCompatActivity implements TextWatcher
         // ToDoのデータを読み込んで、各エリアにデータをセットする
         mLogViewModel.getToDo(todoId).observe(this, toDo -> {
             if (toDo == null) return;
-            mEditToDo = toDo;
+            mBackupToDo = toDo;
+            mEditToDo = new ToDo(toDo.getTodoId(), toDo.getState(), toDo.getGroupId(), toDo.getContents(), toDo.getLatestLogId());
             mDetailContents.setText(toDo.getContents());
             statusSpinner.setSelection(toDo.getState() - 1);
             // グループリストの作成とToDoデータから現在選択されているデータを設定
@@ -133,15 +135,20 @@ public class ToDoDetailActivity extends AppCompatActivity implements TextWatcher
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         switch (item.getItemId()) {
             case android.R.id.home:
-                finish();
                 break;
             case R.id.detail_done:
-                mLogViewModel.update(mEditToDo);
-                // ToDo:operationの内容は差分比較と優先度を決める
-                mLogViewModel.insert(new Log(0, mEditToDo.getTodoId(), new Date(System.currentTimeMillis()), Log.LOG_CHANGE_CONTENTS));
-                finish();
+                int diffResult = diffCheckEditToDo(mBackupToDo, mEditToDo);
+                switch (diffResult) {
+                    case Log.LOG_NOCHANGE:
+                        break;
+                    default:
+                        Log log = new Log(0, mEditToDo.getTodoId(), new Date(System.currentTimeMillis()), diffResult);
+                        mLogViewModel.updateToDoAndLog(mEditToDo, log);
+                        break;
+                }
                 break;
         }
+        finish();
         return super.onOptionsItemSelected(item);
     }
 
@@ -158,5 +165,17 @@ public class ToDoDetailActivity extends AppCompatActivity implements TextWatcher
     @Override
     public void afterTextChanged(Editable editable) {
         mEditToDo.setContents(editable.toString());
+    }
+
+    private int diffCheckEditToDo(ToDo backupToDo, ToDo editTodo) {
+        if (backupToDo.getGroupId() != editTodo.getGroupId()) {
+            return Log.LOG_CHANGE_GROUP;
+        } else if (backupToDo.getState() != editTodo.getState()) {
+            if (editTodo.getState() == ToDo.STATUS_TODO) return Log.LOG_CHANGE_STATUS_TODO;
+            else return Log.LOG_CHANGE_STATUS_DONE;
+        } else if (!backupToDo.getContents().equals(editTodo.getContents())) {
+            return Log.LOG_CHANGE_CONTENTS;
+        }
+        return Log.LOG_NOCHANGE;
     }
 }

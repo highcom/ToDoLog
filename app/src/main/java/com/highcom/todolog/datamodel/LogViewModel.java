@@ -30,6 +30,10 @@ public class LogViewModel extends AndroidViewModel {
         return mGroupList;
     }
 
+    public void updateToDoAndLog(ToDo todo, Log log) {
+        mRepository.updateToDoAndLog(todo, log);
+    }
+
     public void update(ToDo toDo) {
         mRepository.update(toDo);
     }

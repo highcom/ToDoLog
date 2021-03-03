@@ -10,6 +10,7 @@ import java.sql.Date;
 
 @Entity(tableName = "log_table")
 public class Log {
+    public static final int LOG_NOCHANGE = 0;
     public static final int LOG_CREATE_NEW = 1;
     public static final int LOG_CHANGE_STATUS_TODO = 2;
     public static final int LOG_CHANGE_STATUS_DONE = 3;
