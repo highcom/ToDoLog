@@ -70,6 +70,13 @@ public class ToDoListFragment extends Fragment implements SimpleCallbackHelper.S
         mToDoViewModel.getToDoListByTaskGroup(mSelectGroupId).observe(getViewLifecycleOwner(), toDoAndLogList -> {
             // Todoの一覧が読み込まれたらバインドする
             adapter.submitList(toDoAndLogList);
+            // 新規作成時は対象のセルにフォーカスされるようにスクロールする
+            for (int position = 0; position < toDoAndLogList.size(); position++) {
+                if (toDoAndLogList.get(position).toDo.getContents().equals("")) {
+                    recyclerView.smoothScrollToPosition(position);
+                    break;
+                }
+            }
         });
 
         final float scale = getResources().getDisplayMetrics().density;
