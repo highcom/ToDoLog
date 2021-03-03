@@ -26,12 +26,10 @@ public class ToDoViewHolder extends RecyclerView.ViewHolder {
     private TextView mTodoLogOperation;
     private ImageButton mRearrangeButton;
 
-    private String mBackupToDoContents;
-
     public interface ToDoViewHolderListener {
         void onToDoCheckButtonClicked(ToDoAndLog toDoAndLog);
         void onToDoContentsClicked(View view);
-        void onToDoContentsOutOfFocused(View view, ToDoAndLog toDoAndLog, String contents, boolean changed);
+        void onToDoContentsOutOfFocused(View view, ToDoAndLog toDoAndLog, String contents);
     }
 
     public ToDoViewHolder(@NonNull View itemView, ToDoViewHolderListener toDoViewHolderListener) {
@@ -46,13 +44,10 @@ public class ToDoViewHolder extends RecyclerView.ViewHolder {
         mTodoContents.setOnClickListener(view -> toDoViewHolderListener.onToDoContentsClicked(view));
         mTodoContents.setOnFocusChangeListener((view, b) -> {
             if (b) {
-                // フォーカスが当たった時に編集前状態の内容ほ保持しておく
-                mBackupToDoContents = mTodoContents.getText().toString();
                 toDoViewHolderListener.onToDoContentsClicked(view);
             } else {
                 // フォーカスが外れた時に内容が変更されていたら更新する
-                boolean changed = !mTodoContents.getText().toString().equals(mBackupToDoContents);
-                toDoViewHolderListener.onToDoContentsOutOfFocused(view, mToDoAndLog, mTodoContents.getText().toString(), changed);
+                toDoViewHolderListener.onToDoContentsOutOfFocused(view, mToDoAndLog, mTodoContents.getText().toString());
             }
         });
     }

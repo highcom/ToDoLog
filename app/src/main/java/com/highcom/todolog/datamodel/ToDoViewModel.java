@@ -20,13 +20,13 @@ public class ToDoViewModel extends AndroidViewModel {
         return mRepository.getTodoListByTaskGroup(groupId);
     }
 
-    public LiveData<Integer> getLogIdByTodoIdLatest(long todoId) {
-        return mRepository.getLogIdByTodoIdLatest(todoId);
-    }
-
     public void deleteToDoByTodoId(long todoId) {
         mRepository.deleteToDoByTodoId(todoId);
         mRepository.deleteLogByTodoId(todoId);
+    }
+
+    public void updateToDoAndLog(ToDo todo, Log log) {
+        mRepository.updateToDoAndLog(todo, log);
     }
 
     public void update(ToDo todo) {

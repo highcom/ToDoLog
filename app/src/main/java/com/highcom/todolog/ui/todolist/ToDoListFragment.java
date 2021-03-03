@@ -124,18 +124,17 @@ public class ToDoListFragment extends Fragment implements SimpleCallbackHelper.S
         inputMethodManager.hideSoftInputFromWindow(getView().getWindowToken(), InputMethodManager.HIDE_NOT_ALWAYS);
         getView().requestFocus();
 
-        // TODO:TODOとDONEをちゃんと分ける
-        mToDoViewModel.insert(new Log(0, toDoAndLog.toDo.getTodoId(), new Date(System.currentTimeMillis()), Log.LOG_CHANGE_STATUS_TODO));
-
-        // insetしたLogIdでToDoもupdateする
-        mToDoViewModel.getLogIdByTodoIdLatest(toDoAndLog.toDo.getTodoId()).observe(getViewLifecycleOwner(), logId -> {
-            // ToDo状態と済状態をトグルする
-            ToDo toDo = new ToDo(toDoAndLog.toDo.getTodoId(), toDoAndLog.toDo.getState(), toDoAndLog.toDo.getGroupId(), toDoAndLog.toDo.getContents(), toDoAndLog.toDo.getLatestLogId());
-            if (toDo.getState() == ToDo.STATUS_TODO) toDo.setState(ToDo.STATUS_DONE);
-            else toDo.setState(ToDo.STATUS_TODO);
-            toDo.setLatestLogId(logId);
-            mToDoViewModel.update(toDo);
-        });
+        ToDo toDo = new ToDo(toDoAndLog.toDo.getTodoId(), toDoAndLog.toDo.getState(), toDoAndLog.toDo.getGroupId(), toDoAndLog.toDo.getContents(), toDoAndLog.toDo.getLatestLogId());
+        int logOperation;
+        if (toDo.getState() == ToDo.STATUS_TODO) {
+            toDo.setState(ToDo.STATUS_DONE);
+            logOperation = Log.LOG_CHANGE_STATUS_DONE;
+        } else {
+            toDo.setState(ToDo.STATUS_TODO);
+            logOperation = Log.LOG_CHANGE_STATUS_TODO;
+        }
+        Log log = new Log(0, toDoAndLog.toDo.getTodoId(), new Date(System.currentTimeMillis()), logOperation);
+        mToDoViewModel.updateToDoAndLog(toDo, log);
     }
 
     @Override
@@ -153,7 +152,7 @@ public class ToDoListFragment extends Fragment implements SimpleCallbackHelper.S
     }
 
     @Override
-    public void onToDoContentsOutOfFocused(View view, ToDoAndLog toDoAndLog, String contents, boolean changed) {
+    public void onToDoContentsOutOfFocused(View view, ToDoAndLog toDoAndLog, String contents) {
         ((ToDoMainActivity)getContext()).showFloatingButton();
         view.setFocusable(false);
         view.setFocusableInTouchMode(false);
@@ -164,15 +163,17 @@ public class ToDoListFragment extends Fragment implements SimpleCallbackHelper.S
             return;
         }
         // 内容が変更されていない場合には更新をしない
-        if (!changed) return;
-        // ToDo:operationの内容は差分比較と優先度を決める
-        mToDoViewModel.insert(new Log(0, toDoAndLog.toDo.getTodoId(), new Date(System.currentTimeMillis()), Log.LOG_CHANGE_CONTENTS));
-        // insetしたLogIdでToDoもupdateする
-        mToDoViewModel.getLogIdByTodoIdLatest(toDoAndLog.toDo.getTodoId()).observe(getViewLifecycleOwner(), logId -> {
-            ToDo toDo = new ToDo(toDoAndLog.toDo.getTodoId(), toDoAndLog.toDo.getState(), toDoAndLog.toDo.getGroupId(), toDoAndLog.toDo.getContents(), toDoAndLog.toDo.getLatestLogId());
-            toDo.setLatestLogId(logId);
-            toDo.setContents(contents);
+        if (toDoAndLog.toDo.getContents().equals(contents)) return;
+
+        ToDo toDo = new ToDo(toDoAndLog.toDo.getTodoId(), toDoAndLog.toDo.getState(), toDoAndLog.toDo.getGroupId(), toDoAndLog.toDo.getContents(), toDoAndLog.toDo.getLatestLogId());
+        toDo.setContents(contents);
+
+        // 変更前の内容が空の場合、新規作成なので内容変更のログは追加しない。
+        if (toDoAndLog.toDo.getContents().equals("")) {
             mToDoViewModel.update(toDo);
-        });
+        } else {
+            Log log = new Log(0, toDoAndLog.toDo.getTodoId(), new Date(System.currentTimeMillis()), Log.LOG_CHANGE_CONTENTS);
+            mToDoViewModel.updateToDoAndLog(toDo, log);
+        }
     }
 }

@@ -15,7 +15,7 @@ public class ToDoListAdapter extends ListAdapter<ToDoAndLog, ToDoViewHolder> imp
     public interface ToDoListAdapterListener {
         void onToDoCheckButtonClicked(ToDoAndLog toDoAndLog);
         void onToDoContentsClicked(View view);
-        void onToDoContentsOutOfFocused(View view, ToDoAndLog toDoAndLog, String contents, boolean changed);
+        void onToDoContentsOutOfFocused(View view, ToDoAndLog toDoAndLog, String contents);
     }
 
     public ToDoListAdapter(@NonNull DiffUtil.ItemCallback<ToDoAndLog> diffCallback, ToDoListAdapterListener toDoListAdapterListener) {
@@ -46,8 +46,8 @@ public class ToDoListAdapter extends ListAdapter<ToDoAndLog, ToDoViewHolder> imp
     }
 
     @Override
-    public void onToDoContentsOutOfFocused(View view, ToDoAndLog toDoAndLog, String contents, boolean changed) {
-        mToDoListAdapterListener.onToDoContentsOutOfFocused(view, toDoAndLog, contents, changed);
+    public void onToDoContentsOutOfFocused(View view, ToDoAndLog toDoAndLog, String contents) {
+        mToDoListAdapterListener.onToDoContentsOutOfFocused(view, toDoAndLog, contents);
     }
 
     public static class ToDoDiff extends DiffUtil.ItemCallback<ToDoAndLog> {

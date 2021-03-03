@@ -51,12 +51,16 @@ public class ToDoLogRepository {
         return mLogDao.getLogByTodoId(todoId);
     }
 
-    LiveData<Integer> getLogIdByTodoIdLatest(long todoId) {
-        return mLogDao.getLogIdByTodoIdLatest(todoId);
-    }
-
     LiveData<ToDo> getToDo(long todoId) {
         return mTodoDao.getToDo(todoId);
+    }
+
+    void updateToDoAndLog(ToDo todo, Log log) {
+        ToDoLogRoomDatabase.databaseWriteExtractor.execute(() -> {
+            long logRowId = mLogDao.insert(log);
+            todo.setLatestLogId(logRowId);
+            mTodoDao.update(todo);
+        });
     }
 
     void update(ToDo todo) {
