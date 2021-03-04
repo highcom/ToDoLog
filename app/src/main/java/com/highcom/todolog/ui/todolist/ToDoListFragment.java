@@ -1,5 +1,6 @@
 package com.highcom.todolog.ui.todolist;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
@@ -82,12 +83,13 @@ public class ToDoListFragment extends Fragment implements SimpleCallbackHelper.S
         final float scale = getResources().getDisplayMetrics().density;
         // ドラックアンドドロップの操作を実装する
         simpleCallbackHelper = new SimpleCallbackHelper(getContext(), recyclerView, scale, this) {
+            @SuppressLint("ResourceType")
             @Override
             public void instantiateUnderlayButton(RecyclerView.ViewHolder viewHolder, List<UnderlayButton> underlayButtons) {
                 underlayButtons.add(new SimpleCallbackHelper.UnderlayButton(
                         getString(R.string.swipe_button_delete),
                         0,
-                        Color.parseColor("#FF3C30"),
+                        Color.parseColor(getString(R.color.red)),
                         (RecyclerView.ViewHolder) viewHolder,
                         (holder, pos) -> {
                             mToDoViewModel.deleteToDoByTodoId(((ToDoViewHolder)holder).getTodoId());
@@ -96,7 +98,7 @@ public class ToDoListFragment extends Fragment implements SimpleCallbackHelper.S
                 underlayButtons.add(new SimpleCallbackHelper.UnderlayButton(
                         getString(R.string.swipe_button_detail),
                         0,
-                        Color.parseColor("#C7C7CB"),
+                        Color.parseColor(getString(R.color.lightgray)),
                         (RecyclerView.ViewHolder) viewHolder,
                         (holder, pos) -> {
                             Intent intent = new Intent(getContext(), ToDoDetailActivity.class);

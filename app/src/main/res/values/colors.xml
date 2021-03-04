@@ -8,6 +8,9 @@
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
 
+    <color name="lightgray">#C7C7CB</color>
+    <color name="red">#FF3C30</color>
+
     <color name="royalblue">#4169e1</color>
     <color name="deepgreen">#078080</color>
     <color name="cream">#F8F5F2</color>

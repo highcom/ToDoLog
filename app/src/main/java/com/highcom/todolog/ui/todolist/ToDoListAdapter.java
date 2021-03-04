@@ -10,6 +10,8 @@ import androidx.recyclerview.widget.ListAdapter;
 import com.highcom.todolog.datamodel.ToDoAndLog;
 
 public class ToDoListAdapter extends ListAdapter<ToDoAndLog, ToDoViewHolder> implements ToDoViewHolder.ToDoViewHolderListener {
+    private static final int TYPE_ITEM = 1;
+    private static final int TYPE_FOOTER = 2;
 
     private ToDoListAdapterListener mToDoListAdapterListener;
     public interface ToDoListAdapterListener {
@@ -26,13 +28,39 @@ public class ToDoListAdapter extends ListAdapter<ToDoAndLog, ToDoViewHolder> imp
     @NonNull
     @Override
     public ToDoViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        return ToDoViewHolder.create(parent, this);
+        if (viewType == TYPE_ITEM) {
+            return ToDoViewHolder.create(parent, this);
+        } else if (viewType == TYPE_FOOTER) {
+            return ToDoViewHolder.create(parent);
+        } else {
+            return null;
+        }
     }
 
     @Override
     public void onBindViewHolder(@NonNull ToDoViewHolder holder, int position) {
+        // フッターセルの場合にはバインドしない
+        if (position >= super.getItemCount()) return;
+
         ToDoAndLog current = getItem(position);
         holder.bind(current);
+    }
+
+    @Override
+    public int getItemCount() {
+        if (super.getItemCount() > 0) {
+            return super.getItemCount() + 1;
+        } else {
+            return 0;
+        }
+    }
+
+    @Override
+    public int getItemViewType(int position) {
+        if (position >= super.getItemCount()) {
+            return TYPE_FOOTER;
+        }
+        return TYPE_ITEM;
     }
 
     @Override

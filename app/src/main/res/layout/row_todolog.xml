@@ -23,7 +23,7 @@
             android:layout_height="match_parent"
             android:layout_marginLeft="10dp"
             android:gravity="center_vertical|left"
-            android:text="regist"
+            android:text="@string/log_create_new"
             android:textSize="14dp"
             android:textColor="@android:color/darker_gray" />
 

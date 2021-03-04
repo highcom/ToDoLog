@@ -52,12 +52,23 @@ public class ToDoViewHolder extends RecyclerView.ViewHolder {
         });
     }
 
+    public ToDoViewHolder(@NonNull View itemView) {
+        super(itemView);
+    }
+
     public void bind(ToDoAndLog toDoAndLog) {
         mToDoAndLog = toDoAndLog;
         if (toDoAndLog.toDo == null || toDoAndLog.log == null) return;
+        // チェックボタンの状態を設定する
         if (mToDoAndLog.toDo.getState() == ToDo.STATUS_TODO) mCheckButton.setImageResource(R.drawable.ic_todo_uncheck);
         else mCheckButton.setImageResource(R.drawable.ic_todo_check);
+        // 内容を設定する
         mTodoContents.setText(toDoAndLog.toDo.getContents());
+        // ステータスによて表示色を変える
+        if (mToDoAndLog.toDo.getState() == ToDo.STATUS_TODO) mTodoContents.setTextColor(mTodoContents.getResources().getColor(android.R.color.black));
+        else if (mToDoAndLog.toDo.getState() == ToDo.STATUS_DONE) mTodoContents.setTextColor(mTodoContents.getResources().getColor(android.R.color.darker_gray));
+
+        // ログ内容を設定する
         final DateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
         mTodoLogDate.setText(dateFormat.format(toDoAndLog.log.getDate()));
         mTodoLogOperation.setText(StringsResource.get().mLogOperationItems.get(toDoAndLog.log.getOperation()));
@@ -71,6 +82,11 @@ public class ToDoViewHolder extends RecyclerView.ViewHolder {
     static ToDoViewHolder create(ViewGroup parent, ToDoViewHolderListener toDoViewHolderListener) {
         View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.row_todolist, parent, false);
         return new ToDoViewHolder(view, toDoViewHolderListener);
+    }
+
+    static ToDoViewHolder create(ViewGroup parent) {
+        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.row_footer, parent, false);
+        return new ToDoViewHolder(view);
     }
 
     public long getTodoId() {

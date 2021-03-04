@@ -13,7 +13,7 @@ import java.util.List;
 @Dao
 public interface ToDoDao {
     @Transaction
-    @Query("SELECT * FROM todo_table WHERE group_id = :groupId")
+    @Query("SELECT * FROM todo_table WHERE group_id = :groupId ORDER BY state ASC, todo_id ASC")
     LiveData<List<ToDoAndLog>> getToDoListByTaskGroup(int groupId);
 
     @Query("SELECT * FROM todo_table WHERE todo_id = :id")
