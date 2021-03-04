@@ -1,6 +1,7 @@
 package com.highcom.todolog.ui;
 
 import android.content.Context;
+import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
@@ -236,16 +237,16 @@ public abstract class SimpleCallbackHelper extends ItemTouchHelper.SimpleCallbac
 
     public static class UnderlayButton {
         private String text;
-        private int imageResId;
+        private Bitmap imageRes;
         private int color;
         private int pos;
         private RectF clickRegion;
         private RecyclerView.ViewHolder viewHolder;
         private UnderlayButtonClickListener clickListener;
 
-        public UnderlayButton(String text, int imageResId, int color, RecyclerView.ViewHolder holder, UnderlayButtonClickListener clickListener) {
+        public UnderlayButton(String text, Bitmap imageRes, int color, RecyclerView.ViewHolder holder, UnderlayButtonClickListener clickListener) {
             this.text = text;
-            this.imageResId = imageResId;
+            this.imageRes = imageRes;
             this.color = color;
             this.viewHolder = holder;
             this.clickListener = clickListener;
@@ -276,9 +277,21 @@ public abstract class SimpleCallbackHelper extends ItemTouchHelper.SimpleCallbac
             float cWidth = rect.width();
             p.setTextAlign(Paint.Align.LEFT);
             p.getTextBounds(text, 0, text.length(), r);
-            float x = cWidth / 2f - r.width() / 2f - r.left;
-            float y = cHeight / 2f + r.height() / 2f - r.bottom;
-            c.drawText(text, rect.left + x, rect.top + y, p);
+            // テキストを表示する場合はここを有効にする
+//            float x = cWidth / 2f - r.width() / 2f - r.left;
+//            float y = cHeight / 2f + r.height() / 2f - r.bottom;
+//            c.drawText(text, rect.left + x, rect.top + y, p);
+            // 画像を表示する
+            RectF imgRect;
+            if ((rect.right - rect.left) > (rect.bottom - rect.top)) {
+                // 横が長くなった場合には高さに合わせてクリップする
+                float center = rect.left + (rect.right - rect.left) / 2;
+                float span = (rect.bottom - rect.top) / 2;
+                imgRect = new RectF(center - span, rect.top, center + span, rect.bottom);
+            } else {
+                imgRect = new RectF(rect.left, rect.top, rect.right, rect.bottom);
+            }
+            c.drawBitmap(imageRes, null, imgRect, p);
 
             clickRegion = rect;
             this.pos = pos;

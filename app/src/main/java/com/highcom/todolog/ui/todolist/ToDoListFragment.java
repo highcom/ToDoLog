@@ -3,6 +3,7 @@ package com.highcom.todolog.ui.todolist;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -91,7 +92,7 @@ public class ToDoListFragment extends Fragment implements SimpleCallbackHelper.S
             public void instantiateUnderlayButton(RecyclerView.ViewHolder viewHolder, List<UnderlayButton> underlayButtons) {
                 underlayButtons.add(new SimpleCallbackHelper.UnderlayButton(
                         getString(R.string.swipe_button_delete),
-                        0,
+                        BitmapFactory.decodeResource(getResources(), R.drawable.ic_delete),
                         Color.parseColor(getString(R.color.red)),
                         (RecyclerView.ViewHolder) viewHolder,
                         (holder, pos) -> {
@@ -100,7 +101,7 @@ public class ToDoListFragment extends Fragment implements SimpleCallbackHelper.S
                 ));
                 underlayButtons.add(new SimpleCallbackHelper.UnderlayButton(
                         getString(R.string.swipe_button_detail),
-                        0,
+                        BitmapFactory.decodeResource(getResources(), R.drawable.ic_detail),
                         Color.parseColor(getString(R.color.lightgray)),
                         (RecyclerView.ViewHolder) viewHolder,
                         (holder, pos) -> {
