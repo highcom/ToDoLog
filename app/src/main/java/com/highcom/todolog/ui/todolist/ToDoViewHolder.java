@@ -3,6 +3,7 @@ package com.highcom.todolog.ui.todolist;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.Animation;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.TextView;
@@ -32,7 +33,7 @@ public class ToDoViewHolder extends RecyclerView.ViewHolder {
         void onToDoContentsOutOfFocused(View view, ToDoAndLog toDoAndLog, String contents);
     }
 
-    public ToDoViewHolder(@NonNull View itemView, ToDoViewHolderListener toDoViewHolderListener) {
+    public ToDoViewHolder(@NonNull View itemView, ToDoViewHolderListener toDoViewHolderListener, Animation animation) {
         super(itemView);
         mCheckButton = (ImageButton) itemView.findViewById(R.id.check_button);
         mTodoContents = (EditText) itemView.findViewById(R.id.todo_contents);
@@ -40,7 +41,10 @@ public class ToDoViewHolder extends RecyclerView.ViewHolder {
         mTodoLogOperation = (TextView) itemView.findViewById(R.id.todo_log_operation);
         mRearrangeButton = (ImageButton) itemView.findViewById(R.id.rearrange_button);
 
-        mCheckButton.setOnClickListener(view -> toDoViewHolderListener.onToDoCheckButtonClicked(mToDoAndLog));
+        mCheckButton.setOnClickListener(view -> {
+            mCheckButton.startAnimation(animation);
+            toDoViewHolderListener.onToDoCheckButtonClicked(mToDoAndLog);
+        });
         mTodoContents.setOnClickListener(view -> toDoViewHolderListener.onToDoContentsClicked(view));
         mTodoContents.setOnFocusChangeListener((view, b) -> {
             if (b) {
@@ -79,9 +83,9 @@ public class ToDoViewHolder extends RecyclerView.ViewHolder {
         }
     }
 
-    static ToDoViewHolder create(ViewGroup parent, ToDoViewHolderListener toDoViewHolderListener) {
+    static ToDoViewHolder create(ViewGroup parent, ToDoViewHolderListener toDoViewHolderListener, Animation animation) {
         View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.row_todolist, parent, false);
-        return new ToDoViewHolder(view, toDoViewHolderListener);
+        return new ToDoViewHolder(view, toDoViewHolderListener, animation);
     }
 
     static ToDoViewHolder create(ViewGroup parent) {

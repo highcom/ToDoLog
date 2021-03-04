@@ -2,6 +2,8 @@ package com.highcom.todolog.ui.todolist;
 
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.DiffUtil;
@@ -13,6 +15,8 @@ public class ToDoListAdapter extends ListAdapter<ToDoAndLog, ToDoViewHolder> imp
     private static final int TYPE_ITEM = 1;
     private static final int TYPE_FOOTER = 2;
 
+    private Animation mAnimation;
+
     private ToDoListAdapterListener mToDoListAdapterListener;
     public interface ToDoListAdapterListener {
         void onToDoCheckButtonClicked(ToDoAndLog toDoAndLog);
@@ -20,16 +24,17 @@ public class ToDoListAdapter extends ListAdapter<ToDoAndLog, ToDoViewHolder> imp
         void onToDoContentsOutOfFocused(View view, ToDoAndLog toDoAndLog, String contents);
     }
 
-    public ToDoListAdapter(@NonNull DiffUtil.ItemCallback<ToDoAndLog> diffCallback, ToDoListAdapterListener toDoListAdapterListener) {
+    public ToDoListAdapter(@NonNull DiffUtil.ItemCallback<ToDoAndLog> diffCallback, ToDoListAdapterListener toDoListAdapterListener, Animation animation) {
         super(diffCallback);
         mToDoListAdapterListener = toDoListAdapterListener;
+        mAnimation = animation;
     }
 
     @NonNull
     @Override
     public ToDoViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         if (viewType == TYPE_ITEM) {
-            return ToDoViewHolder.create(parent, this);
+            return ToDoViewHolder.create(parent, this, mAnimation);
         } else if (viewType == TYPE_FOOTER) {
             return ToDoViewHolder.create(parent);
         } else {

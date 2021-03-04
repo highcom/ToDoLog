@@ -8,6 +8,8 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.view.inputmethod.InputMethodManager;
 
 import androidx.annotation.NonNull;
@@ -63,7 +65,8 @@ public class ToDoListFragment extends Fragment implements SimpleCallbackHelper.S
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         RecyclerView recyclerView = (RecyclerView) view.findViewById(R.id.todo_list_view);
-        ToDoListAdapter adapter = new ToDoListAdapter(new ToDoListAdapter.ToDoDiff(), this);
+        Animation animation = AnimationUtils.loadAnimation(getContext(), R.anim.scale_animation);
+        ToDoListAdapter adapter = new ToDoListAdapter(new ToDoListAdapter.ToDoDiff(), this, animation);
         recyclerView.setAdapter(adapter);
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
 
