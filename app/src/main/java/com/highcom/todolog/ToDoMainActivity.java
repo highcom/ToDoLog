@@ -1,11 +1,14 @@
 package com.highcom.todolog;
 
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.view.MenuItem;
 import android.view.Menu;
+import android.view.View;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.ListView;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
@@ -13,6 +16,7 @@ import com.google.android.material.navigation.NavigationView;
 import com.highcom.todolog.datamodel.Group;
 import com.highcom.todolog.datamodel.GroupViewModel;
 import com.highcom.todolog.datamodel.StringsResource;
+import com.highcom.todolog.ui.grouplist.GroupListFragment;
 import com.highcom.todolog.ui.todolist.ToDoListFragment;
 
 import androidx.annotation.NonNull;
@@ -60,6 +64,14 @@ public class ToDoMainActivity extends AppCompatActivity {
             public boolean onNavigationItemSelected(@NonNull MenuItem item) {
                 return false;
             }
+        });
+
+        Button groupEditButton = findViewById(R.id.group_edit_button);
+        groupEditButton.setOnClickListener(view -> {
+            setTitle(R.string.group_edit_title);
+            GroupListFragment groupListFragment = new GroupListFragment();
+            getSupportFragmentManager().beginTransaction().replace(R.id.nav_host_fragment, groupListFragment).commit();
+            drawer.closeDrawers();
         });
 
         toDoListFragment = new ToDoListFragment();

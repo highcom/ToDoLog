@@ -1,6 +1,7 @@
 package com.highcom.todolog.datamodel;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.room.ColumnInfo;
 import androidx.room.Entity;
 import androidx.room.PrimaryKey;
@@ -26,6 +27,17 @@ public class Group {
         this.mGroupId = groupId;
         this.mGroupOrder = groupOrder;
         this.mGroupName = groupName;
+    }
+
+    @Override
+    public boolean equals(@Nullable Object obj) {
+        Group group = (Group)obj;
+        if (this.getGroupId() == group.getGroupId()
+            && this.getGroupOrder() == group.getGroupOrder()
+            && this.getGroupName().equals(group.getGroupName())) {
+            return true;
+        }
+        return false;
     }
 
     public int getGroupId() {

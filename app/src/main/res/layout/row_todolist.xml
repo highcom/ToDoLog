@@ -38,7 +38,7 @@
             android:focusableInTouchMode="false"
             android:imeOptions="flagNoExtractUi"
             android:background="#00000000"
-            android:textSize="14dp" />
+            android:textSize="18dp" />
         <LinearLayout
             android:orientation="horizontal"
             android:layout_width="match_parent"
@@ -49,6 +49,8 @@
             android:layout_height="wrap_content"
             android:singleLine="true"
             android:text="0000/00/00 00:00:00"
+            android:textSize="12dp"
+            android:textColor="@android:color/darker_gray"
             android:layout_marginBottom="2dp" />
         <TextView
             android:id="@+id/todo_log_operation"
@@ -56,7 +58,9 @@
             android:layout_height="wrap_content"
             android:layout_marginLeft="10dp"
             android:singleLine="true"
-            android:text="regist"
+            android:text="@string/log_create_new"
+            android:textSize="12dp"
+            android:textColor="@android:color/darker_gray"
             android:layout_marginBottom="2dp" />
         </LinearLayout>
     </LinearLayout>

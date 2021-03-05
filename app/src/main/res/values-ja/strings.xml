@@ -6,12 +6,15 @@
     <string name="nav_header_subtitle">android.studio@android.com</string>
     <string name="nav_header_desc">Navigation header</string>
     <string name="action_settings">設定</string>
+    <string name="group_edit">グループ編集</string>
 
     <string name="drawer_open">開く</string>
     <string name="drawer_close">閉じる</string>
 
     <string name="swipe_button_delete">削除</string>
     <string name="swipe_button_detail">詳細</string>
+
+    <string name="group_edit_title">グループ編集</string>
 
     <string name="detail_title">詳細</string>
     <string name="detail_status">ステータス</string>

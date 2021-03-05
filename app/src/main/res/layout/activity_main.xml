@@ -32,11 +32,11 @@
                 android:id="@+id/task_list_view_inside_nav">
             </ListView>
             <Button
-                android:id="@+id/settings_button"
+                android:id="@+id/group_edit_button"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
-                android:text="@string/action_settings"/>
+                android:text="@string/group_edit"/>
         </LinearLayout>
     </com.google.android.material.navigation.NavigationView>
 </androidx.drawerlayout.widget.DrawerLayout>

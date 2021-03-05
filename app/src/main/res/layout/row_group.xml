@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:tools="http://schemas.android.com/tools"
+    android:background="@color/offwhite"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginLeft="10dp"
+    android:layout_marginRight="10dp"
+    android:layout_marginTop="4dp"
+    android:orientation="horizontal"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:weightSum="1">
+
+    <ImageButton
+        android:layout_width="30dp"
+        android:layout_height="match_parent"
+        android:focusableInTouchMode="false"
+        android:layout_margin="10dp"
+        android:adjustViewBounds="true"
+        android:background="@null"
+        android:scaleType="centerInside"
+        android:src="@drawable/ic_folder"
+        android:id="@+id/group_image_icon" />
+
+    <com.highcom.todolog.ui.DisableNoFocusEditText
+        android:id="@+id/group_name"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:gravity="center_vertical"
+        android:layout_weight="1"
+        android:focusable="false"
+        android:focusableInTouchMode="false"
+        android:imeOptions="flagNoExtractUi"
+        android:background="#00000000"
+        android:textSize="18dp" />
+
+    <ImageButton
+        android:layout_width="30dp"
+        android:layout_height="match_parent"
+        android:focusableInTouchMode="false"
+        android:layout_margin="10dp"
+        android:adjustViewBounds="true"
+        android:background="@null"
+        android:scaleType="centerInside"
+        android:src="@drawable/ic_rearrange"
+        android:id="@+id/group_rearrange_button" />
+
+</LinearLayout>
+
