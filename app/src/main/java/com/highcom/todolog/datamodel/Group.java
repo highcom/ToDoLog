@@ -8,10 +8,10 @@ import androidx.room.PrimaryKey;
 
 @Entity(tableName = "group_table")
 public class Group {
-    @PrimaryKey
+    @PrimaryKey(autoGenerate = true)
     @NonNull
     @ColumnInfo(name = "group_id")
-    private int mGroupId;
+    private long mGroupId;
 
     @NonNull
     @ColumnInfo(name = "groupOrder")
@@ -21,7 +21,7 @@ public class Group {
     @ColumnInfo(name = "groupName")
     private String mGroupName;
 
-    public Group(@NonNull int groupId,
+    public Group(@NonNull long groupId,
                  @NonNull int groupOrder,
                  @NonNull String groupName) {
         this.mGroupId = groupId;
@@ -40,7 +40,7 @@ public class Group {
         return false;
     }
 
-    public int getGroupId() {
+    public long getGroupId() {
         return mGroupId;
     }
 
@@ -52,7 +52,7 @@ public class Group {
         return mGroupName;
     }
 
-    public void setGroupId(int groupId) {
+    public void setGroupId(long groupId) {
         this.mGroupId = groupId;
     }
 

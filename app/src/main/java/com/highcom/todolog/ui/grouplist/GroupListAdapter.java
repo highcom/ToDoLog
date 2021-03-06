@@ -1,5 +1,6 @@
 package com.highcom.todolog.ui.grouplist;
 
+import android.view.View;
 import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
@@ -8,21 +9,68 @@ import androidx.recyclerview.widget.ListAdapter;
 
 import com.highcom.todolog.datamodel.Group;
 
-public class GroupListAdapter extends ListAdapter<Group, GroupViewHolder> {
-    public GroupListAdapter(@NonNull DiffUtil.ItemCallback<Group> diffCallback) {
+public class GroupListAdapter extends ListAdapter<Group, GroupViewHolder> implements GroupViewHolder.GroupViewHolderListener {
+    private static final int TYPE_ITEM = 1;
+    private static final int TYPE_FOOTER = 2;
+
+    private GroupListAdapterListener mGroupListAdapterListener;
+
+    public interface GroupListAdapterListener {
+        void onGroupNameClicked(View view);
+        void onGroupNameOutOfFocused(View view, Group group, String editGroupName);
+    }
+
+    public GroupListAdapter(@NonNull DiffUtil.ItemCallback<Group> diffCallback, GroupListAdapterListener groupListAdapterListener) {
         super(diffCallback);
+        mGroupListAdapterListener = groupListAdapterListener;
     }
 
     @NonNull
     @Override
     public GroupViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        return GroupViewHolder.create(parent);
+        if (viewType == TYPE_ITEM) {
+            return GroupViewHolder.create(parent, this);
+        } else if (viewType == TYPE_FOOTER) {
+            return GroupViewHolder.create(parent);
+        } else {
+            return null;
+        }
     }
 
     @Override
     public void onBindViewHolder(@NonNull GroupViewHolder holder, int position) {
+        // フッターセルの場合にはバインドしない
+        if (position >= super.getItemCount()) return;
+
         Group current = getItem(position);
-        holder.bind(current.getGroupName());
+        holder.bind(current);
+    }
+
+    @Override
+    public int getItemCount() {
+        if (super.getItemCount() > 0) {
+            return super.getItemCount() + 1;
+        } else {
+            return 0;
+        }
+    }
+
+    @Override
+    public int getItemViewType(int position) {
+        if (position >= super.getItemCount()) {
+            return TYPE_FOOTER;
+        }
+        return TYPE_ITEM;
+    }
+
+    @Override
+    public void onGroupNameClicked(View view) {
+        mGroupListAdapterListener.onGroupNameClicked(view);
+    }
+
+    @Override
+    public void onGroupNameOutOfFocused(View view, Group group, String editGroupName) {
+        mGroupListAdapterListener.onGroupNameOutOfFocused(view, group, editGroupName);
     }
 
     public static class GroupDiff extends DiffUtil.ItemCallback<Group> {

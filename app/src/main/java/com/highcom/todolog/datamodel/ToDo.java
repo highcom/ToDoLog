@@ -22,7 +22,7 @@ public class ToDo {
 
     @NonNull
     @ColumnInfo(name = "group_id")
-    private int mGroupId;
+    private long mGroupId;
 
     @ColumnInfo(name = "contents")
     private String mContents;
@@ -32,7 +32,7 @@ public class ToDo {
 
     public ToDo(@NonNull long todoId,
                 @NonNull int state,
-                @NonNull int groupId,
+                @NonNull long groupId,
                 String contents,
                 long latestLogId) {
         this.mTodoId = todoId;
@@ -64,7 +64,7 @@ public class ToDo {
         return this.mState;
     }
 
-    public int getGroupId() {
+    public long getGroupId() {
         return this.mGroupId;
     }
 
@@ -85,7 +85,7 @@ public class ToDo {
         this.mState = state;
     }
 
-    public void setGroupId(int groupId) {
+    public void setGroupId(long groupId) {
         this.mGroupId = groupId;
     }
 

@@ -43,7 +43,7 @@ public class ToDoLogRepository {
         return mFirstGroup;
     }
 
-    LiveData<List<ToDoAndLog>> getTodoListByTaskGroup(int groupId) {
+    LiveData<List<ToDoAndLog>> getTodoListByTaskGroup(long groupId) {
         return mTodoDao.getToDoListByTaskGroup(groupId);
     }
 
@@ -60,6 +60,12 @@ public class ToDoLogRepository {
             long logRowId = mLogDao.insert(log);
             todo.setLatestLogId(logRowId);
             mTodoDao.update(todo);
+        });
+    }
+
+    void update(Group group) {
+        ToDoLogRoomDatabase.databaseWriteExtractor.execute(() -> {
+            mGroupDao.update(group);
         });
     }
 
@@ -95,6 +101,12 @@ public class ToDoLogRepository {
     void insert(Log log) {
         ToDoLogRoomDatabase.databaseWriteExtractor.execute(() -> {
             mLogDao.insert(log);
+        });
+    }
+
+    void deleteGroupByGroupId(long groupId) {
+        ToDoLogRoomDatabase.databaseWriteExtractor.execute(() -> {
+            mGroupDao.deleteByGroupId(groupId);
         });
     }
 

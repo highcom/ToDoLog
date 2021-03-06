@@ -14,7 +14,7 @@ import java.util.List;
 public interface ToDoDao {
     @Transaction
     @Query("SELECT * FROM todo_table WHERE group_id = :groupId ORDER BY state ASC, todo_id ASC")
-    LiveData<List<ToDoAndLog>> getToDoListByTaskGroup(int groupId);
+    LiveData<List<ToDoAndLog>> getToDoListByTaskGroup(long groupId);
 
     @Query("SELECT * FROM todo_table WHERE todo_id = :id")
     LiveData<ToDo> getToDo(long id);

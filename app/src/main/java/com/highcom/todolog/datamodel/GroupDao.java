@@ -5,6 +5,7 @@ import androidx.room.Dao;
 import androidx.room.Insert;
 import androidx.room.OnConflictStrategy;
 import androidx.room.Query;
+import androidx.room.Update;
 
 import java.util.List;
 
@@ -16,8 +17,14 @@ public interface GroupDao {
     @Query("SELECT * FROM group_table ORDER BY groupOrder ASC LIMIT 1")
     LiveData<Group> getFirstGroup();
 
+    @Update(onConflict = OnConflictStrategy.REPLACE)
+    void update(Group group);
+
     @Insert(onConflict = OnConflictStrategy.IGNORE)
     void insert(Group group);
+
+    @Query("DELETE FROM group_table WHERE group_id = :id")
+    void deleteByGroupId(long id);
 
     @Query("DELETE FROM group_table")
     void deleteAll();

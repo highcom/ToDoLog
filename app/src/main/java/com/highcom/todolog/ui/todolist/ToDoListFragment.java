@@ -35,7 +35,7 @@ import java.util.List;
 public class ToDoListFragment extends Fragment implements SimpleCallbackHelper.SimpleCallbackListener, ToDoListAdapter.ToDoListAdapterListener {
 
     public static final String SELECT_GROUP = "selectGroup";
-    private int mSelectGroupId;
+    private long mSelectGroupId;
     private ToDoViewModel mToDoViewModel;
     private SimpleCallbackHelper simpleCallbackHelper;
 
@@ -53,7 +53,7 @@ public class ToDoListFragment extends Fragment implements SimpleCallbackHelper.S
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         Bundle args = getArguments();
-        mSelectGroupId = args.getInt(SELECT_GROUP);
+        mSelectGroupId = args.getLong(SELECT_GROUP);
     }
 
     @Nullable
@@ -85,7 +85,7 @@ public class ToDoListFragment extends Fragment implements SimpleCallbackHelper.S
         });
 
         final float scale = getResources().getDisplayMetrics().density;
-        // ドラックアンドドロップの操作を実装する
+        // スワイプしたチキのボタンの定義
         simpleCallbackHelper = new SimpleCallbackHelper(getContext(), recyclerView, scale, this) {
             @SuppressLint("ResourceType")
             @Override

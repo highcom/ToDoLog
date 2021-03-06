@@ -28,7 +28,15 @@ public class GroupViewModel extends AndroidViewModel {
         return mFirstGroup;
     }
 
+    public void update(Group group) {
+        mRepository.update(group);
+    }
+
     public void insert(Group group) {
         mRepository.insert(group);
+    }
+
+    public void deleteGroupByGroupId(long groupId) {
+        mRepository.deleteGroupByGroupId(groupId);
     }
 }

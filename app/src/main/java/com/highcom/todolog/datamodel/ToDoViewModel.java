@@ -16,7 +16,7 @@ public class ToDoViewModel extends AndroidViewModel {
         mRepository = ToDoLogRepository.getInstance(application);
     }
 
-    public LiveData<List<ToDoAndLog>> getToDoListByTaskGroup(int groupId) {
+    public LiveData<List<ToDoAndLog>> getToDoListByTaskGroup(long groupId) {
         return mRepository.getTodoListByTaskGroup(groupId);
     }
 
