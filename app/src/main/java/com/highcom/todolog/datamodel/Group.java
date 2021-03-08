@@ -7,7 +7,7 @@ import androidx.room.Entity;
 import androidx.room.PrimaryKey;
 
 @Entity(tableName = "group_table")
-public class Group {
+public class Group implements Cloneable {
     @PrimaryKey(autoGenerate = true)
     @NonNull
     @ColumnInfo(name = "group_id")
@@ -40,6 +40,16 @@ public class Group {
         return false;
     }
 
+    @NonNull
+    @Override
+    public Group clone() {
+        try {
+            return (Group) super.clone();
+        } catch (CloneNotSupportedException e) {
+            return new Group(this.mGroupId, this.mGroupOrder, this.mGroupName);
+        }
+    }
+
     public long getGroupId() {
         return mGroupId;
     }
@@ -56,7 +66,7 @@ public class Group {
         this.mGroupId = groupId;
     }
 
-    public void setmGroupOrder(int groupOrder) {
+    public void setGroupOrder(int groupOrder) {
         this.mGroupOrder = groupOrder;
     }
 

@@ -101,7 +101,7 @@ public class ToDoDetailActivity extends AppCompatActivity implements TextWatcher
         mLogViewModel.getToDo(todoId).observe(this, toDo -> {
             if (toDo == null) return;
             mBackupToDo = toDo;
-            mEditToDo = new ToDo(toDo.getTodoId(), toDo.getState(), toDo.getGroupId(), toDo.getContents(), toDo.getLatestLogId());
+            mEditToDo = toDo.clone();
             mDetailContents.setText(toDo.getContents());
             statusSpinner.setSelection(toDo.getState() - 1);
             // グループリストの作成とToDoデータから現在選択されているデータを設定

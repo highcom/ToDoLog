@@ -13,6 +13,7 @@ import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -24,13 +25,16 @@ import com.highcom.todolog.datamodel.Group;
 import com.highcom.todolog.datamodel.GroupViewModel;
 import com.highcom.todolog.ui.SimpleCallbackHelper;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class GroupListFragment extends Fragment implements SimpleCallbackHelper.SimpleCallbackListener, GroupListAdapter.GroupListAdapterListener {
 
     private int latestGroupOrder;
+    private List<Group> rearrangeGroupList;
+    GroupListAdapter mGroupListAdapter;
     private GroupViewModel mGroupViewModel;
-    private SimpleCallbackHelper simpleCallbackHelper;
+    private SimpleCallbackHelper mSimpleCallbackHelper;
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -41,14 +45,18 @@ public class GroupListFragment extends Fragment implements SimpleCallbackHelper.
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         RecyclerView recyclerView = (RecyclerView) view.findViewById(R.id.group_list_view);
-        GroupListAdapter adapter = new GroupListAdapter(new GroupListAdapter.GroupDiff(), this);
-        recyclerView.setAdapter(adapter);
+        mGroupListAdapter = new GroupListAdapter(new GroupListAdapter.GroupDiff(), this);
+        recyclerView.setAdapter(mGroupListAdapter);
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
 
         mGroupViewModel = new ViewModelProvider(this).get(GroupViewModel.class);
         mGroupViewModel.getGroupList().observe(getViewLifecycleOwner(), groupList -> {
             latestGroupOrder = groupList.size();
-            adapter.submitList(groupList);
+            rearrangeGroupList = new ArrayList<>();
+            for (Group group : groupList) {
+                rearrangeGroupList.add(group.clone());
+            }
+            mGroupListAdapter.submitList(groupList);
             // 新規作成時は対象のセルにフォーカスされるようにスクロールする
             for (int position = 0; position < groupList.size(); position++) {
                 if (groupList.get(position).getGroupName().equals("")) {
@@ -60,7 +68,7 @@ public class GroupListFragment extends Fragment implements SimpleCallbackHelper.
 
         final float scale = getResources().getDisplayMetrics().density;
         // スワイプしたチキのボタンの定義
-        simpleCallbackHelper = new SimpleCallbackHelper(getContext(), recyclerView, scale, this) {
+        mSimpleCallbackHelper = new SimpleCallbackHelper(getContext(), recyclerView, scale, this) {
             @SuppressLint("ResourceType")
             @Override
             public void instantiateUnderlayButton(RecyclerView.ViewHolder viewHolder, List<UnderlayButton> underlayButtons) {
@@ -79,12 +87,33 @@ public class GroupListFragment extends Fragment implements SimpleCallbackHelper.
 
     @Override
     public boolean onSimpleCallbackMove(RecyclerView.ViewHolder viewHolder, RecyclerView.ViewHolder target) {
-        return false;
+        // 並べ替え対象がITEMでなければ行わない
+        if (viewHolder.getItemViewType() != GroupListAdapter.TYPE_ITEM || target.getItemViewType() != GroupListAdapter.TYPE_ITEM) return false;
+        // Adapterの表示を更新する
+        final int fromPos = viewHolder.getAdapterPosition();
+        final int toPos = target.getAdapterPosition();
+        mGroupListAdapter.notifyItemMoved(fromPos, toPos);
+        // 並べ替えが終わるまでOrderを編集する
+        final long fromId =  ((GroupViewHolder)viewHolder).getGroup().getGroupId();
+        final long toId = ((GroupViewHolder)target).getGroup().getGroupId();
+        Group fromGroup = null;
+        Group toGroup = null;
+        for (Group group : rearrangeGroupList) {
+            if (group.getGroupId() == fromId) fromGroup = group;
+            if (group.getGroupId() == toId) toGroup = group;
+        }
+        if (fromGroup != null && toGroup != null) {
+            final int fromOrder = fromGroup.getGroupOrder();
+            final int toOrder = toGroup.getGroupOrder();
+            fromGroup.setGroupOrder(toOrder);
+            toGroup.setGroupOrder(fromOrder);
+        }
+        return true;
     }
 
     @Override
     public void clearSimpleCallbackView(@NonNull RecyclerView recyclerView, @NonNull RecyclerView.ViewHolder viewHolder) {
-
+        mGroupViewModel.update(rearrangeGroupList);
     }
 
     public void addNewGroup() {

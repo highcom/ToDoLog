@@ -11,6 +11,8 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.highcom.todolog.R;
 import com.highcom.todolog.datamodel.Group;
 
+import java.nio.file.attribute.GroupPrincipal;
+
 public class GroupViewHolder extends RecyclerView.ViewHolder {
     private Group mGroup;
     private EditText mGroupName;
@@ -62,5 +64,9 @@ public class GroupViewHolder extends RecyclerView.ViewHolder {
 
     public long getGroupId() {
         return mGroup.getGroupId();
+    }
+
+    public Group getGroup() {
+        return mGroup;
     }
 }

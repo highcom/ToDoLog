@@ -10,8 +10,8 @@ import androidx.recyclerview.widget.ListAdapter;
 import com.highcom.todolog.datamodel.Group;
 
 public class GroupListAdapter extends ListAdapter<Group, GroupViewHolder> implements GroupViewHolder.GroupViewHolderListener {
-    private static final int TYPE_ITEM = 1;
-    private static final int TYPE_FOOTER = 2;
+    public static final int TYPE_ITEM = 1;
+    public static final int TYPE_FOOTER = 2;
 
     private GroupListAdapterListener mGroupListAdapterListener;
 

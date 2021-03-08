@@ -7,7 +7,7 @@ import androidx.room.Entity;
 import androidx.room.PrimaryKey;
 
 @Entity(tableName = "todo_table")
-public class ToDo {
+public class ToDo implements Cloneable {
     public static final int STATUS_TODO = 1;
     public static final int STATUS_DONE = 2;
 
@@ -53,6 +53,16 @@ public class ToDo {
             return true;
         }
         return false;
+    }
+
+    @NonNull
+    @Override
+    public ToDo clone() {
+        try {
+            return (ToDo) super.clone();
+        } catch (CloneNotSupportedException e) {
+            return new ToDo(this.mTodoId, this.mState, this.mGroupId, this.mContents, this.mLatestLogId);
+        }
     }
 
     @NonNull

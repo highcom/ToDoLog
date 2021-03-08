@@ -12,8 +12,8 @@ import androidx.recyclerview.widget.ListAdapter;
 import com.highcom.todolog.datamodel.ToDoAndLog;
 
 public class ToDoListAdapter extends ListAdapter<ToDoAndLog, ToDoViewHolder> implements ToDoViewHolder.ToDoViewHolderListener {
-    private static final int TYPE_ITEM = 1;
-    private static final int TYPE_FOOTER = 2;
+    public static final int TYPE_ITEM = 1;
+    public static final int TYPE_FOOTER = 2;
 
     private Animation mAnimation;
 

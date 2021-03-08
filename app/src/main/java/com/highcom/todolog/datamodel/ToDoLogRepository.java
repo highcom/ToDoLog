@@ -69,6 +69,12 @@ public class ToDoLogRepository {
         });
     }
 
+    void update(List<Group> groupList) {
+        ToDoLogRoomDatabase.databaseWriteExtractor.execute(() -> {
+            for (Group group : groupList) mGroupDao.update(group);
+        });
+    }
+
     void update(ToDo todo) {
         ToDoLogRoomDatabase.databaseWriteExtractor.execute(() -> {
             mTodoDao.update(todo);

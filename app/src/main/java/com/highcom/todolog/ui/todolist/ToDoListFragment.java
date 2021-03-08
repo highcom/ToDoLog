@@ -37,7 +37,7 @@ public class ToDoListFragment extends Fragment implements SimpleCallbackHelper.S
     public static final String SELECT_GROUP = "selectGroup";
     private long mSelectGroupId;
     private ToDoViewModel mToDoViewModel;
-    private SimpleCallbackHelper simpleCallbackHelper;
+    private SimpleCallbackHelper mSimpleCallbackHelper;
 
     @Override
     public void onSaveInstanceState(@NonNull Bundle outState) {
@@ -86,7 +86,7 @@ public class ToDoListFragment extends Fragment implements SimpleCallbackHelper.S
 
         final float scale = getResources().getDisplayMetrics().density;
         // スワイプしたチキのボタンの定義
-        simpleCallbackHelper = new SimpleCallbackHelper(getContext(), recyclerView, scale, this) {
+        mSimpleCallbackHelper = new SimpleCallbackHelper(getContext(), recyclerView, scale, this) {
             @SuppressLint("ResourceType")
             @Override
             public void instantiateUnderlayButton(RecyclerView.ViewHolder viewHolder, List<UnderlayButton> underlayButtons) {
