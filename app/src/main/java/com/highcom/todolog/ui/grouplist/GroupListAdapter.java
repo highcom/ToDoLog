@@ -77,7 +77,7 @@ public class GroupListAdapter extends ListAdapter<Group, GroupViewHolder> implem
 
         @Override
         public boolean areItemsTheSame(@NonNull Group oldItem, @NonNull Group newItem) {
-            return oldItem.getGroupId() == newItem.getGroupId();
+            return oldItem.getGroupId() == newItem.getGroupId() && oldItem.getGroupOrder() == newItem.getGroupOrder();
         }
 
         @Override

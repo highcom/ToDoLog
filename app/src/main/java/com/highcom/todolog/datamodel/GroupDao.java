@@ -20,6 +20,9 @@ public interface GroupDao {
     @Update(onConflict = OnConflictStrategy.REPLACE)
     void update(Group group);
 
+    @Update(onConflict = OnConflictStrategy.REPLACE)
+    void update(List<Group> groups);
+
     @Insert(onConflict = OnConflictStrategy.IGNORE)
     void insert(Group group);
 
