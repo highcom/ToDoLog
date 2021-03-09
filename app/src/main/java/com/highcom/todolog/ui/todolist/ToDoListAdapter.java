@@ -87,7 +87,7 @@ public class ToDoListAdapter extends ListAdapter<ToDoAndLog, ToDoViewHolder> imp
 
         @Override
         public boolean areItemsTheSame(@NonNull ToDoAndLog oldItem, @NonNull ToDoAndLog newItem) {
-            return oldItem.toDo.getTodoId() == newItem.toDo.getTodoId();
+            return oldItem.toDo.getTodoId() == newItem.toDo.getTodoId() && oldItem.toDo.getTodoOrder() == newItem.toDo.getTodoOrder();
         }
 
         @Override

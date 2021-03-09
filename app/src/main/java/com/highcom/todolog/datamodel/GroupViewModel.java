@@ -33,7 +33,7 @@ public class GroupViewModel extends AndroidViewModel {
     }
 
     public void update(List<Group> groupList) {
-        mRepository.update(groupList);
+        mRepository.updateGroupList(groupList);
     }
 
     public void insert(Group group) {

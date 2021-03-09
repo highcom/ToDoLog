@@ -9,7 +9,7 @@ import androidx.room.PrimaryKey;
 import java.sql.Date;
 
 @Entity(tableName = "log_table")
-public class Log {
+public class Log implements Cloneable {
     public static final int LOG_NOCHANGE = 0;
     public static final int LOG_CREATE_NEW = 1;
     public static final int LOG_CHANGE_STATUS_TODO = 2;
@@ -52,6 +52,16 @@ public class Log {
             return true;
         }
         return false;
+    }
+
+    @NonNull
+    @Override
+    public Log clone() {
+        try {
+            return (Log) super.clone();
+        } catch (CloneNotSupportedException e) {
+            return new Log(this.mLogId, this.mTodoId, this.mDate, this.mOperation);
+        }
     }
 
     public long getLogId() {

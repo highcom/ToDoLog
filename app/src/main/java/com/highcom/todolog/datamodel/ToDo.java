@@ -17,6 +17,10 @@ public class ToDo implements Cloneable {
     private long mTodoId;
 
     @NonNull
+    @ColumnInfo(name = "todo_order")
+    private int mTodoOrder;
+
+    @NonNull
     @ColumnInfo(name = "state")
     private int mState;
 
@@ -31,11 +35,13 @@ public class ToDo implements Cloneable {
     private long mLatestLogId;
 
     public ToDo(@NonNull long todoId,
+                @NonNull int todoOrder,
                 @NonNull int state,
                 @NonNull long groupId,
                 String contents,
                 long latestLogId) {
         this.mTodoId = todoId;
+        this.mTodoOrder = todoOrder;
         this.mState = state;
         this.mGroupId = groupId;
         this.mContents = contents;
@@ -46,6 +52,7 @@ public class ToDo implements Cloneable {
     public boolean equals(@Nullable Object obj) {
         ToDo toDo = (ToDo)obj;
         if (this.getTodoId() == toDo.getTodoId()
+                && this.getTodoOrder() == toDo.getTodoOrder()
                 && this.getState() == toDo.getState()
                 && this.getGroupId() == toDo.getGroupId()
                 && this.getContents().equals(toDo.getContents())
@@ -61,13 +68,18 @@ public class ToDo implements Cloneable {
         try {
             return (ToDo) super.clone();
         } catch (CloneNotSupportedException e) {
-            return new ToDo(this.mTodoId, this.mState, this.mGroupId, this.mContents, this.mLatestLogId);
+            return new ToDo(this.mTodoId, this.mTodoOrder, this.mState, this.mGroupId, this.mContents, this.mLatestLogId);
         }
     }
 
     @NonNull
     public long getTodoId() {
         return this.mTodoId;
+    }
+
+    @NonNull
+    public int getTodoOrder() {
+        return this.mTodoOrder;
     }
 
     public int getState() {
@@ -89,6 +101,11 @@ public class ToDo implements Cloneable {
     @NonNull
     public void setTodoId(long todoId) {
         this.mTodoId = todoId;
+    }
+
+    @NonNull
+    public void setTodoOrder(int todoOrder) {
+        this.mTodoOrder = todoOrder;
     }
 
     public void setState(int state) {

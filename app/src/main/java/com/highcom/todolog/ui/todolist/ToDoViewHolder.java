@@ -96,4 +96,8 @@ public class ToDoViewHolder extends RecyclerView.ViewHolder {
     public long getTodoId() {
         return mToDoAndLog.toDo.getTodoId();
     }
+
+    public ToDo getToDo() {
+        return mToDoAndLog.toDo;
+    }
 }

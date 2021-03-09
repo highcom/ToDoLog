@@ -14,11 +14,11 @@ public class Group implements Cloneable {
     private long mGroupId;
 
     @NonNull
-    @ColumnInfo(name = "groupOrder")
+    @ColumnInfo(name = "group_order")
     private int mGroupOrder;
 
     @NonNull
-    @ColumnInfo(name = "groupName")
+    @ColumnInfo(name = "group_name")
     private String mGroupName;
 
     public Group(@NonNull long groupId,

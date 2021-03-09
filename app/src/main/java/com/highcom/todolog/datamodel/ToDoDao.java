@@ -13,7 +13,7 @@ import java.util.List;
 @Dao
 public interface ToDoDao {
     @Transaction
-    @Query("SELECT * FROM todo_table WHERE group_id = :groupId ORDER BY state ASC, todo_id ASC")
+    @Query("SELECT * FROM todo_table WHERE group_id = :groupId ORDER BY state ASC, todo_order ASC")
     LiveData<List<ToDoAndLog>> getToDoListByTaskGroup(long groupId);
 
     @Query("SELECT * FROM todo_table WHERE todo_id = :id")
@@ -24,6 +24,9 @@ public interface ToDoDao {
 
     @Update(onConflict = OnConflictStrategy.REPLACE)
     void update(ToDo todo);
+
+    @Update(onConflict = OnConflictStrategy.REPLACE)
+    void update(List<ToDo> todos);
 
     @Insert(onConflict = OnConflictStrategy.IGNORE)
     long insert(ToDo todo);

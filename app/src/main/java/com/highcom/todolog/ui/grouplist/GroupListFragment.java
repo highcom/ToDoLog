@@ -32,7 +32,7 @@ public class GroupListFragment extends Fragment implements SimpleCallbackHelper.
 
     private int latestGroupOrder;
     private List<Group> rearrangeGroupList;
-    GroupListAdapter mGroupListAdapter;
+    private GroupListAdapter mGroupListAdapter;
     private GroupViewModel mGroupViewModel;
     private SimpleCallbackHelper mSimpleCallbackHelper;
     @Override
@@ -51,11 +51,12 @@ public class GroupListFragment extends Fragment implements SimpleCallbackHelper.
 
         mGroupViewModel = new ViewModelProvider(this).get(GroupViewModel.class);
         mGroupViewModel.getGroupList().observe(getViewLifecycleOwner(), groupList -> {
+            // 新規作成時の最新の順番を設定
             latestGroupOrder = groupList.size();
+            // 並べ替え用のリストを作成する
             rearrangeGroupList = new ArrayList<>();
-            for (Group group : groupList) {
-                rearrangeGroupList.add(group.clone());
-            }
+            for (Group group : groupList) rearrangeGroupList.add(group.clone());
+            // グループの一覧をバインドする
             mGroupListAdapter.submitList(groupList);
             // 新規作成時は対象のセルにフォーカスされるようにスクロールする
             for (int position = 0; position < groupList.size(); position++) {

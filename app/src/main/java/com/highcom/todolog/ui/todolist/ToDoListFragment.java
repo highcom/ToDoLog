@@ -30,12 +30,17 @@ import com.highcom.todolog.datamodel.ToDoViewModel;
 import com.highcom.todolog.ui.SimpleCallbackHelper;
 
 import java.sql.Date;
+import java.util.ArrayList;
 import java.util.List;
 
 public class ToDoListFragment extends Fragment implements SimpleCallbackHelper.SimpleCallbackListener, ToDoListAdapter.ToDoListAdapterListener {
 
     public static final String SELECT_GROUP = "selectGroup";
     private long mSelectGroupId;
+    private int latestToDoOrder;
+    private int latestDoneOrder;
+    private List<ToDo> rearrangeToDoList;
+    private ToDoListAdapter mToDoListAdapter;
     private ToDoViewModel mToDoViewModel;
     private SimpleCallbackHelper mSimpleCallbackHelper;
 
@@ -67,14 +72,22 @@ public class ToDoListFragment extends Fragment implements SimpleCallbackHelper.S
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         RecyclerView recyclerView = (RecyclerView) view.findViewById(R.id.todo_list_view);
         Animation animation = AnimationUtils.loadAnimation(getContext(), R.anim.scale_animation);
-        ToDoListAdapter adapter = new ToDoListAdapter(new ToDoListAdapter.ToDoDiff(), this, animation);
-        recyclerView.setAdapter(adapter);
+        mToDoListAdapter = new ToDoListAdapter(new ToDoListAdapter.ToDoDiff(), this, animation);
+        recyclerView.setAdapter(mToDoListAdapter);
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
 
         mToDoViewModel = new ViewModelProvider(this).get(ToDoViewModel.class);
         mToDoViewModel.getToDoListByTaskGroup(mSelectGroupId).observe(getViewLifecycleOwner(), toDoAndLogList -> {
+            // 新規作成時の最新の順番を設定
+            latestToDoOrder = 0;
+            latestDoneOrder = 0;
+            for (ToDoAndLog toDoAndLog : toDoAndLogList) if (toDoAndLog.toDo.getState() == ToDo.STATUS_TODO) latestToDoOrder++;
+            for (ToDoAndLog toDoAndLog : toDoAndLogList) if (toDoAndLog.toDo.getState() == ToDo.STATUS_DONE) latestDoneOrder++;
+            // 並べ替え用のToDoリストを作成する
+            rearrangeToDoList = new ArrayList<>();
+            for (ToDoAndLog toDoAndLog : toDoAndLogList) rearrangeToDoList.add(toDoAndLog.toDo.clone());
             // Todoの一覧が読み込まれたらバインドする
-            adapter.submitList(toDoAndLogList);
+            mToDoListAdapter.submitList(toDoAndLogList);
             // 新規作成時は対象のセルにフォーカスされるようにスクロールする
             for (int position = 0; position < toDoAndLogList.size(); position++) {
                 if (toDoAndLogList.get(position).toDo.getContents().equals("")) {
@@ -116,16 +129,38 @@ public class ToDoListFragment extends Fragment implements SimpleCallbackHelper.S
 
     @Override
     public boolean onSimpleCallbackMove(RecyclerView.ViewHolder viewHolder, RecyclerView.ViewHolder target) {
-        return false;
+        // 並べ替え対象がITEMでかつステータスが同じでなければ行わない
+        if (viewHolder.getItemViewType() != ToDoListAdapter.TYPE_ITEM || target.getItemViewType() != ToDoListAdapter.TYPE_ITEM) return false;
+        if (((ToDoViewHolder)viewHolder).getToDo().getState() != ((ToDoViewHolder)target).getToDo().getState()) return false;
+        // Adapterの表示を更新する
+        final int fromPos = viewHolder.getAdapterPosition();
+        final int toPos = target.getAdapterPosition();
+        mToDoListAdapter.notifyItemMoved(fromPos, toPos);
+        // 並べ替えが終わるまでOrderを編集する
+        final long fromId =  ((ToDoViewHolder)viewHolder).getTodoId();
+        final long toId = ((ToDoViewHolder)target).getTodoId();
+        ToDo fromToDo = null;
+        ToDo toToDo = null;
+        for (ToDo toDo : rearrangeToDoList) {
+            if (toDo.getTodoId() == fromId) fromToDo = toDo;
+            if (toDo.getTodoId() == toId) toToDo = toDo;
+        }
+        if (fromToDo != null && toToDo != null) {
+            final int fromOrder = fromToDo.getTodoOrder();
+            final int toOrder = toToDo.getTodoOrder();
+            fromToDo.setTodoOrder(toOrder);
+            toToDo.setTodoOrder(fromOrder);
+        }
+        return true;
     }
 
     @Override
     public void clearSimpleCallbackView(@NonNull RecyclerView recyclerView, @NonNull RecyclerView.ViewHolder viewHolder) {
-
+        mToDoViewModel.update(rearrangeToDoList);
     }
 
     public void addNewToDoAndLog() {
-        ToDo todo = new ToDo(0, ToDo.STATUS_TODO, mSelectGroupId, "", 0);
+        ToDo todo = new ToDo(0, latestToDoOrder + 1, ToDo.STATUS_TODO, mSelectGroupId, "", 0);
         Log log = new Log(0, 0, new Date(System.currentTimeMillis()), Log.LOG_CREATE_NEW);
         mToDoViewModel.insertToDoAndLog(todo, log);
     }
@@ -137,17 +172,43 @@ public class ToDoListFragment extends Fragment implements SimpleCallbackHelper.S
         inputMethodManager.hideSoftInputFromWindow(getView().getWindowToken(), InputMethodManager.HIDE_NOT_ALWAYS);
         getView().requestFocus();
 
-        ToDo toDo = new ToDo(toDoAndLog.toDo.getTodoId(), toDoAndLog.toDo.getState(), toDoAndLog.toDo.getGroupId(), toDoAndLog.toDo.getContents(), toDoAndLog.toDo.getLatestLogId());
+        ToDo targetToDo = null;
+        for (ToDo toDo : rearrangeToDoList) {
+            if (toDo.getTodoId() == toDoAndLog.toDo.getTodoId()) {
+                targetToDo = toDo;
+                break;
+            }
+        }
+        if (targetToDo == null) return;
+
         int logOperation;
-        if (toDo.getState() == ToDo.STATUS_TODO) {
-            toDo.setState(ToDo.STATUS_DONE);
+        if (targetToDo.getState() == ToDo.STATUS_TODO) {
+            targetToDo.setState(ToDo.STATUS_DONE);
             logOperation = Log.LOG_CHANGE_STATUS_DONE;
+            targetToDo.setTodoOrder(latestDoneOrder + 1);
+            // ステータスがTODOの項目が１つ減ったので、順番を設定し直す
+            int order = 1;
+            for (ToDo toDo : rearrangeToDoList) {
+                if (toDo.getState() == ToDo.STATUS_TODO) {
+                    toDo.setTodoOrder(order);
+                    order++;
+                }
+            }
         } else {
-            toDo.setState(ToDo.STATUS_TODO);
+            targetToDo.setState(ToDo.STATUS_TODO);
             logOperation = Log.LOG_CHANGE_STATUS_TODO;
+            targetToDo.setTodoOrder(latestToDoOrder + 1);
+            // ステータスがDONEの項目が１つ減ったので、順番を設定し直す
+            int order = 1;
+            for (ToDo toDo : rearrangeToDoList) {
+                if (toDo.getState() == ToDo.STATUS_DONE) {
+                    toDo.setTodoOrder(order);
+                    order++;
+                }
+            }
         }
         Log log = new Log(0, toDoAndLog.toDo.getTodoId(), new Date(System.currentTimeMillis()), logOperation);
-        mToDoViewModel.updateToDoAndLog(toDo, log);
+        mToDoViewModel.updateToDoAndLog(rearrangeToDoList, targetToDo.getTodoId(), log);
     }
 
     @Override
@@ -178,7 +239,7 @@ public class ToDoListFragment extends Fragment implements SimpleCallbackHelper.S
         // 内容が変更されていない場合には更新をしない
         if (toDoAndLog.toDo.getContents().equals(contents)) return;
 
-        ToDo toDo = new ToDo(toDoAndLog.toDo.getTodoId(), toDoAndLog.toDo.getState(), toDoAndLog.toDo.getGroupId(), toDoAndLog.toDo.getContents(), toDoAndLog.toDo.getLatestLogId());
+        ToDo toDo = toDoAndLog.toDo.clone();
         toDo.setContents(contents);
 
         // 変更前の内容が空の場合、新規作成なので内容変更のログは追加しない。

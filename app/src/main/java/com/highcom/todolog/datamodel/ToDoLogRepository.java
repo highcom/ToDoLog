@@ -55,11 +55,24 @@ public class ToDoLogRepository {
         return mTodoDao.getToDo(todoId);
     }
 
-    void updateToDoAndLog(ToDo todo, Log log) {
+    void updateToDoAndLog(ToDo toDo, Log log) {
         ToDoLogRoomDatabase.databaseWriteExtractor.execute(() -> {
             long logRowId = mLogDao.insert(log);
-            todo.setLatestLogId(logRowId);
-            mTodoDao.update(todo);
+            toDo.setLatestLogId(logRowId);
+            mTodoDao.update(toDo);
+        });
+    }
+
+    void updateToDoAndLog(List<ToDo> toDoList, long targetToDoId, Log log) {
+        ToDoLogRoomDatabase.databaseWriteExtractor.execute(() -> {
+            long logRowId = mLogDao.insert(log);
+            for (ToDo toDo : toDoList) {
+                if (toDo.getTodoId() == targetToDoId) {
+                    toDo.setLatestLogId(logRowId);
+                    break;
+                }
+            }
+            mTodoDao.update(toDoList);
         });
     }
 
@@ -69,15 +82,21 @@ public class ToDoLogRepository {
         });
     }
 
-    void update(List<Group> groupList) {
+    void update(ToDo todo) {
+        ToDoLogRoomDatabase.databaseWriteExtractor.execute(() -> {
+            mTodoDao.update(todo);
+        });
+    }
+
+    void updateGroupList(List<Group> groupList) {
         ToDoLogRoomDatabase.databaseWriteExtractor.execute(() -> {
             mGroupDao.update(groupList);
         });
     }
 
-    void update(ToDo todo) {
+    void updateToDoList(List<ToDo> todoList) {
         ToDoLogRoomDatabase.databaseWriteExtractor.execute(() -> {
-            mTodoDao.update(todo);
+            mTodoDao.update(todoList);
         });
     }
 
