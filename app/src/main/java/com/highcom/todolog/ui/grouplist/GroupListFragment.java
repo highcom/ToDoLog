@@ -145,6 +145,10 @@ public class GroupListFragment extends Fragment implements SimpleCallbackHelper.
 
     @Override
     public void onGroupNameOutOfFocused(View view, Group group, String editGroupName) {
+        // 内容編集中にフォーカスが外れた場合は、キーボードを閉じる
+        InputMethodManager inputMethodManager = (InputMethodManager)getContext().getSystemService(Context.INPUT_METHOD_SERVICE);
+        inputMethodManager.hideSoftInputFromWindow(getView().getWindowToken(), InputMethodManager.HIDE_NOT_ALWAYS);
+
         ((ToDoMainActivity)getContext()).showFloatingButton();
         view.setFocusable(false);
         view.setFocusableInTouchMode(false);
