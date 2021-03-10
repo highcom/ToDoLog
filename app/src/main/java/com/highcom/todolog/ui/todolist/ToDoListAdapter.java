@@ -15,26 +15,23 @@ public class ToDoListAdapter extends ListAdapter<ToDoAndLog, ToDoViewHolder> imp
     public static final int TYPE_ITEM = 1;
     public static final int TYPE_FOOTER = 2;
 
-    private Animation mAnimation;
-
     private ToDoListAdapterListener mToDoListAdapterListener;
     public interface ToDoListAdapterListener {
-        void onToDoCheckButtonClicked(ToDoAndLog toDoAndLog);
+        void onToDoCheckButtonClicked(View view, ToDoAndLog toDoAndLog, String contents);
         void onToDoContentsClicked(View view);
         void onToDoContentsOutOfFocused(View view, ToDoAndLog toDoAndLog, String contents);
     }
 
-    public ToDoListAdapter(@NonNull DiffUtil.ItemCallback<ToDoAndLog> diffCallback, ToDoListAdapterListener toDoListAdapterListener, Animation animation) {
+    public ToDoListAdapter(@NonNull DiffUtil.ItemCallback<ToDoAndLog> diffCallback, ToDoListAdapterListener toDoListAdapterListener) {
         super(diffCallback);
         mToDoListAdapterListener = toDoListAdapterListener;
-        mAnimation = animation;
     }
 
     @NonNull
     @Override
     public ToDoViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         if (viewType == TYPE_ITEM) {
-            return ToDoViewHolder.create(parent, this, mAnimation);
+            return ToDoViewHolder.create(parent, this);
         } else if (viewType == TYPE_FOOTER) {
             return ToDoViewHolder.create(parent);
         } else {
@@ -69,8 +66,8 @@ public class ToDoListAdapter extends ListAdapter<ToDoAndLog, ToDoViewHolder> imp
     }
 
     @Override
-    public void onToDoCheckButtonClicked(ToDoAndLog toDoAndLog) {
-        mToDoListAdapterListener.onToDoCheckButtonClicked(toDoAndLog);
+    public void onToDoCheckButtonClicked(View view, ToDoAndLog toDoAndLog, String contents) {
+        mToDoListAdapterListener.onToDoCheckButtonClicked(view, toDoAndLog, contents);
     }
 
     @Override

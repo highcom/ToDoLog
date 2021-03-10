@@ -28,12 +28,12 @@ public class ToDoViewHolder extends RecyclerView.ViewHolder {
     private ImageButton mRearrangeButton;
 
     public interface ToDoViewHolderListener {
-        void onToDoCheckButtonClicked(ToDoAndLog toDoAndLog);
+        void onToDoCheckButtonClicked(View view, ToDoAndLog toDoAndLog, String contents);
         void onToDoContentsClicked(View view);
         void onToDoContentsOutOfFocused(View view, ToDoAndLog toDoAndLog, String contents);
     }
 
-    public ToDoViewHolder(@NonNull View itemView, ToDoViewHolderListener toDoViewHolderListener, Animation animation) {
+    public ToDoViewHolder(@NonNull View itemView, ToDoViewHolderListener toDoViewHolderListener) {
         super(itemView);
         mCheckButton = (ImageButton) itemView.findViewById(R.id.check_button);
         mTodoContents = (EditText) itemView.findViewById(R.id.todo_contents);
@@ -42,8 +42,11 @@ public class ToDoViewHolder extends RecyclerView.ViewHolder {
         mRearrangeButton = (ImageButton) itemView.findViewById(R.id.rearrange_button);
 
         mCheckButton.setOnClickListener(view -> {
-            mCheckButton.startAnimation(animation);
-            toDoViewHolderListener.onToDoCheckButtonClicked(mToDoAndLog);
+            // 内容を編集中であればやめる
+            mTodoContents.setFocusable(false);
+            mTodoContents.setFocusableInTouchMode(false);
+            mTodoContents.requestFocus();
+            toDoViewHolderListener.onToDoCheckButtonClicked(view, mToDoAndLog, mTodoContents.getText().toString());
         });
         mTodoContents.setOnClickListener(view -> toDoViewHolderListener.onToDoContentsClicked(view));
         mTodoContents.setOnFocusChangeListener((view, b) -> {
@@ -53,6 +56,12 @@ public class ToDoViewHolder extends RecyclerView.ViewHolder {
                 // フォーカスが外れた時に内容が変更されていたら更新する
                 toDoViewHolderListener.onToDoContentsOutOfFocused(view, mToDoAndLog, mTodoContents.getText().toString());
             }
+        });
+        mRearrangeButton.setOnClickListener(view -> {
+            // 内容を編集中であればやめる
+            mTodoContents.setFocusable(false);
+            mTodoContents.setFocusableInTouchMode(false);
+            mTodoContents.requestFocus();
         });
     }
 
@@ -83,9 +92,9 @@ public class ToDoViewHolder extends RecyclerView.ViewHolder {
         }
     }
 
-    static ToDoViewHolder create(ViewGroup parent, ToDoViewHolderListener toDoViewHolderListener, Animation animation) {
+    static ToDoViewHolder create(ViewGroup parent, ToDoViewHolderListener toDoViewHolderListener) {
         View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.row_todolist, parent, false);
-        return new ToDoViewHolder(view, toDoViewHolderListener, animation);
+        return new ToDoViewHolder(view, toDoViewHolderListener);
     }
 
     static ToDoViewHolder create(ViewGroup parent) {

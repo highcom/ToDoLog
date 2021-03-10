@@ -43,6 +43,7 @@ public class ToDoListFragment extends Fragment implements SimpleCallbackHelper.S
     private ToDoListAdapter mToDoListAdapter;
     private ToDoViewModel mToDoViewModel;
     private SimpleCallbackHelper mSimpleCallbackHelper;
+    private Animation mScaleAnimation;
 
     @Override
     public void onSaveInstanceState(@NonNull Bundle outState) {
@@ -70,9 +71,10 @@ public class ToDoListFragment extends Fragment implements SimpleCallbackHelper.S
 
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        mScaleAnimation = AnimationUtils.loadAnimation(getContext(), R.anim.scale_animation);
+
         RecyclerView recyclerView = (RecyclerView) view.findViewById(R.id.todo_list_view);
-        Animation animation = AnimationUtils.loadAnimation(getContext(), R.anim.scale_animation);
-        mToDoListAdapter = new ToDoListAdapter(new ToDoListAdapter.ToDoDiff(), this, animation);
+        mToDoListAdapter = new ToDoListAdapter(new ToDoListAdapter.ToDoDiff(), this);
         recyclerView.setAdapter(mToDoListAdapter);
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
 
@@ -166,12 +168,7 @@ public class ToDoListFragment extends Fragment implements SimpleCallbackHelper.S
     }
 
     @Override
-    public void onToDoCheckButtonClicked(ToDoAndLog toDoAndLog) {
-        // 内容編集中にチェックボックスが押下された場合は、キーボードを閉じる
-        InputMethodManager inputMethodManager = (InputMethodManager)getContext().getSystemService(Context.INPUT_METHOD_SERVICE);
-        inputMethodManager.hideSoftInputFromWindow(getView().getWindowToken(), InputMethodManager.HIDE_NOT_ALWAYS);
-        getView().requestFocus();
-
+    public void onToDoCheckButtonClicked(View view, ToDoAndLog toDoAndLog, String contents) {
         ToDo targetToDo = null;
         for (ToDo toDo : rearrangeToDoList) {
             if (toDo.getTodoId() == toDoAndLog.toDo.getTodoId()) {
@@ -180,6 +177,10 @@ public class ToDoListFragment extends Fragment implements SimpleCallbackHelper.S
             }
         }
         if (targetToDo == null) return;
+        // 内容が更新されている場合はチェックボックスの処理を行わない
+        if (!toDoAndLog.toDo.getContents().equals(contents)) return;
+
+        view.startAnimation(mScaleAnimation);
 
         int logOperation;
         if (targetToDo.getState() == ToDo.STATUS_TODO) {
@@ -227,6 +228,10 @@ public class ToDoListFragment extends Fragment implements SimpleCallbackHelper.S
 
     @Override
     public void onToDoContentsOutOfFocused(View view, ToDoAndLog toDoAndLog, String contents) {
+        // 内容編集中にフォーカスが外れた場合は、キーボードを閉じる
+        InputMethodManager inputMethodManager = (InputMethodManager)getContext().getSystemService(Context.INPUT_METHOD_SERVICE);
+        inputMethodManager.hideSoftInputFromWindow(getView().getWindowToken(), InputMethodManager.HIDE_NOT_ALWAYS);
+
         ((ToDoMainActivity)getContext()).showFloatingButton();
         view.setFocusable(false);
         view.setFocusableInTouchMode(false);
