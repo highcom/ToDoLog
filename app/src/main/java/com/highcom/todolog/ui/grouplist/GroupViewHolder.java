@@ -32,6 +32,10 @@ public class GroupViewHolder extends RecyclerView.ViewHolder {
             if (b) {
                 mGroupViewHolderListener.onGroupNameClicked(view);
             } else {
+                // グループ名を空欄で登録することは出来ないので元の名前にする
+                if (mGroupName.getText().toString().equals("")) {
+                    mGroupName.setText(mGroup.getGroupName());
+                }
                 // フォーカスが外れた時に内容が変更されていたら更新する
                 mGroupViewHolderListener.onGroupNameOutOfFocused(view, mGroup, mGroupName.getText().toString());
             }
