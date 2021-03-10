@@ -1,7 +1,9 @@
 package com.highcom.todolog.ui.grouplist;
 
 import android.annotation.SuppressLint;
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.os.Bundle;
@@ -79,7 +81,12 @@ public class GroupListFragment extends Fragment implements SimpleCallbackHelper.
                         Color.parseColor(getString(R.color.red)),
                         (RecyclerView.ViewHolder) viewHolder,
                         (holder, pos) -> {
-                            mGroupViewModel.deleteGroupByGroupId(((GroupViewHolder)holder).getGroupId());
+                            AlertDialog dialog = new AlertDialog.Builder(getActivity())
+                                    .setTitle(((GroupViewHolder)holder).getGroup().getGroupName() + getString(R.string.group_dialog_title))
+                                    .setMessage(getString(R.string.group_dialog_detail))
+                                    .setPositiveButton(getString(R.string.group_dialog_ok), (dialog1, which) -> mGroupViewModel.deleteGroupByGroupId(((GroupViewHolder)holder).getGroupId()))
+                                    .setNegativeButton(getString(R.string.group_dialog_cancel), null)
+                                    .show();
                         }
                 ));
             }

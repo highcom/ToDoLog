@@ -83,8 +83,10 @@ public class ToDoListFragment extends Fragment implements SimpleCallbackHelper.S
             // 新規作成時の最新の順番を設定
             latestToDoOrder = 0;
             latestDoneOrder = 0;
-            for (ToDoAndLog toDoAndLog : toDoAndLogList) if (toDoAndLog.toDo.getState() == ToDo.STATUS_TODO) latestToDoOrder++;
-            for (ToDoAndLog toDoAndLog : toDoAndLogList) if (toDoAndLog.toDo.getState() == ToDo.STATUS_DONE) latestDoneOrder++;
+            for (ToDoAndLog toDoAndLog : toDoAndLogList) {
+                if (toDoAndLog.toDo.getState() == ToDo.STATUS_TODO) latestToDoOrder = toDoAndLog.toDo.getTodoOrder();
+                if (toDoAndLog.toDo.getState() == ToDo.STATUS_DONE) latestDoneOrder = toDoAndLog.toDo.getTodoOrder();
+            }
             // 並べ替え用のToDoリストを作成する
             rearrangeToDoList = new ArrayList<>();
             for (ToDoAndLog toDoAndLog : toDoAndLogList) rearrangeToDoList.add(toDoAndLog.toDo.clone());

@@ -16,6 +16,9 @@ public interface ToDoDao {
     @Query("SELECT * FROM todo_table WHERE group_id = :groupId ORDER BY state ASC, todo_order ASC")
     LiveData<List<ToDoAndLog>> getToDoListByTaskGroup(long groupId);
 
+    @Query("SELECT todo_id FROM todo_table WHERE group_id = :groupId")
+    List<Long> getToDoIdListByTaskGroup(long groupId);
+
     @Query("SELECT * FROM todo_table WHERE todo_id = :id")
     LiveData<ToDo> getToDo(long id);
 
@@ -33,6 +36,9 @@ public interface ToDoDao {
 
     @Query("DELETE FROM todo_table WHERE todo_id = :id")
     void deleteByTodoId(long id);
+
+    @Query("DELETE FROM todo_table WHERE group_id = :id")
+    void deleteByGroupId(long id);
 
     @Query("DELETE FROM todo_table")
     void deleteAll();

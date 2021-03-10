@@ -15,6 +15,10 @@
     <string name="swipe_button_detail">詳細</string>
 
     <string name="group_edit_title">グループ編集</string>
+    <string name="group_dialog_title">：削除しますか？</string>
+    <string name="group_dialog_detail">グループに登録されているToDoも削除されます。よろしいですか？</string>
+    <string name="group_dialog_ok">実行</string>
+    <string name="group_dialog_cancel">キャンセル</string>
 
     <string name="detail_title">詳細</string>
     <string name="detail_status">ステータス</string>

@@ -15,6 +15,10 @@
     <string name="swipe_button_detail">Detail</string>
 
     <string name="group_edit_title">Edit group</string>
+    <string name="group_dialog_title"> : Delete？</string>
+    <string name="group_dialog_detail">ToDo list registered in the group are also deleted. Is it OK?</string>
+    <string name="group_dialog_ok">OK</string>
+    <string name="group_dialog_cancel">Cancel</string>
 
     <string name="detail_title">Detail</string>
     <string name="detail_status">Status</string>

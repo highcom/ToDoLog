@@ -53,7 +53,7 @@ public class ToDoListAdapter extends ListAdapter<ToDoAndLog, ToDoViewHolder> imp
         if (super.getItemCount() > 0) {
             return super.getItemCount() + 1;
         } else {
-            return 0;
+            return 1;
         }
     }
 

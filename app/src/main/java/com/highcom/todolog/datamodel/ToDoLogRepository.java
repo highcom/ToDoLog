@@ -131,7 +131,10 @@ public class ToDoLogRepository {
 
     void deleteGroupByGroupId(long groupId) {
         ToDoLogRoomDatabase.databaseWriteExtractor.execute(() -> {
+            List<Long> deleteToDoIds = mTodoDao.getToDoIdListByTaskGroup(groupId);
+            for (Long toDoId : deleteToDoIds) mLogDao.deleteLogByTodoId(toDoId.longValue());
             mGroupDao.deleteByGroupId(groupId);
+            mTodoDao.deleteByGroupId(groupId);
         });
     }
 

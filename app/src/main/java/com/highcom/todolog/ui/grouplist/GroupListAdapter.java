@@ -51,7 +51,7 @@ public class GroupListAdapter extends ListAdapter<Group, GroupViewHolder> implem
         if (super.getItemCount() > 0) {
             return super.getItemCount() + 1;
         } else {
-            return 0;
+            return 1;
         }
     }
 
