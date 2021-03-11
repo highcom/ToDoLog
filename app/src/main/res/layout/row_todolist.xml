@@ -11,10 +11,10 @@
     android:weightSum="1">
 
     <ImageButton
-        android:layout_width="30dp"
+        android:layout_width="25dp"
         android:layout_height="match_parent"
         android:focusableInTouchMode="false"
-        android:layout_margin="10dp"
+        android:layout_margin="15dp"
         android:adjustViewBounds="true"
         android:background="@null"
         android:scaleType="centerInside"
@@ -38,7 +38,9 @@
             android:focusableInTouchMode="false"
             android:imeOptions="flagNoExtractUi"
             android:background="#00000000"
-            android:textSize="18dp" />
+            android:layout_marginTop="10dp"
+            android:layout_marginBottom="10dp"
+            android:textSize="16dp" />
         <LinearLayout
             android:orientation="horizontal"
             android:layout_width="match_parent"
@@ -49,7 +51,7 @@
             android:layout_height="wrap_content"
             android:singleLine="true"
             android:text="0000/00/00 00:00:00"
-            android:textSize="12dp"
+            android:textSize="10dp"
             android:textColor="@android:color/darker_gray"
             android:layout_marginBottom="2dp" />
         <TextView
@@ -59,17 +61,17 @@
             android:layout_marginLeft="10dp"
             android:singleLine="true"
             android:text="@string/log_create_new"
-            android:textSize="12dp"
+            android:textSize="10dp"
             android:textColor="@android:color/darker_gray"
             android:layout_marginBottom="2dp" />
         </LinearLayout>
     </LinearLayout>
 
     <ImageButton
-        android:layout_width="30dp"
+        android:layout_width="25dp"
         android:layout_height="match_parent"
         android:focusableInTouchMode="false"
-        android:layout_margin="10dp"
+        android:layout_margin="15dp"
         android:adjustViewBounds="true"
         android:background="@null"
         android:scaleType="centerInside"

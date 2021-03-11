@@ -283,11 +283,16 @@ public abstract class SimpleCallbackHelper extends ItemTouchHelper.SimpleCallbac
 //            c.drawText(text, rect.left + x, rect.top + y, p);
             // 画像を表示する
             RectF imgRect;
+            if (rect.bottom - rect.top > 100) {
+                float vcenter = rect.top + (rect.bottom - rect.top) / 2;
+                rect.top = vcenter - 50;
+                rect.bottom = vcenter + 50;
+            }
             if ((rect.right - rect.left) > (rect.bottom - rect.top)) {
                 // 横が長くなった場合には高さに合わせてクリップする
-                float center = rect.left + (rect.right - rect.left) / 2;
+                float hcenter = rect.left + (rect.right - rect.left) / 2;
                 float span = (rect.bottom - rect.top) / 2;
-                imgRect = new RectF(center - span, rect.top, center + span, rect.bottom);
+                imgRect = new RectF(hcenter - span, rect.top, hcenter + span, rect.bottom);
             } else {
                 imgRect = new RectF(rect.left, rect.top, rect.right, rect.bottom);
             }

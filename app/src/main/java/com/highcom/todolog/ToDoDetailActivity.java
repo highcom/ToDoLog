@@ -24,6 +24,7 @@ import com.highcom.todolog.datamodel.Log;
 import com.highcom.todolog.datamodel.LogViewModel;
 import com.highcom.todolog.datamodel.StringsResource;
 import com.highcom.todolog.datamodel.ToDo;
+import com.highcom.todolog.ui.DividerItemDecoration;
 import com.highcom.todolog.ui.loglist.LogListAdapter;
 
 import java.sql.Date;
@@ -94,8 +95,10 @@ public class ToDoDetailActivity extends AppCompatActivity implements TextWatcher
 
         RecyclerView recyclerView = (RecyclerView) findViewById(R.id.detail_log_view);
         LogListAdapter adapter = new LogListAdapter(new LogListAdapter.LogDiff());
+        RecyclerView.ItemDecoration itemDecoration = new DividerItemDecoration(this, DividerItemDecoration.VERTICAL_LIST);
         recyclerView.setAdapter(adapter);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
+        recyclerView.addItemDecoration(itemDecoration);
 
         // ToDoのデータを読み込んで、各エリアにデータをセットする
         mLogViewModel.getToDo(todoId).observe(this, toDo -> {
