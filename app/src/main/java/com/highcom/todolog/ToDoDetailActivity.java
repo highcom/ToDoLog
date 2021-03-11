@@ -1,5 +1,6 @@
 package com.highcom.todolog;
 
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.Editable;
@@ -7,6 +8,7 @@ import android.text.TextWatcher;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
@@ -55,6 +57,17 @@ public class ToDoDetailActivity extends AppCompatActivity implements TextWatcher
 
         mDetailContents = findViewById(R.id.detail_contents_edit);
         mDetailContents.addTextChangedListener(this);
+        mDetailContents.setOnClickListener(view -> {
+            view.post(() -> {
+                view.setFocusable(true);
+                view.setFocusableInTouchMode(true);
+                view.requestFocus();
+                InputMethodManager inputMethodManager = (InputMethodManager)getApplicationContext().getSystemService(Context.INPUT_METHOD_SERVICE);
+                if (inputMethodManager != null) {
+                    inputMethodManager.showSoftInput(view, 0);
+                }
+            });
+        });
 
         // 状態選択スピナーの設定をする
         Spinner statusSpinner = findViewById(R.id.detail_status_spinner);

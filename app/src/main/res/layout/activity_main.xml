@@ -33,8 +33,10 @@
             </ListView>
             <Button
                 android:id="@+id/group_edit_button"
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_marginLeft="4dp"
+                android:layout_marginRight="4dp"
                 android:layout_gravity="center"
                 android:text="@string/group_edit"/>
         </LinearLayout>
