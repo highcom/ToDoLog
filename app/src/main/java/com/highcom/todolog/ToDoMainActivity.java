@@ -2,7 +2,6 @@ package com.highcom.todolog;
 
 import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.preference.PreferenceManager;
 import android.view.MenuItem;
 import android.view.Menu;
 import android.widget.ArrayAdapter;
@@ -22,6 +21,7 @@ import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
+import androidx.preference.PreferenceManager;
 import androidx.lifecycle.ViewModelProvider;
 
 import java.util.ArrayList;

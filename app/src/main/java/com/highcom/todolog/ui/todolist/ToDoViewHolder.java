@@ -9,6 +9,7 @@ import android.widget.ImageButton;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.highcom.todolog.R;
@@ -78,8 +79,8 @@ public class ToDoViewHolder extends RecyclerView.ViewHolder {
         // 内容を設定する
         mTodoContents.setText(toDoAndLog.toDo.getContents());
         // ステータスによて表示色を変える
-        if (mToDoAndLog.toDo.getState() == ToDo.STATUS_TODO) mTodoContents.setTextColor(mTodoContents.getResources().getColor(android.R.color.black));
-        else if (mToDoAndLog.toDo.getState() == ToDo.STATUS_DONE) mTodoContents.setTextColor(mTodoContents.getResources().getColor(android.R.color.darker_gray));
+        if (mToDoAndLog.toDo.getState() == ToDo.STATUS_TODO) mTodoContents.setTextColor(ContextCompat.getColor(mTodoContents.getContext(), android.R.color.black));
+        else if (mToDoAndLog.toDo.getState() == ToDo.STATUS_DONE) mTodoContents.setTextColor(ContextCompat.getColor(mTodoContents.getContext(), android.R.color.darker_gray));
 
         // ログ内容を設定する
         final DateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
