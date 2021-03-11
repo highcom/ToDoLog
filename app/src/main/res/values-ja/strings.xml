@@ -2,11 +2,11 @@
     <string name="app_name">ToDo記録</string>
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
-    <string name="nav_header_title">Android Studio</string>
+    <string name="nav_header_title">ToDo記録</string>
     <string name="nav_header_subtitle">android.studio@android.com</string>
     <string name="nav_header_desc">Navigation header</string>
     <string name="action_settings">設定</string>
-    <string name="group_edit">リスト編集</string>
+    <string name="group_edit">タスクリスト編集</string>
 
     <string name="drawer_open">開く</string>
     <string name="drawer_close">閉じる</string>
@@ -14,21 +14,21 @@
     <string name="swipe_button_delete">削除</string>
     <string name="swipe_button_detail">詳細</string>
 
-    <string name="group_edit_title">グループ編集</string>
+    <string name="group_edit_title">タスクリスト編集</string>
     <string name="group_dialog_title">：削除しますか？</string>
-    <string name="group_dialog_detail">グループに登録されているToDoも削除されます。よろしいですか？</string>
+    <string name="group_dialog_detail">タスクに登録されているToDoも削除されます。よろしいですか？</string>
     <string name="group_dialog_ok">実行</string>
     <string name="group_dialog_cancel">キャンセル</string>
 
     <string name="detail_title">詳細</string>
     <string name="detail_status">ステータス</string>
-    <string name="detail_taskgroup">グループ</string>
+    <string name="detail_taskgroup">タスク</string>
     <string name="detail_status_todo">ToDo</string>
     <string name="detail_status_done">完了</string>
 
     <string name="log_create_new">新規作成</string>
     <string name="log_change_status_todo">完了からToDoへ変更</string>
     <string name="log_change_status_done">ToDoから完了へ変更</string>
-    <string name="log_change_group">グループ変更</string>
+    <string name="log_change_group">登録タスクを変更</string>
     <string name="log_change_contents">内容変更</string>
 </resources>

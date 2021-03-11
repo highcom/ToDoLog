@@ -2,11 +2,11 @@
     <string name="app_name">ToDoLog</string>
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
-    <string name="nav_header_title">Android Studio</string>
+    <string name="nav_header_title">ToDoLog</string>
     <string name="nav_header_subtitle">android.studio@android.com</string>
     <string name="nav_header_desc">Navigation header</string>
     <string name="action_settings">Settings</string>
-    <string name="group_edit">Edit list</string>
+    <string name="group_edit">Edit task list</string>
 
     <string name="drawer_open">Open</string>
     <string name="drawer_close">Close</string>
@@ -14,21 +14,21 @@
     <string name="swipe_button_delete">Delete</string>
     <string name="swipe_button_detail">Detail</string>
 
-    <string name="group_edit_title">Edit group</string>
+    <string name="group_edit_title">Edit task list</string>
     <string name="group_dialog_title"> : Delete？</string>
-    <string name="group_dialog_detail">ToDo list registered in the group are also deleted. Is it OK?</string>
+    <string name="group_dialog_detail">ToDo list registered in the task are also deleted. Is it OK?</string>
     <string name="group_dialog_ok">OK</string>
     <string name="group_dialog_cancel">Cancel</string>
 
     <string name="detail_title">Detail</string>
     <string name="detail_status">Status</string>
-    <string name="detail_taskgroup">Group</string>
+    <string name="detail_taskgroup">task</string>
     <string name="detail_status_todo">ToDo</string>
     <string name="detail_status_done">Done</string>
 
     <string name="log_create_new">Create new</string>
     <string name="log_change_status_todo">Change from Done to ToDo</string>
     <string name="log_change_status_done">Change from ToDo to Done</string>
-    <string name="log_change_group">Change group</string>
+    <string name="log_change_group">Change registered task</string>
     <string name="log_change_contents">Change contents</string>
 </resources>
