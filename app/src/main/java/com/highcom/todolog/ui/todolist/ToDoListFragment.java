@@ -189,26 +189,10 @@ public class ToDoListFragment extends Fragment implements SimpleCallbackHelper.S
             targetToDo.setState(ToDo.STATUS_DONE);
             logOperation = Log.LOG_CHANGE_STATUS_DONE;
             targetToDo.setTodoOrder(latestDoneOrder + 1);
-            // ステータスがTODOの項目が１つ減ったので、順番を設定し直す
-            int order = 1;
-            for (ToDo toDo : rearrangeToDoList) {
-                if (toDo.getState() == ToDo.STATUS_TODO) {
-                    toDo.setTodoOrder(order);
-                    order++;
-                }
-            }
         } else {
             targetToDo.setState(ToDo.STATUS_TODO);
             logOperation = Log.LOG_CHANGE_STATUS_TODO;
             targetToDo.setTodoOrder(latestToDoOrder + 1);
-            // ステータスがDONEの項目が１つ減ったので、順番を設定し直す
-            int order = 1;
-            for (ToDo toDo : rearrangeToDoList) {
-                if (toDo.getState() == ToDo.STATUS_DONE) {
-                    toDo.setTodoOrder(order);
-                    order++;
-                }
-            }
         }
         Log log = new Log(0, toDoAndLog.toDo.getTodoId(), new Date(System.currentTimeMillis()), logOperation);
         mToDoViewModel.updateToDoAndLog(rearrangeToDoList, targetToDo.getTodoId(), log);
