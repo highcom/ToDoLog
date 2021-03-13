@@ -1,12 +1,15 @@
 package com.highcom.todolog;
 
 import android.content.SharedPreferences;
+import android.content.pm.PackageInfo;
+import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.view.MenuItem;
 import android.view.Menu;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ListView;
+import android.widget.TextView;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.navigation.NavigationView;
@@ -53,6 +56,14 @@ public class ToDoMainActivity extends AppCompatActivity {
         StringsResource.create(this);
 
         hasBeenFirstGroupHandled = false;
+
+        TextView headerTitle = findViewById(R.id.nav_header_title);
+        try {
+            PackageInfo info = getPackageManager().getPackageInfo(getPackageName(), PackageManager.GET_META_DATA);
+            headerTitle.setText(getString(R.string.nav_header_title) + " Ver " + info.versionName);
+        } catch (PackageManager.NameNotFoundException e) {
+            e.printStackTrace();
+        }
 
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
