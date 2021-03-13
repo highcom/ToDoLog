@@ -17,15 +17,10 @@ public class GroupViewModel extends AndroidViewModel {
         super(application);
         mRepository = ToDoLogRepository.getInstance(application);
         mGroupList = mRepository.getGroupList();
-        mFirstGroup = mRepository.getFirstGroup();
     }
 
     public LiveData<List<Group>> getGroupList() {
         return mGroupList;
-    }
-
-    public LiveData<Group> getFirstGroup() {
-        return mFirstGroup;
     }
 
     public void update(Group group) {

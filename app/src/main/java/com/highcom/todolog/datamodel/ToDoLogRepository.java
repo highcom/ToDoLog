@@ -12,7 +12,7 @@ public class ToDoLogRepository {
     private GroupDao mGroupDao;
     private ToDoDao mTodoDao;
     private LogDao mLogDao;
-    private LiveData<Group> mFirstGroup;
+    private LiveData<List<Group>> mGroupList;
 
     public static ToDoLogRepository getInstance(Application application) {
         if (instance == null) {
@@ -28,17 +28,13 @@ public class ToDoLogRepository {
     private ToDoLogRepository(Application application) {
         ToDoLogRoomDatabase db = ToDoLogRoomDatabase.getDatabase(application);
         mGroupDao = db.groupDao();
-        mFirstGroup = mGroupDao.getFirstGroup();
+        mGroupList = mGroupDao.getGroupList();
         mTodoDao = db.toDoDao();
         mLogDao = db.logDao();
     }
 
     LiveData<List<Group>> getGroupList() {
         return mGroupDao.getGroupList();
-    }
-
-    LiveData<Group> getFirstGroup() {
-        return mFirstGroup;
     }
 
     LiveData<List<ToDoAndLog>> getTodoListByTaskGroup(long groupId) {

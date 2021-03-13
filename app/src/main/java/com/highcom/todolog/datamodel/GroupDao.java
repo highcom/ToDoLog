@@ -14,9 +14,6 @@ public interface GroupDao {
     @Query("SELECT * FROM group_table ORDER BY group_order ASC")
     LiveData<List<Group>> getGroupList();
 
-    @Query("SELECT * FROM group_table ORDER BY group_order ASC LIMIT 1")
-    LiveData<Group> getFirstGroup();
-
     @Update(onConflict = OnConflictStrategy.REPLACE)
     void update(Group group);
 
