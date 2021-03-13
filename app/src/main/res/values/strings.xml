@@ -15,6 +15,7 @@
     <string name="swipe_button_detail">Detail</string>
 
     <string name="group_edit_title">Edit task list</string>
+    <string name="group_default_name">Things to do</string>
     <string name="group_dialog_title"> : Delete？</string>
     <string name="group_dialog_detail">ToDo list registered in the task are also deleted. Is it OK?</string>
     <string name="group_dialog_ok">OK</string>

@@ -38,7 +38,7 @@ public class ToDoMainActivity extends AppCompatActivity {
         FRAGMENT_TODOLIST,
         FRAGMENT_GROUPLIST,
     }
-    private SELECT_FRAGMENT selectFragment;
+    private SELECT_FRAGMENT mSelectFragment;
     private FloatingActionButton fab;
     private ToDoListFragment mToDoListFragment;
     private GroupListFragment mGroupListFragment;
@@ -69,7 +69,7 @@ public class ToDoMainActivity extends AppCompatActivity {
         setSupportActionBar(toolbar);
         fab = findViewById(R.id.fab);
         fab.setOnClickListener(view -> {
-            switch (selectFragment) {
+            switch (mSelectFragment) {
                 case FRAGMENT_TODOLIST:
                     if (mToDoListFragment != null) mToDoListFragment.addNewToDoAndLog();
                     break;
@@ -99,42 +99,56 @@ public class ToDoMainActivity extends AppCompatActivity {
         groupEditButton.setOnClickListener(view -> {
             setTitle(R.string.group_edit_title);
             mGroupListFragment = new GroupListFragment();
-            selectFragment = SELECT_FRAGMENT.FRAGMENT_GROUPLIST;
+            mSelectFragment = SELECT_FRAGMENT.FRAGMENT_GROUPLIST;
             getSupportFragmentManager().beginTransaction().replace(R.id.nav_host_fragment, mGroupListFragment).commit();
             drawer.closeDrawers();
         });
-
-        mToDoListFragment = new ToDoListFragment();
-        selectFragment = SELECT_FRAGMENT.FRAGMENT_TODOLIST;
 
         ListView listView = findViewById(R.id.task_list_view_inside_nav);
         mGroupViewModel = new ViewModelProvider(this).get(GroupViewModel.class);
 
         if (savedInstanceState == null) {
-            mSelectGroup = mPreferences.getLong(SELECT_GROUP, 0);
-            if (mSelectGroup != 0) {
-                // 前回選択していたグループを設定する
-                Bundle args = new Bundle();
-                args.putLong(SELECT_GROUP, mSelectGroup);
-                mToDoListFragment.setArguments(args);
-                getSupportFragmentManager().beginTransaction().replace(R.id.nav_host_fragment, mToDoListFragment).commit();
-            } else {
-                // 初期表示のFragmentを設定する
-                mGroupViewModel.getFirstGroup().observe(this, firstGroup -> {
-                    if (firstGroup == null) return;
+            // 初期表示のFragmentを設定する
+            mGroupViewModel.getGroupList().observe(this, groupList -> {
+                // グループが1つも存在しない場合にはタスクリスト編集に移る
+                if (groupList.size() == 0) {
+                    setTitle(R.string.group_edit_title);
+                    mGroupListFragment = new GroupListFragment();
+                    mSelectFragment = SELECT_FRAGMENT.FRAGMENT_GROUPLIST;
+                    getSupportFragmentManager().beginTransaction().replace(R.id.nav_host_fragment, mGroupListFragment).commit();
+                    return;
+                }
 
-                    // この変化通知を受けるのは１度だけ
-                    if (hasBeenFirstGroupHandled) return;
-                    hasBeenFirstGroupHandled = true;
+                // この変化通知を受けるのは１度だけ
+                if (hasBeenFirstGroupHandled) return;
+                hasBeenFirstGroupHandled = true;
 
-                    setTitle(firstGroup.getGroupName());
-                    mSelectGroup = firstGroup.getGroupId();
+                // 初めて起動時はgroupListが空で来た後、サンプルデータが作成されるのでToDoList選択状態にしたい
+                // グループが１つで名前が空の場合は初めて起動時ではなく、グループを全削除した後の新規追加時の登録なので何もしない
+                if (groupList.size() == 1 && groupList.get(0).getGroupName().equals("")) return;
+
+                mToDoListFragment = new ToDoListFragment();
+                mSelectFragment = SELECT_FRAGMENT.FRAGMENT_TODOLIST;
+
+                mSelectGroup = mPreferences.getLong(SELECT_GROUP, 0);
+                boolean isGroupExist = false;
+                for (Group group : groupList) if (group.getGroupId() == mSelectGroup) isGroupExist = true;
+                if (isGroupExist) {
+                    // 前回選択していたグループを設定する
                     Bundle args = new Bundle();
                     args.putLong(SELECT_GROUP, mSelectGroup);
                     mToDoListFragment.setArguments(args);
                     getSupportFragmentManager().beginTransaction().replace(R.id.nav_host_fragment, mToDoListFragment).commit();
-                });
-            }
+                } else {
+                    // 前回選択していたグループが存在していない場合は最初のグループを選択する
+                    setTitle(groupList.get(0).getGroupName());
+                    mSelectGroup = groupList.get(0).getGroupId();
+                    Bundle args = new Bundle();
+                    args.putLong(SELECT_GROUP, mSelectGroup);
+                    mToDoListFragment.setArguments(args);
+                    getSupportFragmentManager().beginTransaction().replace(R.id.nav_host_fragment, mToDoListFragment).commit();
+                }
+            });
         }
         // Drawerに表示するListを設定する
         mGroupViewModel.getGroupList().observe(this, groupList -> {
@@ -142,7 +156,7 @@ public class ToDoMainActivity extends AppCompatActivity {
             for (Group group : groupList) {
                 groupNames.add(group.getGroupName());
                 // グループ編集以外を選択している場合には、タイトルも更新する
-                if (selectFragment == SELECT_FRAGMENT.FRAGMENT_TODOLIST && group.getGroupId() == mSelectGroup) {
+                if (mSelectFragment == SELECT_FRAGMENT.FRAGMENT_TODOLIST && group.getGroupId() == mSelectGroup) {
                     setTitle(group.getGroupName());
                 }
             }
@@ -153,7 +167,7 @@ public class ToDoMainActivity extends AppCompatActivity {
                 long selectGroup = groupList.get(i).getGroupId();
                 mPreferences.edit().putLong(SELECT_GROUP, selectGroup).apply();
                 mToDoListFragment = new ToDoListFragment();
-                selectFragment = SELECT_FRAGMENT.FRAGMENT_TODOLIST;
+                mSelectFragment = SELECT_FRAGMENT.FRAGMENT_TODOLIST;
                 Bundle args = new Bundle();
                 args.putLong(SELECT_GROUP, selectGroup);
                 mToDoListFragment.setArguments(args);
