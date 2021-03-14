@@ -27,8 +27,11 @@ import androidx.appcompat.widget.Toolbar;
 import androidx.preference.PreferenceManager;
 import androidx.lifecycle.ViewModelProvider;
 
+import java.util.Date;
 import java.util.ArrayList;
 import java.util.List;
+
+import jp.co.recruit_mp.android.rmp_appirater.RmpAppirater;
 
 import static com.highcom.todolog.ui.todolist.ToDoListFragment.SELECT_GROUP;
 
@@ -51,6 +54,35 @@ public class ToDoMainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        RmpAppirater.appLaunched(this,
+            (appLaunchCount, appThisVersionCodeLaunchCount, firstLaunchDate, appVersionCode, previousAppVersionCode, rateClickDate, reminderClickDate, doNotShowAgain) -> {
+                // 現在のアプリのバージョンで10回以上起動したか
+                if (appThisVersionCodeLaunchCount < 10) {
+                    return false;
+                }
+                // ダイアログで「いいえ」を選択していないか
+                if (doNotShowAgain) {
+                    return false;
+                }
+                // ユーザーがまだ評価していないか
+                if (rateClickDate != null) {
+                    return false;
+                }
+                // ユーザーがまだ「あとで」を選択していないか
+                if (reminderClickDate != null) {
+                    // 「あとで」を選択してから3日以上経過しているか
+                    long prevtime = reminderClickDate.getTime();
+                    long nowtime = new Date().getTime();
+                    long diffDays = (nowtime - prevtime) / (1000 * 60 * 60 * 24);
+                    if (diffDays < 3) {
+                        return false;
+                    }
+                }
+
+                return true;
+            }
+        );
 
         mPreferences = PreferenceManager.getDefaultSharedPreferences(this);
         StringsResource.create(this);
