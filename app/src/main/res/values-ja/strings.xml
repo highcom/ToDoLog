@@ -32,4 +32,8 @@
     <string name="log_change_status_done">ToDoから完了へ変更</string>
     <string name="log_change_group">登録タスクを変更</string>
     <string name="log_change_contents">内容変更</string>
+
+    <string name="setting_title">設定</string>
+    <string name="setting_license">ライセンス</string>
+    <string name="setting_privacy_policy">プライバシーポリシー</string>
 </resources>

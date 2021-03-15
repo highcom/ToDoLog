@@ -32,4 +32,8 @@
     <string name="log_change_status_done">Change from ToDo to Done</string>
     <string name="log_change_group">Change registered task</string>
     <string name="log_change_contents">Change contents</string>
+
+    <string name="setting_title">Setting</string>
+    <string name="setting_license">Lisence</string>
+    <string name="setting_privacy_policy">Privacy policy</string>
 </resources>
