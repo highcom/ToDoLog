@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "250766940635",
+    "project_id": "todolog-1002d",
+    "storage_bucket": "todolog-1002d.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:250766940635:android:1c710d30bd4b9ca1912ffe",
+        "android_client_info": {
+          "package_name": "com.highcom.todolog"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "250766940635-bcv1mph1g4d4694fmqliqg22uc6hgf7d.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCPuhdtVDBJp2GoRsQ5MYA4h7t950p7RbI"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "250766940635-bcv1mph1g4d4694fmqliqg22uc6hgf7d.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
