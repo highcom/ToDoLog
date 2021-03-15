@@ -24,6 +24,10 @@
         <activity
             android:name=".ToDoDetailActivity"
             android:configChanges="orientation|screenSize" />
+        <activity
+            android:name="com.google.android.gms.oss.licenses.OssLicensesMenuActivity" />
+        <activity
+            android:name="com.google.android.gms.oss.licenses.OssLicensesActivity" />
     </application>
 
 </manifest>

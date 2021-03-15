@@ -36,4 +36,6 @@
     <string name="setting_title">設定</string>
     <string name="setting_license">ライセンス</string>
     <string name="setting_privacy_policy">プライバシーポリシー</string>
+
+    <string name="privacy_policy_url">https://high-commu.amebaownd.com/pages/2891722/page_201905200001</string>
 </resources>
