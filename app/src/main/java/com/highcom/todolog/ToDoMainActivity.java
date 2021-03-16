@@ -79,7 +79,7 @@ public class ToDoMainActivity extends AppCompatActivity {
         });
         MobileAds.setRequestConfiguration(
                 new RequestConfiguration.Builder().setTestDeviceIds(Arrays.asList("874848BA4D9A6B9B0A256F7862A47A31")).build());
-        adContainerView = findViewById(R.id.adViewFrame);
+        adContainerView = findViewById(R.id.ad_view_frame);
         adContainerView.post(new Runnable() {
             @Override
             public void run() {
