@@ -182,13 +182,16 @@ public abstract class SimpleCallbackHelper extends ItemTouchHelper.SimpleCallbac
             if(dX < 0) {
                 List<UnderlayButton> buffer = new ArrayList<>();
 
-                if (!buttonsBuffer.containsKey(pos)){
-                    instantiateUnderlayButton(viewHolder, buffer);
-                    buttonsBuffer.put(pos, buffer);
-                }
-                else {
-                    buffer = buttonsBuffer.get(pos);
-                }
+//                if (!buttonsBuffer.containsKey(pos)){
+//                    instantiateUnderlayButton(viewHolder, buffer);
+//                    buttonsBuffer.put(pos, buffer);
+//                }
+//                else {
+//                    buffer = buttonsBuffer.get(pos);
+//                }
+                // データが更新されたら必ず作り直す
+                instantiateUnderlayButton(viewHolder, buffer);
+                buttonsBuffer.put(pos, buffer);
 
                 translationX = dX * buffer.size() * BUTTON_WIDTH_DP / itemView.getWidth();
                 drawButtons(c, itemView, buffer, pos, translationX);
