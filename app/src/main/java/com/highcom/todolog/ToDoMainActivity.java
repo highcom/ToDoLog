@@ -9,7 +9,6 @@ import android.util.DisplayMetrics;
 import android.view.Display;
 import android.view.MenuItem;
 import android.view.Menu;
-import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.ListView;
@@ -28,6 +27,8 @@ import com.google.firebase.analytics.FirebaseAnalytics;
 import com.highcom.todolog.datamodel.Group;
 import com.highcom.todolog.datamodel.GroupViewModel;
 import com.highcom.todolog.datamodel.StringsResource;
+import com.highcom.todolog.ui.drawerlist.DrawerListAdapter;
+import com.highcom.todolog.ui.drawerlist.DrawerListItem;
 import com.highcom.todolog.ui.grouplist.GroupListFragment;
 import com.highcom.todolog.ui.todolist.ToDoListFragment;
 
@@ -42,7 +43,6 @@ import androidx.lifecycle.ViewModelProvider;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.ArrayList;
-import java.util.List;
 
 import jp.co.recruit_mp.android.rmp_appirater.RmpAppirater;
 
@@ -216,16 +216,17 @@ public class ToDoMainActivity extends AppCompatActivity {
         }
         // Drawerに表示するListを設定する
         mGroupViewModel.getGroupList().observe(this, groupList -> {
-            List<String> groupNames = new ArrayList<>();
+            ArrayList<DrawerListItem> drawerListItem = new ArrayList<>();
             for (Group group : groupList) {
-                groupNames.add(group.getGroupName());
+                drawerListItem.add(new DrawerListItem(group.getGroupName()));
                 // グループ編集以外を選択している場合には、タイトルも更新する
                 if (mSelectFragment == SELECT_FRAGMENT.FRAGMENT_TODOLIST && group.getGroupId() == mSelectGroup) {
                     setTitle(group.getGroupName());
                 }
             }
-            ArrayAdapter<String> arrayAdapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, groupNames);
-            listView.setAdapter(arrayAdapter);
+            DrawerListAdapter adapter = new DrawerListAdapter(this, R.layout.row_drawerlist, drawerListItem);
+            listView.setAdapter(adapter);
+
             listView.setOnItemClickListener((adapterView, view, i, l) -> {
                 setTitle(groupList.get(i).getGroupName());
                 long selectGroup = groupList.get(i).getGroupId();
