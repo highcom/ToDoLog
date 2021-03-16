@@ -16,6 +16,8 @@ android {
 
         multiDexEnabled true
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+
+        archivesBaseName="ToDoLog"
     }
 
     buildTypes {
@@ -27,6 +29,15 @@ android {
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_1_8
         targetCompatibility JavaVersion.VERSION_1_8
+    }
+    applicationVariants.all { variant ->
+        if (variant.buildType.name.equals("release")) {
+            // releaseビルドのみ、ファイル名にVesionNameとビルド時間を付与
+            variant.outputs.all {
+                def newName = "ToDoLog.apk"
+                outputFileName = newName
+            }
+        }
     }
 }
 
