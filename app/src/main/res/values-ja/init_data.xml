@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="group_data_1">操作説明</string>
+    <string name="group_data_2">毎日のやること</string>
+    <string name="group_data_3">仕事の予定</string>
+
+    <string name="todo_data_1">右下のボタンをタップで新規のToDoが追加できます。改行が出来るので長い文章も書けます</string>
+    <string name="todo_data_2">チェックボックスをタップする事で完了に出来ます</string>
+    <string name="todo_data_3">左にスライドすると、詳細ボタンと削除ボタンが現れます</string>
+    <string name="todo_data_4">右側のハンドルアイコンを長押しすると並べ替えができます</string>
+    <string name="todo_data_5">左上のメニューを開いてタスクリストを切り替えられます</string>
+    <string name="todo_data_6">タスクリスト編集からタスクごと削除する事もできます</string>
+    <string name="todo_data_7">お弁当を作る</string>
+    <string name="todo_data_8">ペットにご飯あげる</string>
+    <string name="todo_data_9">ストレッチする</string>
+    <string name="todo_data_10">日記を書く</string>
+    <string name="todo_data_11">明日の用意をする</string>
+    <string name="todo_data_12">月曜日の朝一に先方にスケジュールを確認する。→来週が空いていない場合は要相談</string>
+    <string name="todo_data_13">週報を書く</string>
+    <string name="todo_data_14">先週提出されたレポートについてレビューする。指摘内容はリストにしてメールで返信する</string>
+    <string name="todo_data_15">不具合としてあがっている内容を確認して、作業担当者を振り分ける</string>
+</resources>
