@@ -10,7 +10,7 @@ import java.util.List;
 
 @Dao
 public interface LogDao {
-    @Query("SELECT * FROM log_table WHERE todo_id = :id")
+    @Query("SELECT * FROM log_table WHERE todo_id = :id ORDER BY log_id DESC")
     LiveData<List<Log>> getLogByTodoId(long id);
 
     @Insert(onConflict = OnConflictStrategy.IGNORE)

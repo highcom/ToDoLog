@@ -28,8 +28,8 @@
     <string name="detail_status_done">完了</string>
 
     <string name="log_create_new">新規作成</string>
-    <string name="log_change_status_todo">完了からToDoへ変更</string>
-    <string name="log_change_status_done">ToDoから完了へ変更</string>
+    <string name="log_change_status_todo">ToDoにステータスを変更</string>
+    <string name="log_change_status_done">完了にステータスを変更</string>
     <string name="log_change_group">登録タスクを変更</string>
     <string name="log_change_contents">内容変更</string>
 

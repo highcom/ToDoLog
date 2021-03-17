@@ -28,8 +28,8 @@
     <string name="detail_status_done">Done</string>
 
     <string name="log_create_new">Create new</string>
-    <string name="log_change_status_todo">Change from Done to ToDo</string>
-    <string name="log_change_status_done">Change from ToDo to Done</string>
+    <string name="log_change_status_todo">Change status to ToDo</string>
+    <string name="log_change_status_done">Change status to Done</string>
     <string name="log_change_group">Change registered task</string>
     <string name="log_change_contents">Change contents</string>
 

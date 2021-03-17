@@ -3,7 +3,6 @@ package com.highcom.todolog.ui.grouplist;
 import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.os.Bundle;
@@ -15,7 +14,6 @@ import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -32,14 +30,16 @@ import java.util.List;
 
 public class GroupListFragment extends Fragment implements SimpleCallbackHelper.SimpleCallbackListener, GroupListAdapter.GroupListAdapterListener {
 
-    private int latestGroupOrder;
-    private List<Group> rearrangeGroupList;
+    private boolean isInitPositionSet;
+    private int mLatestGroupOrder;
+    private List<Group> mRearrangeGroupList;
     private GroupListAdapter mGroupListAdapter;
     private GroupViewModel mGroupViewModel;
     private SimpleCallbackHelper mSimpleCallbackHelper;
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+        isInitPositionSet = false;
         // Inflate the layout for this fragment
         return inflater.inflate(R.layout.fragment_grouplist, container, false);
     }
@@ -54,12 +54,17 @@ public class GroupListFragment extends Fragment implements SimpleCallbackHelper.
         mGroupViewModel = new ViewModelProvider(this).get(GroupViewModel.class);
         mGroupViewModel.getGroupList().observe(getViewLifecycleOwner(), groupList -> {
             // 新規作成時の最新の順番を設定
-            latestGroupOrder = groupList.size();
+            mLatestGroupOrder = groupList.size();
             // 並べ替え用のリストを作成する
-            rearrangeGroupList = new ArrayList<>();
-            for (Group group : groupList) rearrangeGroupList.add(group.clone());
+            mRearrangeGroupList = new ArrayList<>();
+            for (Group group : groupList) mRearrangeGroupList.add(group.clone());
             // グループの一覧をバインドする
             mGroupListAdapter.submitList(groupList);
+            // 初期表示の時は先頭位置にする
+            if (!isInitPositionSet) {
+                recyclerView.scrollToPosition(0);
+                isInitPositionSet = true;
+            }
             // 新規作成時は対象のセルにフォーカスされるようにスクロールする
             for (int position = 0; position < groupList.size(); position++) {
                 if (groupList.get(position).getGroupName().equals("")) {
@@ -106,7 +111,7 @@ public class GroupListFragment extends Fragment implements SimpleCallbackHelper.
         final long toId = ((GroupViewHolder)target).getGroup().getGroupId();
         Group fromGroup = null;
         Group toGroup = null;
-        for (Group group : rearrangeGroupList) {
+        for (Group group : mRearrangeGroupList) {
             if (group.getGroupId() == fromId) fromGroup = group;
             if (group.getGroupId() == toId) toGroup = group;
         }
@@ -121,11 +126,11 @@ public class GroupListFragment extends Fragment implements SimpleCallbackHelper.
 
     @Override
     public void clearSimpleCallbackView(@NonNull RecyclerView recyclerView, @NonNull RecyclerView.ViewHolder viewHolder) {
-        mGroupViewModel.update(rearrangeGroupList);
+        mGroupViewModel.update(mRearrangeGroupList);
     }
 
     public void addNewGroup() {
-        Group group = new Group(0, latestGroupOrder + 1, "");
+        Group group = new Group(0, mLatestGroupOrder + 1, "");
         mGroupViewModel.insert(group);
     }
 

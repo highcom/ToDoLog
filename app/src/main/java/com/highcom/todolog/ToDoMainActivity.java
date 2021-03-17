@@ -104,11 +104,11 @@ public class ToDoMainActivity extends AppCompatActivity {
                 }
                 // ユーザーがまだ「あとで」を選択していないか
                 if (reminderClickDate != null) {
-                    // 「あとで」を選択してから3日以上経過しているか
+                    // 「あとで」を選択してから5日以上経過しているか
                     long prevtime = reminderClickDate.getTime();
                     long nowtime = new Date().getTime();
                     long diffDays = (nowtime - prevtime) / (1000 * 60 * 60 * 24);
-                    if (diffDays < 3) {
+                    if (diffDays < 5) {
                         return false;
                     }
                 }
