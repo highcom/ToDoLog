@@ -16,6 +16,8 @@ import android.view.GestureDetector;
 import android.view.MotionEvent;
 import android.view.View;
 
+import com.highcom.todolog.R;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedList;
@@ -115,6 +117,7 @@ public abstract class SimpleCallbackHelper extends ItemTouchHelper.SimpleCallbac
 
     @Override
     public boolean onMove(RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder, RecyclerView.ViewHolder target) {
+        if (target.itemView.getId() == R.id.row_footer) return false;
         return simpleCallbackListener.onSimpleCallbackMove(viewHolder, target);
     }
 
@@ -126,6 +129,8 @@ public abstract class SimpleCallbackHelper extends ItemTouchHelper.SimpleCallbac
 
     @Override
     public void onSwiped(RecyclerView.ViewHolder viewHolder, int direction) {
+        if (viewHolder.itemView.getId() == R.id.row_footer) return;
+
         int pos = viewHolder.getAdapterPosition();
 
         if (swipedPos != pos)

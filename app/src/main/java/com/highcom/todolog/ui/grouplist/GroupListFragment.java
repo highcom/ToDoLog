@@ -80,6 +80,8 @@ public class GroupListFragment extends Fragment implements SimpleCallbackHelper.
             @SuppressLint("ResourceType")
             @Override
             public void instantiateUnderlayButton(RecyclerView.ViewHolder viewHolder, List<UnderlayButton> underlayButtons) {
+                if (viewHolder.itemView.getId() == R.id.row_footer) return;
+
                 underlayButtons.add(new SimpleCallbackHelper.UnderlayButton(
                         getString(R.string.swipe_button_delete),
                         BitmapFactory.decodeResource(getResources(), R.drawable.ic_delete),

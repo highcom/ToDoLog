@@ -53,27 +53,30 @@ abstract class ToDoLogRoomDatabase extends RoomDatabase {
                 groupDao.insert(new Group(2, 2, mContext.getString(R.string.group_data_2)));
                 groupDao.insert(new Group(3, 3, mContext.getString(R.string.group_data_3)));
 
+                long currentTime = System.currentTimeMillis();
                 LogDao logDao = INSTANCE.logDao();
                 logDao.deleteAll();
-                logDao.insert(new Log(1, 1, new Date(System.currentTimeMillis()), Log.LOG_CREATE_NEW));
-                logDao.insert(new Log(2, 2, new Date(System.currentTimeMillis()), Log.LOG_CREATE_NEW));
-                logDao.insert(new Log(3, 3, new Date(System.currentTimeMillis()), Log.LOG_CREATE_NEW));
-                logDao.insert(new Log(4, 4, new Date(System.currentTimeMillis()), Log.LOG_CREATE_NEW));
-                logDao.insert(new Log(5, 5, new Date(System.currentTimeMillis()), Log.LOG_CREATE_NEW));
-                logDao.insert(new Log(6, 6, new Date(System.currentTimeMillis()), Log.LOG_CREATE_NEW));
-                logDao.insert(new Log(7, 7, new Date(System.currentTimeMillis() - (1000 * 60 * 60 * 24)), Log.LOG_CREATE_NEW));
-                logDao.insert(new Log(8, 8, new Date(System.currentTimeMillis() - (1000 * 60 * 60 * 24)), Log.LOG_CREATE_NEW));
-                logDao.insert(new Log(9, 9, new Date(System.currentTimeMillis()), Log.LOG_CREATE_NEW));
-                logDao.insert(new Log(10, 10, new Date(System.currentTimeMillis()), Log.LOG_CREATE_NEW));
-                logDao.insert(new Log(11, 11, new Date(System.currentTimeMillis()), Log.LOG_CREATE_NEW));
-                logDao.insert(new Log(12, 7, new Date(System.currentTimeMillis()), Log.LOG_CHANGE_STATUS_DONE));
-                logDao.insert(new Log(13, 8, new Date(System.currentTimeMillis()), Log.LOG_CHANGE_STATUS_DONE));
-                logDao.insert(new Log(14, 12, new Date(System.currentTimeMillis()), Log.LOG_CREATE_NEW));
-                logDao.insert(new Log(15, 13, new Date(System.currentTimeMillis() - (1000 * 60 * 60 * 24 * 2)), Log.LOG_CREATE_NEW));
-                logDao.insert(new Log(16, 14, new Date(System.currentTimeMillis()), Log.LOG_CREATE_NEW));
-                logDao.insert(new Log(17, 15, new Date(System.currentTimeMillis()), Log.LOG_CREATE_NEW));
-                logDao.insert(new Log(18, 13, new Date(System.currentTimeMillis() - (1000 * 60 * 60 * 24)), Log.LOG_CHANGE_CONTENTS));
-                logDao.insert(new Log(19, 13, new Date(System.currentTimeMillis()), Log.LOG_CHANGE_STATUS_DONE));
+                logDao.insert(new Log(1, 1, new Date(currentTime), Log.LOG_CREATE_NEW));
+                logDao.insert(new Log(2, 2, new Date(currentTime), Log.LOG_CREATE_NEW));
+                logDao.insert(new Log(3, 3, new Date(currentTime), Log.LOG_CREATE_NEW));
+                logDao.insert(new Log(4, 4, new Date(currentTime), Log.LOG_CREATE_NEW));
+                logDao.insert(new Log(5, 5, new Date(currentTime), Log.LOG_CREATE_NEW));
+                logDao.insert(new Log(6, 6, new Date(currentTime), Log.LOG_CREATE_NEW));
+                logDao.insert(new Log(7, 7, new Date(currentTime - (1000 * 60 * 60 * 24)), Log.LOG_CREATE_NEW));
+                logDao.insert(new Log(8, 8, new Date(currentTime - (1000 * 60 * 60 * 24 * 2)), Log.LOG_CREATE_NEW));
+                logDao.insert(new Log(9, 9, new Date(currentTime), Log.LOG_CREATE_NEW));
+                logDao.insert(new Log(10, 10, new Date(currentTime), Log.LOG_CREATE_NEW));
+                logDao.insert(new Log(11, 11, new Date(currentTime), Log.LOG_CREATE_NEW));
+                logDao.insert(new Log(12, 7, new Date(currentTime), Log.LOG_CHANGE_STATUS_DONE));
+                logDao.insert(new Log(13, 8, new Date(currentTime - (1000 * 60 * 60 * 24 * 3 / 2)), Log.LOG_CHANGE_STATUS_DONE));
+                logDao.insert(new Log(14, 12, new Date(currentTime), Log.LOG_CREATE_NEW));
+                logDao.insert(new Log(15, 13, new Date(currentTime - (1000 * 60 * 60 * 24 * 2)), Log.LOG_CREATE_NEW));
+                logDao.insert(new Log(16, 14, new Date(currentTime), Log.LOG_CREATE_NEW));
+                logDao.insert(new Log(17, 15, new Date(currentTime), Log.LOG_CREATE_NEW));
+                logDao.insert(new Log(18, 13, new Date(currentTime - (1000 * 60 * 60 * 24)), Log.LOG_CHANGE_CONTENTS));
+                logDao.insert(new Log(19, 13, new Date(currentTime), Log.LOG_CHANGE_STATUS_DONE));
+                logDao.insert(new Log(20, 8, new Date(currentTime - (1000 * 60 * 60 * 24)), Log.LOG_CHANGE_STATUS_TODO));
+                logDao.insert(new Log(21, 8, new Date(currentTime), Log.LOG_CHANGE_STATUS_DONE));
 
                 ToDoDao todoDao = INSTANCE.toDoDao();
                 todoDao.deleteAll();
@@ -85,7 +88,7 @@ abstract class ToDoLogRoomDatabase extends RoomDatabase {
                 todoDao.insert(new ToDo(6, 6, 1, 1, mContext.getString(R.string.todo_data_6), 6));
 
                 todoDao.insert(new ToDo(7, 1, 2, 2, mContext.getString(R.string.todo_data_7), 12));
-                todoDao.insert(new ToDo(8, 2, 2, 2, mContext.getString(R.string.todo_data_8), 13));
+                todoDao.insert(new ToDo(8, 2, 2, 2, mContext.getString(R.string.todo_data_8), 21));
                 todoDao.insert(new ToDo(9, 3, 1, 2, mContext.getString(R.string.todo_data_9), 9));
                 todoDao.insert(new ToDo(10, 4, 1, 2, mContext.getString(R.string.todo_data_10), 10));
                 todoDao.insert(new ToDo(11, 5, 1, 2, mContext.getString(R.string.todo_data_11), 11));
