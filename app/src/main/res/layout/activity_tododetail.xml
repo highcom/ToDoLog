@@ -131,4 +131,19 @@
         android:layout_marginRight="10dp"
         android:layout_marginBottom="50dp" />
 
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_gravity="center_horizontal">
+
+    <FrameLayout
+        android:id="@+id/ad_view_frame_tododetail"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center|bottom"
+        android:layout_centerInParent="true"
+        android:layout_alignParentBottom="true" />
+
+    </LinearLayout>
 </LinearLayout>

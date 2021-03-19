@@ -5,13 +5,17 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.DisplayMetrics;
+import android.view.Display;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
+import android.widget.FrameLayout;
 import android.widget.Spinner;
 
 import androidx.annotation.NonNull;
@@ -21,6 +25,9 @@ import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.google.android.gms.ads.AdRequest;
+import com.google.android.gms.ads.AdSize;
+import com.google.android.gms.ads.AdView;
 import com.highcom.todolog.datamodel.Group;
 import com.highcom.todolog.datamodel.Log;
 import com.highcom.todolog.datamodel.LogViewModel;
@@ -42,10 +49,16 @@ public class ToDoDetailActivity extends AppCompatActivity implements TextWatcher
 
     private LogViewModel mLogViewModel;
 
+    private FrameLayout adContainerView;
+    private AdView mAdView;
+
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_tododetail);
+
+        adContainerView = findViewById(R.id.ad_view_frame_tododetail);
+        adContainerView.post(() -> loadBanner());
 
         setTitle(getString(R.string.detail_title));
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
@@ -65,8 +78,16 @@ public class ToDoDetailActivity extends AppCompatActivity implements TextWatcher
                 InputMethodManager inputMethodManager = (InputMethodManager)getApplicationContext().getSystemService(Context.INPUT_METHOD_SERVICE);
                 if (inputMethodManager != null) {
                     inputMethodManager.showSoftInput(view, 0);
+                    // キーボードを表示する時は広告を非表示「にする
+                    mAdView.setVisibility(AdView.GONE);
                 }
             });
+        });
+        mDetailContents.setOnFocusChangeListener((view, b) -> {
+            // フォーカスが外れるとキーボードが閉じるので広告を表示する
+            if (!b) {
+                mAdView.setVisibility(AdView.VISIBLE);
+            }
         });
 
         // 状態選択スピナーの設定をする
@@ -141,6 +162,54 @@ public class ToDoDetailActivity extends AppCompatActivity implements TextWatcher
         });
     }
 
+    private void loadBanner() {
+        // Create an ad request.
+        mAdView = new AdView(this);
+        mAdView.setAdUnitId(getString(R.string.admob_unit_id_2));
+        adContainerView.removeAllViews();
+        adContainerView.addView(mAdView);
+
+        AdSize adSize = getAdSize();
+        mAdView.setAdSize(adSize);
+
+        AdRequest adRequest = new AdRequest.Builder().addTestDevice(getString(R.string.admob_test_device)).build();
+
+        // Start loading the ad in the background.
+        mAdView.loadAd(adRequest);
+    }
+
+    private AdSize getAdSize() {
+        // Determine the screen width (less decorations) to use for the ad width.
+        Display display = getWindowManager().getDefaultDisplay();
+        DisplayMetrics outMetrics = new DisplayMetrics();
+        display.getMetrics(outMetrics);
+
+        float density = outMetrics.density;
+
+        float adWidthPixels = adContainerView.getWidth();
+
+        // If the ad hasn't been laid out, default to the full screen width.
+        if (adWidthPixels == 0) {
+            adWidthPixels = outMetrics.widthPixels;
+        }
+
+        int adWidth = (int) (adWidthPixels / density);
+        return AdSize.getCurrentOrientationAnchoredAdaptiveBannerAdSize(this, adWidth);
+    }
+
+    @Override
+    public boolean onTouchEvent(MotionEvent event) {
+        // 内容編集中にフォーカスが外れた場合は、キーボードを閉じる
+        mDetailContents.setFocusable(false);
+        mDetailContents.setFocusableInTouchMode(false);
+        mDetailContents.requestFocus();
+        if (getCurrentFocus() != null) {
+            InputMethodManager inputMethodManager = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+            inputMethodManager.hideSoftInputFromWindow(getCurrentFocus().getWindowToken(), InputMethodManager.HIDE_NOT_ALWAYS);
+        }
+        return super.onTouchEvent(event);
+    }
+
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.activity_detail_menu, menu);
@@ -193,5 +262,11 @@ public class ToDoDetailActivity extends AppCompatActivity implements TextWatcher
             return Log.LOG_CHANGE_CONTENTS;
         }
         return Log.LOG_NOCHANGE;
+    }
+
+    @Override
+    protected void onDestroy() {
+        mAdView.destroy();
+        super.onDestroy();
     }
 }
