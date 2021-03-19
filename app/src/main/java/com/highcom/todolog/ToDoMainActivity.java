@@ -81,12 +81,7 @@ public class ToDoMainActivity extends AppCompatActivity {
         MobileAds.setRequestConfiguration(
                 new RequestConfiguration.Builder().setTestDeviceIds(Arrays.asList("874848BA4D9A6B9B0A256F7862A47A31")).build());
         adContainerView = findViewById(R.id.ad_view_frame);
-        adContainerView.post(new Runnable() {
-            @Override
-            public void run() {
-                loadBanner();
-            }
-        });
+        adContainerView.post(() -> loadBanner());
 
         RmpAppirater.appLaunched(this,
             (appLaunchCount, appThisVersionCodeLaunchCount, firstLaunchDate, appVersionCode, previousAppVersionCode, rateClickDate, reminderClickDate, doNotShowAgain) -> {
@@ -172,49 +167,47 @@ public class ToDoMainActivity extends AppCompatActivity {
         ListView listView = findViewById(R.id.task_list_view_inside_nav);
         mGroupViewModel = new ViewModelProvider(this).get(GroupViewModel.class);
 
-        if (savedInstanceState == null) {
-            // 初期表示のFragmentを設定する
-            mGroupViewModel.getGroupList().observe(this, groupList -> {
-                // グループが1つも存在しない場合にはタスクリスト編集に移る
-                if (groupList.size() == 0) {
-                    setTitle(R.string.group_edit_title);
-                    mGroupListFragment = new GroupListFragment();
-                    mSelectFragment = SELECT_FRAGMENT.FRAGMENT_GROUPLIST;
-                    getSupportFragmentManager().beginTransaction().replace(R.id.nav_host_fragment, mGroupListFragment).commit();
-                    return;
-                }
+        // 初期表示のFragmentを設定する
+        mGroupViewModel.getGroupList().observe(this, groupList -> {
+            // グループが1つも存在しない場合にはタスクリスト編集に移る
+            if (groupList.size() == 0) {
+                setTitle(R.string.group_edit_title);
+                mGroupListFragment = new GroupListFragment();
+                mSelectFragment = SELECT_FRAGMENT.FRAGMENT_GROUPLIST;
+                getSupportFragmentManager().beginTransaction().replace(R.id.nav_host_fragment, mGroupListFragment).commit();
+                return;
+            }
 
-                // この変化通知を受けるのは１度だけ
-                if (hasBeenFirstGroupHandled) return;
-                hasBeenFirstGroupHandled = true;
+            // この変化通知を受けるのは１度だけ
+            if (hasBeenFirstGroupHandled) return;
+            hasBeenFirstGroupHandled = true;
 
-                // 初めて起動時はgroupListが空で来た後、サンプルデータが作成されるのでToDoList選択状態にしたい
-                // グループが１つで名前が空の場合は初めて起動時ではなく、グループを全削除した後の新規追加時の登録なので何もしない
-                if (groupList.size() == 1 && groupList.get(0).getGroupName().equals("")) return;
+            // 初めて起動時はgroupListが空で来た後、サンプルデータが作成されるのでToDoList選択状態にしたい
+            // グループが１つで名前が空の場合は初めて起動時ではなく、グループを全削除した後の新規追加時の登録なので何もしない
+            if (groupList.size() == 1 && groupList.get(0).getGroupName().equals("")) return;
 
-                mToDoListFragment = new ToDoListFragment();
-                mSelectFragment = SELECT_FRAGMENT.FRAGMENT_TODOLIST;
+            mToDoListFragment = new ToDoListFragment();
+            mSelectFragment = SELECT_FRAGMENT.FRAGMENT_TODOLIST;
 
-                mSelectGroup = mPreferences.getLong(SELECT_GROUP, 0);
-                boolean isGroupExist = false;
-                for (Group group : groupList) if (group.getGroupId() == mSelectGroup) isGroupExist = true;
-                if (isGroupExist) {
-                    // 前回選択していたグループを設定する
-                    Bundle args = new Bundle();
-                    args.putLong(SELECT_GROUP, mSelectGroup);
-                    mToDoListFragment.setArguments(args);
-                    getSupportFragmentManager().beginTransaction().replace(R.id.nav_host_fragment, mToDoListFragment).commit();
-                } else {
-                    // 前回選択していたグループが存在していない場合は最初のグループを選択する
-                    setTitle(groupList.get(0).getGroupName());
-                    mSelectGroup = groupList.get(0).getGroupId();
-                    Bundle args = new Bundle();
-                    args.putLong(SELECT_GROUP, mSelectGroup);
-                    mToDoListFragment.setArguments(args);
-                    getSupportFragmentManager().beginTransaction().replace(R.id.nav_host_fragment, mToDoListFragment).commit();
-                }
-            });
-        }
+            mSelectGroup = mPreferences.getLong(SELECT_GROUP, 0);
+            boolean isGroupExist = false;
+            for (Group group : groupList) if (group.getGroupId() == mSelectGroup) isGroupExist = true;
+            if (isGroupExist) {
+                // 前回選択していたグループを設定する
+                Bundle args = new Bundle();
+                args.putLong(SELECT_GROUP, mSelectGroup);
+                mToDoListFragment.setArguments(args);
+                getSupportFragmentManager().beginTransaction().replace(R.id.nav_host_fragment, mToDoListFragment).commit();
+            } else {
+                // 前回選択していたグループが存在していない場合は最初のグループを選択する
+                setTitle(groupList.get(0).getGroupName());
+                mSelectGroup = groupList.get(0).getGroupId();
+                Bundle args = new Bundle();
+                args.putLong(SELECT_GROUP, mSelectGroup);
+                mToDoListFragment.setArguments(args);
+                getSupportFragmentManager().beginTransaction().replace(R.id.nav_host_fragment, mToDoListFragment).commit();
+            }
+        });
         // Drawerに表示するListを設定する
         mGroupViewModel.getGroupList().observe(this, groupList -> {
             ArrayList<DrawerListItem> drawerListItem = new ArrayList<>();
@@ -240,7 +233,6 @@ public class ToDoMainActivity extends AppCompatActivity {
                 getSupportFragmentManager().beginTransaction().replace(R.id.nav_host_fragment, mToDoListFragment).commit();
                 drawer.closeDrawers();
             });
-
         });
     }
 
@@ -298,10 +290,18 @@ public class ToDoMainActivity extends AppCompatActivity {
     }
 
     public void hideFloatingButton() {
+        mAdView.setVisibility(AdView.GONE);
         fab.hide();
     }
 
     public void showFloatingButton() {
+        mAdView.setVisibility(AdView.VISIBLE);
         fab.show();
+    }
+
+    @Override
+    protected void onDestroy() {
+        mAdView.destroy();
+        super.onDestroy();
     }
 }
