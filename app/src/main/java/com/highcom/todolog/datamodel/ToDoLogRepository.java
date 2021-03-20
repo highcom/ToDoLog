@@ -52,6 +52,10 @@ public class ToDoLogRepository {
     void updateToDoAndLog(ToDo toDo, Log log) {
         ToDoLogRoomDatabase.databaseWriteExtractor.execute(() -> {
             long logRowId = mLogDao.insert(log);
+            // グループ又はステータスを変更した場合には、変更先の順番の末尾にする
+            if (log.getOperation() == Log.LOG_CHANGE_GROUP || log.getOperation() == Log.LOG_CHANGE_STATUS_TODO || log.getOperation() == Log.LOG_CHANGE_STATUS_DONE) {
+                toDo.setTodoOrder(mTodoDao.getToDoOrderByGroupIdAndState(toDo.getGroupId(), toDo.getState()) + 1);
+            }
             toDo.setLatestLogId(logRowId);
             mTodoDao.update(toDo);
         });

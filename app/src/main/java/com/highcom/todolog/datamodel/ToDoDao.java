@@ -25,6 +25,9 @@ public interface ToDoDao {
     @Query("SELECT * FROM todo_table WHERE todo_id = :id")
     ToDo getToDoSync(long id);
 
+    @Query("SELECT todo_order FROM todo_table WHERE group_id = :groupId AND state = :state ORDER BY todo_order DESC LIMIT 1")
+    int getToDoOrderByGroupIdAndState(long groupId, int state);
+
     @Update(onConflict = OnConflictStrategy.REPLACE)
     void update(ToDo todo);
 
