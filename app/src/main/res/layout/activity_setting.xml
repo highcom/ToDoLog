@@ -35,6 +35,7 @@
             android:layout_marginLeft="4dp"
             android:layout_marginTop="15dp"
             android:layout_marginBottom="15dp"
+            android:textColor="@color/black"
             android:textSize="14dp"
             android:id="@+id/license_text" />
     </LinearLayout>
@@ -68,6 +69,7 @@
             android:layout_marginLeft="4dp"
             android:layout_marginTop="15dp"
             android:layout_marginBottom="15dp"
+            android:textColor="@color/black"
             android:textSize="14dp"
             android:id="@+id/privacy_policy_text" />
 

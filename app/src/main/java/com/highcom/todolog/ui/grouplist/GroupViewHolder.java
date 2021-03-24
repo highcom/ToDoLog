@@ -6,10 +6,12 @@ import android.view.ViewGroup;
 import android.widget.EditText;
 
 import androidx.annotation.NonNull;
+import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.highcom.todolog.R;
 import com.highcom.todolog.datamodel.Group;
+import com.highcom.todolog.datamodel.ToDo;
 
 import java.nio.file.attribute.GroupPrincipal;
 
@@ -49,6 +51,7 @@ public class GroupViewHolder extends RecyclerView.ViewHolder {
     public void bind(Group group) {
         mGroup = group;
         mGroupName.setText(group.getGroupName());
+        mGroupName.setTextColor(ContextCompat.getColor(mGroupName.getContext(), android.R.color.black));
 
         // 内容が空の場合、新規に作成されたものなので編集状態にする
         if (group.getGroupName().equals("")) {
