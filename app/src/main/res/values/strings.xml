@@ -7,6 +7,7 @@
     <string name="nav_header_desc">Navigation header</string>
     <string name="action_settings">Settings</string>
     <string name="group_edit">Edit task list</string>
+    <string name="group_select">Select task list</string>
 
     <string name="drawer_open">Open</string>
     <string name="drawer_close">Close</string>
