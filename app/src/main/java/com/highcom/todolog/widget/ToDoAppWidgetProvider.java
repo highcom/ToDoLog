@@ -1,13 +1,23 @@
 package com.highcom.todolog.widget;
 
+import android.app.Activity;
 import android.app.PendingIntent;
+import android.app.TaskStackBuilder;
 import android.appwidget.AppWidgetManager;
 import android.appwidget.AppWidgetProvider;
+import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.widget.RemoteViews;
 
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.lifecycle.ViewModelProvider;
+
 import com.highcom.todolog.R;
+import com.highcom.todolog.SettingActivity;
+import com.highcom.todolog.ToDoMainActivity;
+import com.highcom.todolog.datamodel.Group;
+import com.highcom.todolog.datamodel.GroupViewModel;
 
 public class ToDoAppWidgetProvider extends AppWidgetProvider {
     @Override
@@ -18,27 +28,50 @@ public class ToDoAppWidgetProvider extends AppWidgetProvider {
         for (int i=0; i<N; i++) {
             int appWidgetId = appWidgetIds[i];
 
-            // Create an Intent to launch ExampleActivity
-            Intent intent = new Intent(context, ToDoAppWidgetProvider.class);
-            PendingIntent pendingIntent = PendingIntent.getActivity(context, 0, intent, 0);
-
-            // Get the layout for the App Widget and attach an on-click listener
-            // to the button
             RemoteViews views = new RemoteViews(context.getPackageName(), R.layout.todo_appwidget);
 
-            views.setOnClickPendingIntent(R.id.button_update, pendingIntent);
+            Intent titleIntent = new Intent(context, ToDoMainActivity.class);
+            PendingIntent titlePendingIntent = PendingIntent.getActivity(context, 0, titleIntent, 0);
+            // タイトルを押下した時のアクションを定義する
+            views.setOnClickPendingIntent(R.id.todo_widget_title_view, titlePendingIntent);
 
-            // Tell the AppWidgetManager to perform an update on the current app widget
+            Intent listIntent = new Intent(context, ToDoWidgetRemoteViewsService.class);
+            views.setRemoteAdapter(R.id.todo_widget_list_view, listIntent);
+            // リストを選択した時のアクションを定義する
+            Intent clickIntentTemplate = new Intent(context, SettingActivity.class);
+            PendingIntent clickPendingIntentTemplate = TaskStackBuilder.create(context)
+                    .addNextIntentWithParentStack(clickIntentTemplate)
+                    .getPendingIntent(0, PendingIntent.FLAG_UPDATE_CURRENT);
+            views.setPendingIntentTemplate(R.id.todo_widget_list_view, clickPendingIntentTemplate);
+
             appWidgetManager.updateAppWidget(appWidgetId, views);
         }
     }
 
     static void updateAppWidget(Context context, AppWidgetManager appWidgetManager, int appWidgetId) {
-        long selectGroupId = ToDoAppWidgetConfigure.loadSelectWidgetGroupPref(context, appWidgetId);
+        String selectGroupName = ToDoAppWidgetConfigure.loadSelectWidgetGroupNamePref(context, appWidgetId);
 
         RemoteViews views = new RemoteViews(context.getPackageName(), R.layout.todo_appwidget);
-        views.setTextViewText(R.id.appwidget_id, " " + selectGroupId);
+        views.setTextViewText(R.id.todo_widget_title_view, selectGroupName);
 
         appWidgetManager.updateAppWidget(appWidgetId, views);
+    }
+
+    public static void sendRefreshBroadcast(Context context) {
+        Intent intent = new Intent(AppWidgetManager.ACTION_APPWIDGET_UPDATE);
+        intent.setComponent(new ComponentName(context, ToDoAppWidgetProvider.class));
+        context.sendBroadcast(intent);
+    }
+
+    @Override
+    public void onReceive(final Context context, Intent intent) {
+        final String action = intent.getAction();
+        if (action.equals(AppWidgetManager.ACTION_APPWIDGET_UPDATE)) {
+            // refresh all your widgets
+            AppWidgetManager mgr = AppWidgetManager.getInstance(context);
+            ComponentName cn = new ComponentName(context, ToDoAppWidgetProvider.class);
+            mgr.notifyAppWidgetViewDataChanged(mgr.getAppWidgetIds(cn), R.id.todo_widget_list_view);
+        }
+        super.onReceive(context, intent);
     }
 }

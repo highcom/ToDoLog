@@ -3,40 +3,36 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#09C"
+    android:background="#55FFFFFF"
     android:padding="@dimen/widget_margin"
     android:orientation="vertical">
 
-    <!-- Panel for Widget ID -->
-    <LinearLayout
-        android:id="@+id/section_id"
+    <FrameLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true"
-        android:layout_alignParentTop="true"
-        android:orientation="horizontal">
-
+        android:layout_height="wrap_content">
         <TextView
-            android:id="@+id/appwidget_id_label"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="2"
-            android:text="TEST"/>
+            android:layout_width="match_parent"
+            android:id="@+id/todo_widget_title_view"
+            android:text="@string/widget_title"
+            android:textColor="@color/white"
+            android:background="@color/deepgreen"
+            android:textSize="18dp"
+            android:gravity="center"
+            android:textAllCaps="true"
+            android:layout_height="@dimen/widget_title_min_height"/>
+    </FrameLayout>
 
-        <TextView
-            android:id="@+id/appwidget_id"
-            android:layout_width="0dp"
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <ListView
+            android:id="@+id/todo_widget_list_view"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:gravity="end"
-            android:text="XX"/>
+            android:background="@color/cream"
+            android:dividerHeight="1dp"
+            android:divider="#eeeeee"
+            tools:listitem="@layout/todo_widget_list_item" />
     </LinearLayout>
-    <Button
-        android:id="@+id/button_update"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/section_update"
-        android:layout_centerHorizontal="true"
-        android:text="BUTTON" />
 </LinearLayout>

@@ -16,6 +16,10 @@ public interface ToDoDao {
     @Query("SELECT * FROM todo_table WHERE group_id = :groupId ORDER BY state ASC, todo_order ASC")
     LiveData<List<ToDoAndLog>> getToDoListByTaskGroup(long groupId);
 
+    @Transaction
+    @Query("SELECT * FROM todo_table WHERE group_id = :groupId ORDER BY state ASC, todo_order ASC")
+    List<ToDoAndLog> getToDoListByTaskGroupSync(long groupId);
+
     @Query("SELECT todo_id FROM todo_table WHERE group_id = :groupId")
     List<Long> getToDoIdListByTaskGroup(long groupId);
 

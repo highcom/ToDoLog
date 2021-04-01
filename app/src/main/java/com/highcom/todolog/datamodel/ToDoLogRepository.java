@@ -1,6 +1,6 @@
 package com.highcom.todolog.datamodel;
 
-import android.app.Application;
+import android.content.Context;
 
 import androidx.lifecycle.LiveData;
 
@@ -14,19 +14,19 @@ public class ToDoLogRepository {
     private LogDao mLogDao;
     private LiveData<List<Group>> mGroupList;
 
-    public static ToDoLogRepository getInstance(Application application) {
+    public static ToDoLogRepository getInstance(Context context) {
         if (instance == null) {
             synchronized (ToDoLogRepository.class) {
                 if (instance == null) {
-                    instance = new ToDoLogRepository(application);
+                    instance = new ToDoLogRepository(context);
                 }
             }
         }
         return instance;
     }
 
-    private ToDoLogRepository(Application application) {
-        ToDoLogRoomDatabase db = ToDoLogRoomDatabase.getDatabase(application);
+    private ToDoLogRepository(Context context) {
+        ToDoLogRoomDatabase db = ToDoLogRoomDatabase.getDatabase(context);
         mGroupDao = db.groupDao();
         mGroupList = mGroupDao.getGroupList();
         mTodoDao = db.toDoDao();
@@ -39,6 +39,10 @@ public class ToDoLogRepository {
 
     LiveData<List<ToDoAndLog>> getTodoListByTaskGroup(long groupId) {
         return mTodoDao.getToDoListByTaskGroup(groupId);
+    }
+
+    public List<ToDoAndLog> getTodoListByTaskGroupSync(long groupId) {
+        return mTodoDao.getToDoListByTaskGroupSync(groupId);
     }
 
     LiveData<List<Log>> getLogListByTodoId(long todoId) {

@@ -18,6 +18,7 @@ import com.highcom.todolog.R;
 import com.highcom.todolog.ToDoMainActivity;
 import com.highcom.todolog.datamodel.Group;
 import com.highcom.todolog.datamodel.GroupViewModel;
+import com.highcom.todolog.datamodel.StringsResource;
 import com.highcom.todolog.ui.drawerlist.DrawerListAdapter;
 import com.highcom.todolog.ui.drawerlist.DrawerListItem;
 import com.highcom.todolog.ui.todolist.ToDoListFragment;
@@ -28,8 +29,10 @@ import static com.highcom.todolog.ui.todolist.ToDoListFragment.SELECT_GROUP;
 
 public class ToDoAppWidgetConfigure extends AppCompatActivity {
 
-    public static final String SELECT_WIDGET_GROUP = "selectWidgetGroup";
-    private int mAppWidgetId = AppWidgetManager.INVALID_APPWIDGET_ID;
+    public static final String SELECT_WIDGET_GROUP_ID = "selectWidgetGroupId";
+    public static final String SELECT_WIDGET_GROUP_NAME = "selectWidgetGroupName";
+    // TODO:対策できたらstaticけす
+    private static int mAppWidgetId = AppWidgetManager.INVALID_APPWIDGET_ID;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -60,12 +63,13 @@ public class ToDoAppWidgetConfigure extends AppCompatActivity {
             listView.setAdapter(adapter);
 
             listView.setOnItemClickListener((adapterView, view, i, l) -> {
-                long selectGroup = groupList.get(i).getGroupId();
-                saveSelectWidgetGroupPref(getApplicationContext(), mAppWidgetId, selectGroup);
+                long selectGroupId = groupList.get(i).getGroupId();
+                String selectGroupName = groupList.get(i).getGroupName();
+                saveSelectWidgetGroupPref(getApplicationContext(), mAppWidgetId, selectGroupId, selectGroupName);
                 RemoteViews views = new RemoteViews(getPackageName(), R.layout.todo_appwidget);
                 AppWidgetManager appWidgetManager = AppWidgetManager.getInstance(getApplicationContext());
                 appWidgetManager.updateAppWidget(mAppWidgetId, views);
-                ToDoAppWidgetProvider.updateAppWidget(getApplicationContext(), appWidgetManager, mAppWidgetId);
+                ToDoAppWidgetProvider.updateAppWidget(this.getApplicationContext(), appWidgetManager, mAppWidgetId);
 
                 Intent resultValue = new Intent();
                 resultValue.putExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, mAppWidgetId);
@@ -75,14 +79,23 @@ public class ToDoAppWidgetConfigure extends AppCompatActivity {
         });
     }
 
-    static void saveSelectWidgetGroupPref(Context context, int appWidgetId, long selectGroupId) {
+    static void saveSelectWidgetGroupPref(Context context, int appWidgetId, long selectGroupId, String selectGroupName) {
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
-        prefs.edit().putLong(SELECT_WIDGET_GROUP + appWidgetId, selectGroupId).apply();
+        prefs.edit().putLong(SELECT_WIDGET_GROUP_ID + appWidgetId, selectGroupId).apply();
+        prefs.edit().putString(SELECT_WIDGET_GROUP_NAME + appWidgetId, selectGroupName).apply();
     }
 
-    static long loadSelectWidgetGroupPref(Context context, int appWidgetId) {
+    static long loadSelectWidgetGroupIdPref(Context context, int appWidgetId) {
+        // TODO:どう直すか
+        if (appWidgetId == 0) appWidgetId = mAppWidgetId;
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
-        long groupId = prefs.getLong(SELECT_WIDGET_GROUP + appWidgetId, -1);
+        long groupId = prefs.getLong(SELECT_WIDGET_GROUP_ID + appWidgetId, -1);
         return groupId;
+    }
+
+    static String loadSelectWidgetGroupNamePref(Context context, int appWidgetId) {
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
+        String groupName = prefs.getString(SELECT_WIDGET_GROUP_NAME + appWidgetId, "");
+        return groupName;
     }
 }
