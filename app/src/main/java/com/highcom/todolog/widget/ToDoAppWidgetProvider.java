@@ -8,10 +8,12 @@ import android.appwidget.AppWidgetProvider;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.widget.RemoteViews;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.ViewModelProvider;
+import androidx.preference.PreferenceManager;
 
 import com.highcom.todolog.R;
 import com.highcom.todolog.SettingActivity;
@@ -53,6 +55,9 @@ public class ToDoAppWidgetProvider extends AppWidgetProvider {
 
         RemoteViews views = new RemoteViews(context.getPackageName(), R.layout.todo_appwidget);
         views.setTextViewText(R.id.todo_widget_title_view, selectGroupName);
+        Intent listIntent = new Intent(context, ToDoWidgetRemoteViewsService.class);
+        listIntent.putExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, appWidgetId);
+        views.setRemoteAdapter(R.id.todo_widget_list_view, listIntent);
 
         appWidgetManager.updateAppWidget(appWidgetId, views);
     }

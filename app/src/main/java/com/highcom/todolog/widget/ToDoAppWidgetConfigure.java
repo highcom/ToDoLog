@@ -31,8 +31,7 @@ public class ToDoAppWidgetConfigure extends AppCompatActivity {
 
     public static final String SELECT_WIDGET_GROUP_ID = "selectWidgetGroupId";
     public static final String SELECT_WIDGET_GROUP_NAME = "selectWidgetGroupName";
-    // TODO:対策できたらstaticけす
-    private static int mAppWidgetId = AppWidgetManager.INVALID_APPWIDGET_ID;
+    private int mAppWidgetId = AppWidgetManager.INVALID_APPWIDGET_ID;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -86,8 +85,6 @@ public class ToDoAppWidgetConfigure extends AppCompatActivity {
     }
 
     static long loadSelectWidgetGroupIdPref(Context context, int appWidgetId) {
-        // TODO:どう直すか
-        if (appWidgetId == 0) appWidgetId = mAppWidgetId;
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
         long groupId = prefs.getLong(SELECT_WIDGET_GROUP_ID + appWidgetId, -1);
         return groupId;
