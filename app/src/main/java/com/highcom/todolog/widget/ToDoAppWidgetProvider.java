@@ -1,6 +1,5 @@
 package com.highcom.todolog.widget;
 
-import android.app.Activity;
 import android.app.PendingIntent;
 import android.app.TaskStackBuilder;
 import android.appwidget.AppWidgetManager;
@@ -8,19 +7,12 @@ import android.appwidget.AppWidgetProvider;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.net.Uri;
 import android.widget.RemoteViews;
-
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.lifecycle.ViewModelProvider;
-import androidx.preference.PreferenceManager;
 
 import com.highcom.todolog.R;
 import com.highcom.todolog.SettingActivity;
 import com.highcom.todolog.ToDoMainActivity;
-import com.highcom.todolog.datamodel.Group;
-import com.highcom.todolog.datamodel.GroupViewModel;
 
 public class ToDoAppWidgetProvider extends AppWidgetProvider {
     @Override
@@ -31,14 +23,17 @@ public class ToDoAppWidgetProvider extends AppWidgetProvider {
         for (int i=0; i<N; i++) {
             int appWidgetId = appWidgetIds[i];
 
+            String selectGroupName = ToDoAppWidgetConfigure.loadSelectWidgetGroupNamePref(context, appWidgetId);
             RemoteViews views = new RemoteViews(context.getPackageName(), R.layout.todo_appwidget);
 
             Intent titleIntent = new Intent(context, ToDoMainActivity.class);
+            views.setTextViewText(R.id.todo_widget_title_view, selectGroupName);
             PendingIntent titlePendingIntent = PendingIntent.getActivity(context, 0, titleIntent, 0);
             // タイトルを押下した時のアクションを定義する
             views.setOnClickPendingIntent(R.id.todo_widget_title_view, titlePendingIntent);
 
             Intent listIntent = new Intent(context, ToDoWidgetRemoteViewsService.class);
+            listIntent.setData(Uri.fromParts("content", Integer.toString(appWidgetId), null));
             views.setRemoteAdapter(R.id.todo_widget_list_view, listIntent);
             // リストを選択した時のアクションを定義する
             Intent clickIntentTemplate = new Intent(context, SettingActivity.class);
