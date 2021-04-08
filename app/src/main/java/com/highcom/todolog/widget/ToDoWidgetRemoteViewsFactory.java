@@ -27,7 +27,7 @@ public class ToDoWidgetRemoteViewsFactory implements RemoteViewsService.RemoteVi
 
     public ToDoWidgetRemoteViewsFactory(Context applicationContext, Intent intent) {
         mContext = applicationContext;
-        mAppWidgetId = intent.getIntExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, AppWidgetManager.INVALID_APPWIDGET_ID);
+        mAppWidgetId = Integer.parseInt(intent.getData().getSchemeSpecificPart());
     }
 
     @Override
