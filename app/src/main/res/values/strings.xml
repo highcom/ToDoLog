@@ -9,7 +9,7 @@
     <string name="group_edit">Edit task list</string>
     <string name="group_select">Select task list</string>
 
-    <string name="widget_title">Task name</string>
+    <string name="widget_title">Task not found</string>
 
     <string name="drawer_open">Open</string>
     <string name="drawer_close">Close</string>

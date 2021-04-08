@@ -1,6 +1,5 @@
 package com.highcom.todolog.widget;
 
-import android.appwidget.AppWidgetManager;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Binder;
@@ -27,7 +26,9 @@ public class ToDoWidgetRemoteViewsFactory implements RemoteViewsService.RemoteVi
 
     public ToDoWidgetRemoteViewsFactory(Context applicationContext, Intent intent) {
         mContext = applicationContext;
-        mAppWidgetId = Integer.parseInt(intent.getData().getSchemeSpecificPart());
+        if (intent.getData() != null) {
+            mAppWidgetId = Integer.parseInt(intent.getData().getSchemeSpecificPart());
+        }
     }
 
     @Override
@@ -45,7 +46,7 @@ public class ToDoWidgetRemoteViewsFactory implements RemoteViewsService.RemoteVi
             mTodoAndLogList = ToDoLogRepository.getInstance(mContext).getTodoListByTaskGroupSync(selectGroupId);
         });
         futureList .add(future);
-        // ワーカースレっその処理完了を待つ
+        // ワーカースレッドその処理完了を待つ
         for (Future<?> f : futureList) {
             try {
                 f.get();
@@ -59,7 +60,7 @@ public class ToDoWidgetRemoteViewsFactory implements RemoteViewsService.RemoteVi
 
     @Override
     public void onDestroy() {
-
+        ToDoAppWidgetConfigure.deleteSelectWidgetGroupPref(mContext, mAppWidgetId);
     }
 
     @Override

@@ -95,4 +95,10 @@ public class ToDoAppWidgetConfigure extends AppCompatActivity {
         String groupName = prefs.getString(SELECT_WIDGET_GROUP_NAME + appWidgetId, "");
         return groupName;
     }
+
+    static void deleteSelectWidgetGroupPref(Context context, int appWidgetId) {
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
+        prefs.edit().remove(SELECT_WIDGET_GROUP_ID + appWidgetId).apply();
+        prefs.edit().remove(SELECT_WIDGET_GROUP_NAME + appWidgetId).apply();
+    }
 }

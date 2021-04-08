@@ -9,7 +9,7 @@
     <string name="group_edit">タスクリスト編集</string>
     <string name="group_select">タスクリスト選択</string>
 
-    <string name="widget_title">タスク名</string>
+    <string name="widget_title">タスクがありません</string>
 
     <string name="drawer_open">開く</string>
     <string name="drawer_close">閉じる</string>
