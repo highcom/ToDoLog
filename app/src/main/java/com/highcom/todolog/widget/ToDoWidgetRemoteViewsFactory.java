@@ -75,11 +75,11 @@ public class ToDoWidgetRemoteViewsFactory implements RemoteViewsService.RemoteVi
         }
 
         RemoteViews rv = new RemoteViews(mContext.getPackageName(), R.layout.todo_widget_list_item);
-        rv.setTextViewText(R.id.widgetItemTaskNameLabel, mTodoAndLogList.get(i).toDo.getContents());
+        rv.setTextViewText(R.id.widget_todo_contents, mTodoAndLogList.get(i).toDo.getContents());
 
         Intent fillInIntent = new Intent();
         fillInIntent.putExtra("TASK_TEXT", mTodoAndLogList.get(i).toDo.getContents());
-        rv.setOnClickFillInIntent(R.id.widgetItemContainer, fillInIntent);
+        rv.setOnClickFillInIntent(R.id.widget_item_container, fillInIntent);
 
         return rv;
     }

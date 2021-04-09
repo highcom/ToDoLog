@@ -11,7 +11,6 @@ import android.net.Uri;
 import android.widget.RemoteViews;
 
 import com.highcom.todolog.R;
-import com.highcom.todolog.SettingActivity;
 import com.highcom.todolog.ToDoMainActivity;
 
 public class ToDoAppWidgetProvider extends AppWidgetProvider {
@@ -36,7 +35,7 @@ public class ToDoAppWidgetProvider extends AppWidgetProvider {
             listIntent.setData(Uri.fromParts("content", Integer.toString(appWidgetId), null));
             views.setRemoteAdapter(R.id.todo_widget_list_view, listIntent);
             // リストを選択した時のアクションを定義する
-            Intent clickIntentTemplate = new Intent(context, SettingActivity.class);
+            Intent clickIntentTemplate = new Intent(context, ToDoMainActivity.class);
             PendingIntent clickPendingIntentTemplate = TaskStackBuilder.create(context)
                     .addNextIntentWithParentStack(clickIntentTemplate)
                     .getPendingIntent(0, PendingIntent.FLAG_UPDATE_CURRENT);
