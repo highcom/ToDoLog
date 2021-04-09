@@ -43,7 +43,7 @@ public class ToDoWidgetRemoteViewsFactory implements RemoteViewsService.RemoteVi
         List<Future<?>> futureList = new ArrayList<>();
         // ワーカースレッドで実行する。
         Future<?> future = databaseWriteExtractor.submit(() -> {
-            mTodoAndLogList = ToDoLogRepository.getInstance(mContext).getTodoListByTaskGroupSync(selectGroupId);
+            mTodoAndLogList = ToDoLogRepository.getInstance(mContext).getTodoListOnlyToDoByTaskGroupSync(selectGroupId);
         });
         futureList .add(future);
         // ワーカースレッドその処理完了を待つ
