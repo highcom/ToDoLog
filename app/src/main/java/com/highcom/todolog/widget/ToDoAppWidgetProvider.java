@@ -31,6 +31,7 @@ public class ToDoAppWidgetProvider extends AppWidgetProvider {
         RemoteViews views = new RemoteViews(context.getPackageName(), R.layout.todo_appwidget);
 
         Intent titleIntent = new Intent(context, ToDoMainActivity.class);
+        titleIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
         views.setTextViewText(R.id.todo_widget_title_view, selectGroupName);
         PendingIntent titlePendingIntent = PendingIntent.getActivity(context, 0, titleIntent, 0);
         // タイトルを押下した時のアクションを定義する
@@ -41,6 +42,7 @@ public class ToDoAppWidgetProvider extends AppWidgetProvider {
         views.setRemoteAdapter(R.id.todo_widget_list_view, listIntent);
         // リストを選択した時のアクションを定義する
         Intent clickIntentTemplate = new Intent(context, ToDoMainActivity.class);
+        clickIntentTemplate.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
         PendingIntent clickPendingIntentTemplate = TaskStackBuilder.create(context)
                 .addNextIntentWithParentStack(clickIntentTemplate)
                 .getPendingIntent(0, PendingIntent.FLAG_UPDATE_CURRENT);
