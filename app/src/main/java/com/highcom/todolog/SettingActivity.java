@@ -33,6 +33,13 @@ public class SettingActivity extends AppCompatActivity {
             Intent intent = new Intent(Intent.ACTION_VIEW,uri);
             startActivity(intent);
         });
+
+        TextView starTextView = findViewById(R.id.star_text);
+        starTextView.setOnClickListener(view -> {
+            Uri uri = Uri.parse(getString(R.string.star_url));
+            Intent intent = new Intent(Intent.ACTION_VIEW,uri);
+            startActivity(intent);
+        });
     }
 
     @Override
