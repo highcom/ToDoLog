@@ -28,6 +28,7 @@ import com.highcom.todolog.datamodel.ToDo;
 import com.highcom.todolog.datamodel.ToDoAndLog;
 import com.highcom.todolog.datamodel.ToDoViewModel;
 import com.highcom.todolog.ui.SimpleCallbackHelper;
+import com.highcom.todolog.widget.ToDoAppWidgetProvider;
 
 import java.sql.Date;
 import java.util.ArrayList;
@@ -107,6 +108,9 @@ public class ToDoListFragment extends Fragment implements SimpleCallbackHelper.S
                     break;
                 }
             }
+
+            // ウィジェットに更新を通知する
+            ToDoAppWidgetProvider.sendRefreshBroadcast(getContext());
         });
 
         final float scale = getResources().getDisplayMetrics().density;
