@@ -139,7 +139,7 @@ public class GroupListFragment extends Fragment implements SimpleCallbackHelper.
     @Override
     public void onGroupNameClicked(View view) {
         view.post(() -> {
-            ((ToDoMainActivity)getContext()).hideFloatingButton();
+            ((ToDoMainActivity)getContext()).changeDoneFloatingButton();
             view.setFocusable(true);
             view.setFocusableInTouchMode(true);
             view.requestFocus();
@@ -156,7 +156,7 @@ public class GroupListFragment extends Fragment implements SimpleCallbackHelper.
         InputMethodManager inputMethodManager = (InputMethodManager)getContext().getSystemService(Context.INPUT_METHOD_SERVICE);
         inputMethodManager.hideSoftInputFromWindow(getView().getWindowToken(), InputMethodManager.HIDE_NOT_ALWAYS);
 
-        ((ToDoMainActivity)getContext()).showFloatingButton();
+        ((ToDoMainActivity)getContext()).changeEditFloatingButton();
         view.setFocusable(false);
         view.setFocusableInTouchMode(false);
         view.requestFocus();

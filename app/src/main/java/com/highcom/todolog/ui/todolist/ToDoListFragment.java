@@ -215,7 +215,7 @@ public class ToDoListFragment extends Fragment implements SimpleCallbackHelper.S
     @Override
     public void onToDoContentsClicked(View view) {
         view.post(() -> {
-            ((ToDoMainActivity)getContext()).hideFloatingButton();
+            ((ToDoMainActivity)getContext()).changeDoneFloatingButton();
             view.setFocusable(true);
             view.setFocusableInTouchMode(true);
             view.requestFocus();
@@ -232,7 +232,7 @@ public class ToDoListFragment extends Fragment implements SimpleCallbackHelper.S
         InputMethodManager inputMethodManager = (InputMethodManager)getContext().getSystemService(Context.INPUT_METHOD_SERVICE);
         inputMethodManager.hideSoftInputFromWindow(getView().getWindowToken(), InputMethodManager.HIDE_NOT_ALWAYS);
 
-        ((ToDoMainActivity)getContext()).showFloatingButton();
+        ((ToDoMainActivity)getContext()).changeEditFloatingButton();
         view.setFocusable(false);
         view.setFocusableInTouchMode(false);
         view.requestFocus();

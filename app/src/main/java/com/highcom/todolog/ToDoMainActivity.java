@@ -9,6 +9,7 @@ import android.util.DisplayMetrics;
 import android.view.Display;
 import android.view.MenuItem;
 import android.view.Menu;
+import android.view.View;
 import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.ListView;
@@ -128,18 +129,7 @@ public class ToDoMainActivity extends AppCompatActivity {
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         fab = findViewById(R.id.fab);
-        fab.setOnClickListener(view -> {
-            switch (mSelectFragment) {
-                case FRAGMENT_TODOLIST:
-                    if (mToDoListFragment != null) mToDoListFragment.addNewToDoAndLog();
-                    break;
-                case FRAGMENT_GROUPLIST:
-                    if (mGroupListFragment != null) mGroupListFragment.addNewGroup();
-                    break;
-                default:
-                    break;
-            }
-        });
+        fab.setOnClickListener(new FloationButtonEditClickListener());
         DrawerLayout drawer = findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle actionBarDrawerToggle =
                 new ActionBarDrawerToggle(
@@ -289,19 +279,48 @@ public class ToDoMainActivity extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
-    public void hideFloatingButton() {
+    public void changeDoneFloatingButton() {
         mAdView.setVisibility(AdView.GONE);
-        fab.hide();
+        fab.setImageResource(R.drawable.ic_baseline_check_24);
+        fab.setOnClickListener(new FloationButtonDoneClickListener());
     }
 
-    public void showFloatingButton() {
+    public void changeEditFloatingButton() {
         mAdView.setVisibility(AdView.VISIBLE);
-        fab.show();
+        fab.setImageResource(R.drawable.ic_new_edit);
+        fab.setOnClickListener(new FloationButtonEditClickListener());
     }
 
     @Override
     protected void onDestroy() {
         mAdView.destroy();
         super.onDestroy();
+    }
+
+    public class FloationButtonEditClickListener implements View.OnClickListener {
+
+        @Override
+        public void onClick(View v) {
+            switch (mSelectFragment) {
+                case FRAGMENT_TODOLIST:
+                    if (mToDoListFragment != null) mToDoListFragment.addNewToDoAndLog();
+                    break;
+                case FRAGMENT_GROUPLIST:
+                    if (mGroupListFragment != null) mGroupListFragment.addNewGroup();
+                    break;
+                default:
+                    break;
+            }
+        }
+    }
+
+    public class FloationButtonDoneClickListener implements View.OnClickListener {
+
+        @Override
+        public void onClick(View v) {
+            fab.setFocusable(true);
+            fab.setFocusableInTouchMode(true);
+            fab.requestFocus();
+        }
     }
 }

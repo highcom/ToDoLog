@@ -54,7 +54,8 @@
             android:adjustViewBounds="true"
             android:background="@null"
             android:scaleType="centerInside"
-            android:src="@drawable/ic_detail_state"
+            android:src="@drawable/ic_baseline_check_24"
+            android:tint="@color/lightgray"
             android:id="@+id/detail_state_icon" />
 
         <TextView
@@ -102,6 +103,7 @@
             android:background="@null"
             android:scaleType="centerInside"
             android:src="@drawable/ic_folder"
+            android:tint="@color/lightgray"
             android:id="@+id/detail_group_icon" />
 
         <TextView
