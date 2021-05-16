@@ -129,7 +129,7 @@ public class ToDoMainActivity extends AppCompatActivity {
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         fab = findViewById(R.id.fab);
-        fab.setOnClickListener(new FloationButtonEditClickListener());
+        fab.setOnClickListener(new FloatingButtonEditClickListener());
         DrawerLayout drawer = findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle actionBarDrawerToggle =
                 new ActionBarDrawerToggle(
@@ -282,13 +282,13 @@ public class ToDoMainActivity extends AppCompatActivity {
     public void changeDoneFloatingButton() {
         mAdView.setVisibility(AdView.GONE);
         fab.setImageResource(R.drawable.ic_baseline_check_24);
-        fab.setOnClickListener(new FloationButtonDoneClickListener());
+        fab.setOnClickListener(new FloatingButtonDoneClickListener());
     }
 
     public void changeEditFloatingButton() {
         mAdView.setVisibility(AdView.VISIBLE);
         fab.setImageResource(R.drawable.ic_new_edit);
-        fab.setOnClickListener(new FloationButtonEditClickListener());
+        fab.setOnClickListener(new FloatingButtonEditClickListener());
     }
 
     @Override
@@ -297,7 +297,7 @@ public class ToDoMainActivity extends AppCompatActivity {
         super.onDestroy();
     }
 
-    public class FloationButtonEditClickListener implements View.OnClickListener {
+    public class FloatingButtonEditClickListener implements View.OnClickListener {
 
         @Override
         public void onClick(View v) {
@@ -314,10 +314,11 @@ public class ToDoMainActivity extends AppCompatActivity {
         }
     }
 
-    public class FloationButtonDoneClickListener implements View.OnClickListener {
+    public class FloatingButtonDoneClickListener implements View.OnClickListener {
 
         @Override
         public void onClick(View v) {
+            // フォーカスをfabにすることで内容からフォーカスを外して入力を完了させる
             fab.setFocusable(true);
             fab.setFocusableInTouchMode(true);
             fab.requestFocus();
