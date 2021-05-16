@@ -1,5 +1,6 @@
 package com.highcom.todolog.ui.todolist;
 
+import android.graphics.Color;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,6 +14,7 @@ import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.highcom.todolog.R;
+import com.highcom.todolog.datamodel.Log;
 import com.highcom.todolog.datamodel.StringsResource;
 import com.highcom.todolog.datamodel.ToDo;
 import com.highcom.todolog.datamodel.ToDoAndLog;
@@ -26,6 +28,7 @@ public class ToDoViewHolder extends RecyclerView.ViewHolder {
     private EditText mTodoContents;
     private TextView mTodoLogDate;
     private TextView mTodoLogOperation;
+    private ImageButton mToDoLogIcon;
     private ImageButton mRearrangeButton;
 
     public interface ToDoViewHolderListener {
@@ -40,6 +43,7 @@ public class ToDoViewHolder extends RecyclerView.ViewHolder {
         mTodoContents = (EditText) itemView.findViewById(R.id.todo_contents);
         mTodoLogDate = (TextView) itemView.findViewById(R.id.todo_log_date);
         mTodoLogOperation = (TextView) itemView.findViewById(R.id.todo_log_operation);
+        mToDoLogIcon = (ImageButton) itemView.findViewById(R.id.todo_log_icon);
         mRearrangeButton = (ImageButton) itemView.findViewById(R.id.rearrange_button);
 
         mCheckButton.setOnClickListener(view -> {
@@ -85,6 +89,7 @@ public class ToDoViewHolder extends RecyclerView.ViewHolder {
         // ログ内容を設定する
         final DateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
         mTodoLogDate.setText(dateFormat.format(toDoAndLog.log.getDate()));
+        mToDoLogIcon.setColorFilter(toDoAndLog.log.getLogIconColor());
         mTodoLogOperation.setText(StringsResource.get().mLogOperationItems.get(toDoAndLog.log.getOperation()));
 
         // 内容が空の場合、新規に作成されたものなので編集状態にする

@@ -1,5 +1,8 @@
 package com.highcom.todolog.datamodel;
 
+import android.graphics.Color;
+import android.widget.ImageButton;
+
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.room.ColumnInfo;
@@ -16,6 +19,12 @@ public class Log implements Cloneable {
     public static final int LOG_CHANGE_STATUS_DONE = 3;
     public static final int LOG_CHANGE_GROUP = 4;
     public static final int LOG_CHANGE_CONTENTS = 5;
+    public static final String LOG_NOCHANGE_COLOR = "#ffd3a8";
+    public static final String LOG_CREATE_NEW_COLOR = "#ffa8d3";
+    public static final String LOG_CHANGE_STATUS_TODO_COLOR = "#a8ffa8";
+    public static final String LOG_CHANGE_STATUS_DONE_COLOR = "#a8ffff";
+    public static final String LOG_CHANGE_GROUP_COLOR = "#a8a8ff";
+    public static final String LOG_CHANGE_CONTENTS_COLOR = "#ffffa8";
 
     @PrimaryKey(autoGenerate = true)
     @NonNull
@@ -61,6 +70,24 @@ public class Log implements Cloneable {
             return (Log) super.clone();
         } catch (CloneNotSupportedException e) {
             return new Log(this.mLogId, this.mTodoId, this.mDate, this.mOperation);
+        }
+    }
+
+    public int getLogIconColor() {
+        switch (mOperation) {
+            case Log.LOG_NOCHANGE:
+                return Color.parseColor(Log.LOG_NOCHANGE_COLOR);
+            case Log.LOG_CREATE_NEW:
+            default:
+                return Color.parseColor(Log.LOG_CREATE_NEW_COLOR);
+            case Log.LOG_CHANGE_STATUS_TODO:
+                return Color.parseColor(Log.LOG_CHANGE_STATUS_TODO_COLOR);
+            case Log.LOG_CHANGE_STATUS_DONE:
+                return Color.parseColor(Log.LOG_CHANGE_STATUS_DONE_COLOR);
+            case Log.LOG_CHANGE_GROUP:
+                return Color.parseColor(Log.LOG_CHANGE_GROUP_COLOR);
+            case Log.LOG_CHANGE_CONTENTS:
+                return Color.parseColor(Log.LOG_CHANGE_CONTENTS_COLOR);
         }
     }
 

@@ -2,14 +2,14 @@
     <!-- Base application theme. -->
     <style name="Theme.ToDoLog" parent="Theme.AppCompat.Light.DarkActionBar">
         <!-- Primary brand color. -->
-        <item name="colorPrimary">@color/deepgreen</item>
-        <item name="colorPrimaryDark">@color/deepgreen</item>
-        <item name="colorPrimaryVariant">@color/deepgreen</item>
-        <item name="colorAccent">@color/deepgreen</item>
+        <item name="colorPrimary">@color/ashgray</item>
+        <item name="colorPrimaryDark">@color/ashgray</item>
+        <item name="colorPrimaryVariant">@color/ashgray</item>
+        <item name="colorAccent">@color/ashgray</item>
         <item name="colorOnPrimary">@color/offwhite</item>
         <!-- Secondary brand color. -->
-        <item name="colorSecondary">@color/deepgreen</item>
-        <item name="colorSecondaryVariant">@color/deepgreen</item>
+        <item name="colorSecondary">@color/ashgray</item>
+        <item name="colorSecondaryVariant">@color/ashgray</item>
         <item name="colorOnSecondary">@color/offwhite</item>
         <!-- Status bar color. -->
         <item name="android:statusBarColor" tools:targetApi="l">?attr/colorPrimaryVariant</item>
@@ -22,7 +22,12 @@
     </style>
 
     <!-- Splash screen theme. -->
-    <style name="SplashTheme" parent="Theme.AppCompat.NoActionBar">
+    <style name="SplashTheme" parent="Theme.AppCompat.Light.DarkActionBar">
+        <item name="colorPrimary">@color/white</item>
+        <item name="colorPrimaryDark">@color/white</item>
+        <item name="colorPrimaryVariant">@color/white</item>
+        <item name="colorAccent">@color/white</item>
+        <item name="colorOnPrimary">@color/white</item>
         <item name="android:windowBackground">@drawable/splash</item>
     </style>
 

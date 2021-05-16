@@ -2,7 +2,7 @@
 
 <layer-list xmlns:android="http://schemas.android.com/apk/res/android">
     <!-- 背景をブルーに設定します。 -->
-    <item android:drawable="@color/deepgreen" />
+    <item android:drawable="@color/white" />
     <item>
         <!-- アイコンを中央に表示します。 -->
         <bitmap
