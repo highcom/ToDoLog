@@ -1,5 +1,6 @@
 package com.highcom.todolog;
 
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageInfo;
@@ -47,6 +48,8 @@ import java.util.ArrayList;
 
 import jp.co.recruit_mp.android.rmp_appirater.RmpAppirater;
 
+import static com.highcom.todolog.SettingActivity.PREF_FILE_NAME;
+import static com.highcom.todolog.SettingActivity.PREF_PARAM_THEME_COLOR;
 import static com.highcom.todolog.ui.todolist.ToDoListFragment.SELECT_GROUP;
 
 public class ToDoMainActivity extends AppCompatActivity {
@@ -71,7 +74,7 @@ public class ToDoMainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setTheme(R.style.Theme_ToDoLog_NoActionBar);
+        setThemeNoActionBarColor();
         setContentView(R.layout.activity_main);
 
         mFirebaseAnalytics = FirebaseAnalytics.getInstance(this);
@@ -295,6 +298,24 @@ public class ToDoMainActivity extends AppCompatActivity {
     protected void onDestroy() {
         mAdView.destroy();
         super.onDestroy();
+    }
+
+    private void setThemeNoActionBarColor() {
+        SharedPreferences data = getSharedPreferences(PREF_FILE_NAME, Context.MODE_PRIVATE);
+        int color = data.getInt(PREF_PARAM_THEME_COLOR, getResources().getColor(R.color.ivy_gray));
+        if (color == getResources().getColor(R.color.topaz)) {
+            setTheme(R.style.Theme_ToDoLog_topaz_NoActionBar_topaz);
+        } else if (color == getResources().getColor(R.color.water_green)) {
+            setTheme(R.style.Theme_ToDoLog_water_green_NoActionBar_water_green);
+        } else if (color == getResources().getColor(R.color.day_dream)) {
+            setTheme(R.style.Theme_ToDoLog_day_dream_NoActionBar_day_dream);
+        } else if (color == getResources().getColor(R.color.old_rose)) {
+            setTheme(R.style.Theme_ToDoLog_old_rose_NoActionBar_old_rose);
+        } else if (color == getResources().getColor(R.color.mauve)) {
+            setTheme(R.style.Theme_ToDoLog_mauve_NoActionBar_mauve);
+        } else {
+            setTheme(R.style.Theme_ToDoLog_ivy_gray_NoActionBar_ivy_gray);
+        }
     }
 
     public class FloatingButtonEditClickListener implements View.OnClickListener {

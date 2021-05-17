@@ -25,6 +25,8 @@ import com.highcom.todolog.ui.todolist.ToDoListFragment;
 
 import java.util.ArrayList;
 
+import static com.highcom.todolog.SettingActivity.PREF_FILE_NAME;
+import static com.highcom.todolog.SettingActivity.PREF_PARAM_THEME_COLOR;
 import static com.highcom.todolog.ui.todolist.ToDoListFragment.SELECT_GROUP;
 
 public class ToDoAppWidgetConfigure extends AppCompatActivity {
@@ -36,6 +38,7 @@ public class ToDoAppWidgetConfigure extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setThemeColor();
         setContentView(R.layout.activity_to_do_app_widget_configure);
         setTitle(getString(R.string.group_select));
 
@@ -100,5 +103,23 @@ public class ToDoAppWidgetConfigure extends AppCompatActivity {
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
         prefs.edit().remove(SELECT_WIDGET_GROUP_ID + appWidgetId).apply();
         prefs.edit().remove(SELECT_WIDGET_GROUP_NAME + appWidgetId).apply();
+    }
+
+    private void setThemeColor() {
+        SharedPreferences data = getSharedPreferences(PREF_FILE_NAME, Context.MODE_PRIVATE);
+        int color = data.getInt(PREF_PARAM_THEME_COLOR, getResources().getColor(R.color.ivy_gray));
+        if (color == getResources().getColor(R.color.topaz)) {
+            setTheme(R.style.Theme_ToDoLog_topaz);
+        } else if (color == getResources().getColor(R.color.water_green)) {
+            setTheme(R.style.Theme_ToDoLog_water_green);
+        } else if (color == getResources().getColor(R.color.day_dream)) {
+            setTheme(R.style.Theme_ToDoLog_day_dream);
+        } else if (color == getResources().getColor(R.color.old_rose)) {
+            setTheme(R.style.Theme_ToDoLog_old_rose);
+        } else if (color == getResources().getColor(R.color.mauve)) {
+            setTheme(R.style.Theme_ToDoLog_mauve);
+        } else {
+            setTheme(R.style.Theme_ToDoLog_ivy_gray);
+        }
     }
 }

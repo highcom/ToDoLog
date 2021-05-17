@@ -9,14 +9,15 @@
 
     <FrameLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="3dp">
         <TextView
             android:layout_width="match_parent"
             android:layout_height="@dimen/widget_title_min_height"
             android:id="@+id/todo_widget_title_view"
             android:text="@string/widget_title"
-            android:textColor="@color/white"
-            android:background="@color/ashgray"
+            android:textColor="@color/black"
+            android:background="@color/white"
             android:textSize="14dp"
             android:gravity="center"
             android:textAllCaps="true"/>

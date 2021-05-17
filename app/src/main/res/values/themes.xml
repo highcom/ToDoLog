@@ -2,14 +2,14 @@
     <!-- Base application theme. -->
     <style name="Theme.ToDoLog" parent="Theme.AppCompat.Light.DarkActionBar">
         <!-- Primary brand color. -->
-        <item name="colorPrimary">@color/ashgray</item>
-        <item name="colorPrimaryDark">@color/ashgray</item>
-        <item name="colorPrimaryVariant">@color/ashgray</item>
-        <item name="colorAccent">@color/ashgray</item>
+        <item name="colorPrimary">@color/ivy_gray</item>
+        <item name="colorPrimaryDark">@color/ivy_gray</item>
+        <item name="colorPrimaryVariant">@color/ivy_gray</item>
+        <item name="colorAccent">@color/ivy_gray</item>
         <item name="colorOnPrimary">@color/offwhite</item>
         <!-- Secondary brand color. -->
-        <item name="colorSecondary">@color/ashgray</item>
-        <item name="colorSecondaryVariant">@color/ashgray</item>
+        <item name="colorSecondary">@color/ivy_gray</item>
+        <item name="colorSecondaryVariant">@color/ivy_gray</item>
         <item name="colorOnSecondary">@color/offwhite</item>
         <!-- Status bar color. -->
         <item name="android:statusBarColor" tools:targetApi="l">?attr/colorPrimaryVariant</item>
@@ -17,6 +17,132 @@
     </style>
 
     <style name="Theme.ToDoLog.NoActionBar">
+        <item name="windowActionBar">false</item>
+        <item name="windowNoTitle">true</item>
+    </style>
+
+    <style name="Theme.ToDoLog_topaz" parent="Theme.AppCompat.Light.DarkActionBar">
+        <!-- Primary brand color. -->
+        <item name="colorPrimary">@color/topaz</item>
+        <item name="colorPrimaryDark">@color/topaz</item>
+        <item name="colorPrimaryVariant">@color/topaz</item>
+        <item name="colorAccent">@color/topaz</item>
+        <item name="colorOnPrimary">@color/offwhite</item>
+        <!-- Secondary brand color. -->
+        <item name="colorSecondary">@color/topaz</item>
+        <item name="colorSecondaryVariant">@color/topaz</item>
+        <item name="colorOnSecondary">@color/offwhite</item>
+        <!-- Status bar color. -->
+        <item name="android:statusBarColor" tools:targetApi="l">?attr/colorPrimaryVariant</item>
+        <!-- Customize your theme here. -->
+    </style>
+
+    <style name="Theme.ToDoLog_topaz.NoActionBar_topaz">
+        <item name="windowActionBar">false</item>
+        <item name="windowNoTitle">true</item>
+    </style>
+
+    <style name="Theme.ToDoLog_water_green" parent="Theme.AppCompat.Light.DarkActionBar">
+        <!-- Primary brand color. -->
+        <item name="colorPrimary">@color/water_green</item>
+        <item name="colorPrimaryDark">@color/water_green</item>
+        <item name="colorPrimaryVariant">@color/water_green</item>
+        <item name="colorAccent">@color/water_green</item>
+        <item name="colorOnPrimary">@color/offwhite</item>
+        <!-- Secondary brand color. -->
+        <item name="colorSecondary">@color/water_green</item>
+        <item name="colorSecondaryVariant">@color/water_green</item>
+        <item name="colorOnSecondary">@color/offwhite</item>
+        <!-- Status bar color. -->
+        <item name="android:statusBarColor" tools:targetApi="l">?attr/colorPrimaryVariant</item>
+        <!-- Customize your theme here. -->
+    </style>
+
+    <style name="Theme.ToDoLog_water_green.NoActionBar_water_green">
+        <item name="windowActionBar">false</item>
+        <item name="windowNoTitle">true</item>
+    </style>
+
+    <style name="Theme.ToDoLog_day_dream" parent="Theme.AppCompat.Light.DarkActionBar">
+        <!-- Primary brand color. -->
+        <item name="colorPrimary">@color/day_dream</item>
+        <item name="colorPrimaryDark">@color/day_dream</item>
+        <item name="colorPrimaryVariant">@color/day_dream</item>
+        <item name="colorAccent">@color/day_dream</item>
+        <item name="colorOnPrimary">@color/offwhite</item>
+        <!-- Secondary brand color. -->
+        <item name="colorSecondary">@color/day_dream</item>
+        <item name="colorSecondaryVariant">@color/day_dream</item>
+        <item name="colorOnSecondary">@color/offwhite</item>
+        <!-- Status bar color. -->
+        <item name="android:statusBarColor" tools:targetApi="l">?attr/colorPrimaryVariant</item>
+        <!-- Customize your theme here. -->
+    </style>
+
+    <style name="Theme.ToDoLog_day_dream.NoActionBar_day_dream">
+        <item name="windowActionBar">false</item>
+        <item name="windowNoTitle">true</item>
+    </style>
+
+    <style name="Theme.ToDoLog_old_rose" parent="Theme.AppCompat.Light.DarkActionBar">
+        <!-- Primary brand color. -->
+        <item name="colorPrimary">@color/old_rose</item>
+        <item name="colorPrimaryDark">@color/old_rose</item>
+        <item name="colorPrimaryVariant">@color/old_rose</item>
+        <item name="colorAccent">@color/old_rose</item>
+        <item name="colorOnPrimary">@color/offwhite</item>
+        <!-- Secondary brand color. -->
+        <item name="colorSecondary">@color/old_rose</item>
+        <item name="colorSecondaryVariant">@color/old_rose</item>
+        <item name="colorOnSecondary">@color/offwhite</item>
+        <!-- Status bar color. -->
+        <item name="android:statusBarColor" tools:targetApi="l">?attr/colorPrimaryVariant</item>
+        <!-- Customize your theme here. -->
+    </style>
+
+    <style name="Theme.ToDoLog_old_rose.NoActionBar_old_rose">
+        <item name="windowActionBar">false</item>
+        <item name="windowNoTitle">true</item>
+    </style>
+
+    <style name="Theme.ToDoLog_mauve" parent="Theme.AppCompat.Light.DarkActionBar">
+        <!-- Primary brand color. -->
+        <item name="colorPrimary">@color/mauve</item>
+        <item name="colorPrimaryDark">@color/mauve</item>
+        <item name="colorPrimaryVariant">@color/mauve</item>
+        <item name="colorAccent">@color/mauve</item>
+        <item name="colorOnPrimary">@color/offwhite</item>
+        <!-- Secondary brand color. -->
+        <item name="colorSecondary">@color/mauve</item>
+        <item name="colorSecondaryVariant">@color/mauve</item>
+        <item name="colorOnSecondary">@color/offwhite</item>
+        <!-- Status bar color. -->
+        <item name="android:statusBarColor" tools:targetApi="l">?attr/colorPrimaryVariant</item>
+        <!-- Customize your theme here. -->
+    </style>
+
+    <style name="Theme.ToDoLog_mauve.NoActionBar_mauve">
+        <item name="windowActionBar">false</item>
+        <item name="windowNoTitle">true</item>
+    </style>
+
+    <style name="Theme.ToDoLog_ivy_gray" parent="Theme.AppCompat.Light.DarkActionBar">
+        <!-- Primary brand color. -->
+        <item name="colorPrimary">@color/ivy_gray</item>
+        <item name="colorPrimaryDark">@color/ivy_gray</item>
+        <item name="colorPrimaryVariant">@color/ivy_gray</item>
+        <item name="colorAccent">@color/ivy_gray</item>
+        <item name="colorOnPrimary">@color/offwhite</item>
+        <!-- Secondary brand color. -->
+        <item name="colorSecondary">@color/ivy_gray</item>
+        <item name="colorSecondaryVariant">@color/ivy_gray</item>
+        <item name="colorOnSecondary">@color/offwhite</item>
+        <!-- Status bar color. -->
+        <item name="android:statusBarColor" tools:targetApi="l">?attr/colorPrimaryVariant</item>
+        <!-- Customize your theme here. -->
+    </style>
+
+    <style name="Theme.ToDoLog_ivy_gray.NoActionBar_ivy_gray">
         <item name="windowActionBar">false</item>
         <item name="windowNoTitle">true</item>
     </style>

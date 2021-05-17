@@ -2,6 +2,7 @@ package com.highcom.todolog;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -40,6 +41,9 @@ import java.sql.Date;
 import java.util.ArrayList;
 import java.util.List;
 
+import static com.highcom.todolog.SettingActivity.PREF_FILE_NAME;
+import static com.highcom.todolog.SettingActivity.PREF_PARAM_THEME_COLOR;
+
 public class ToDoDetailActivity extends AppCompatActivity implements TextWatcher {
 
     private ToDo mBackupToDo;
@@ -55,6 +59,7 @@ public class ToDoDetailActivity extends AppCompatActivity implements TextWatcher
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setThemeColor();
         setContentView(R.layout.activity_tododetail);
 
         adContainerView = findViewById(R.id.ad_view_frame_tododetail);
@@ -268,5 +273,23 @@ public class ToDoDetailActivity extends AppCompatActivity implements TextWatcher
     protected void onDestroy() {
         mAdView.destroy();
         super.onDestroy();
+    }
+
+    private void setThemeColor() {
+        SharedPreferences data = getSharedPreferences(PREF_FILE_NAME, Context.MODE_PRIVATE);
+        int color = data.getInt(PREF_PARAM_THEME_COLOR, getResources().getColor(R.color.ivy_gray));
+        if (color == getResources().getColor(R.color.topaz)) {
+            setTheme(R.style.Theme_ToDoLog_topaz);
+        } else if (color == getResources().getColor(R.color.water_green)) {
+            setTheme(R.style.Theme_ToDoLog_water_green);
+        } else if (color == getResources().getColor(R.color.day_dream)) {
+            setTheme(R.style.Theme_ToDoLog_day_dream);
+        } else if (color == getResources().getColor(R.color.old_rose)) {
+            setTheme(R.style.Theme_ToDoLog_old_rose);
+        } else if (color == getResources().getColor(R.color.mauve)) {
+            setTheme(R.style.Theme_ToDoLog_mauve);
+        } else {
+            setTheme(R.style.Theme_ToDoLog_ivy_gray);
+        }
     }
 }
