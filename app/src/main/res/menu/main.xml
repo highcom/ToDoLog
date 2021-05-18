@@ -2,12 +2,10 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
     <item android:id="@+id/action_change_all_done"
-        android:icon="@drawable/ic_setting"
         android:title="@string/setting_change_all_done"
         app:showAsAction="never">
     </item>
     <item android:id="@+id/action_change_all_todo"
-        android:icon="@drawable/ic_license"
         android:title="@string/setting_change_all_todo"
         app:showAsAction="never">
     </item>
