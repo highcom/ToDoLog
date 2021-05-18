@@ -4,6 +4,7 @@ import android.content.Context;
 
 import androidx.lifecycle.LiveData;
 
+import java.sql.Date;
 import java.util.List;
 
 public class ToDoLogRepository {
@@ -75,6 +76,30 @@ public class ToDoLogRepository {
                 }
             }
             mTodoDao.update(toDoList);
+        });
+    }
+
+    void updateAllToDoByGroupToState(long groupId, int setState) {
+        ToDoLogRoomDatabase.databaseWriteExtractor.execute(() -> {
+            int getState;
+            int logOperation;
+            if (setState == ToDo.STATUS_TODO) {
+                getState = ToDo.STATUS_DONE;
+                logOperation = Log.LOG_CHANGE_STATUS_TODO;
+            } else {
+                getState = ToDo.STATUS_TODO;
+                logOperation = Log.LOG_CHANGE_STATUS_DONE;
+            }
+
+            List<ToDo> toDoList = mTodoDao.getToDoListByTaskGroupAndStateSync(groupId, getState);
+            for (ToDo toDo : toDoList) {
+                toDo.setState(setState);
+                Log log = new Log(0, toDo.getTodoId(), new Date(System.currentTimeMillis()), logOperation);
+                long logRowId = mLogDao.insert(log);
+                toDo.setTodoOrder(mTodoDao.getToDoOrderByGroupIdAndState(toDo.getGroupId(), toDo.getState()) + 1);
+                toDo.setLatestLogId(logRowId);
+                mTodoDao.update(toDo);
+            }
         });
     }
 

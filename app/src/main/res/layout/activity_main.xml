@@ -19,29 +19,68 @@
         android:layout_height="match_parent"
         android:layout_gravity="start"
         android:fitsSystemWindows="true" >
+
         <LinearLayout
             android:orientation="vertical"
             android:background="@color/white"
             android:layout_width="match_parent"
             android:layout_height="match_parent">
+
             <include layout="@layout/nav_header_main"
                 android:id="@+id/nav_header" />
+
+            <LinearLayout
+                android:orientation="horizontal"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" >
+
+                <ImageView
+                    android:layout_width="30dp"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="10dp"
+                    android:adjustViewBounds="true"
+                    android:background="@null"
+                    android:scaleType="centerInside"
+                    android:src="@drawable/ic_setting"
+                    android:id="@+id/drawer_setting_icon"
+                    app:tint="@color/lightgray" />
+
+                <TextView
+                    android:id="@+id/drawer_setting_title"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_gravity="center_vertical"
+                    android:textColor="@color/black"
+                    android:textSize="14dp"
+                    android:text="@string/setting_title"
+                    android:gravity="center_vertical" />
+
+            </LinearLayout>
+
+            <View
+                android:id="@+id/divider1"
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="?android:attr/listDivider" />
+
             <ListView
                 android:layout_weight="7"
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
                 android:id="@+id/task_list_view_inside_nav">
             </ListView>
+
             <Button
                 android:id="@+id/group_edit_button"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_height="35dp"
                 android:layout_margin="4dp"
                 android:layout_gravity="center"
                 android:background="@layout/frame_layout_button"
                 android:textColor="@color/ivy_gray"
-                android:textSize="14dp"
+                android:textSize="12dp"
                 android:text="@string/group_edit"/>
+
         </LinearLayout>
     </com.google.android.material.navigation.NavigationView>
 </androidx.drawerlayout.widget.DrawerLayout>

@@ -29,6 +29,7 @@ import com.google.firebase.analytics.FirebaseAnalytics;
 import com.highcom.todolog.datamodel.Group;
 import com.highcom.todolog.datamodel.GroupViewModel;
 import com.highcom.todolog.datamodel.StringsResource;
+import com.highcom.todolog.datamodel.ToDo;
 import com.highcom.todolog.ui.drawerlist.DrawerListAdapter;
 import com.highcom.todolog.ui.drawerlist.DrawerListItem;
 import com.highcom.todolog.ui.grouplist.GroupListFragment;
@@ -141,11 +142,12 @@ public class ToDoMainActivity extends AppCompatActivity {
         actionBarDrawerToggle.syncState();
 
         NavigationView navigationView = findViewById(R.id.nav_view);
-        navigationView.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
-            @Override
-            public boolean onNavigationItemSelected(@NonNull MenuItem item) {
-                return false;
-            }
+        navigationView.setNavigationItemSelectedListener(item -> false);
+
+        TextView settingTextView = findViewById(R.id.drawer_setting_title);
+        settingTextView.setOnClickListener(v -> {
+            Intent intent = new Intent(getApplicationContext(), SettingActivity.class);
+            startActivity(intent);
         });
 
         Button groupEditButton = findViewById(R.id.group_edit_button);
@@ -216,12 +218,12 @@ public class ToDoMainActivity extends AppCompatActivity {
 
             listView.setOnItemClickListener((adapterView, view, i, l) -> {
                 setTitle(groupList.get(i).getGroupName());
-                long selectGroup = groupList.get(i).getGroupId();
-                mPreferences.edit().putLong(SELECT_GROUP, selectGroup).apply();
+                mSelectGroup = groupList.get(i).getGroupId();
+                mPreferences.edit().putLong(SELECT_GROUP, mSelectGroup).apply();
                 mToDoListFragment = new ToDoListFragment();
                 mSelectFragment = SELECT_FRAGMENT.FRAGMENT_TODOLIST;
                 Bundle args = new Bundle();
-                args.putLong(SELECT_GROUP, selectGroup);
+                args.putLong(SELECT_GROUP, mSelectGroup);
                 mToDoListFragment.setArguments(args);
                 getSupportFragmentManager().beginTransaction().replace(R.id.nav_host_fragment, mToDoListFragment).commit();
                 drawer.closeDrawers();
@@ -274,9 +276,11 @@ public class ToDoMainActivity extends AppCompatActivity {
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         switch (item.getItemId()) {
-            case R.id.action_settings:
-                Intent intent = new Intent(this, SettingActivity.class);
-                startActivity(intent);
+            case R.id.action_change_all_done:
+                mGroupViewModel.updateAllToDoByGroupToState(mSelectGroup, ToDo.STATUS_DONE);
+                break;
+            case R.id.action_change_all_todo:
+                mGroupViewModel.updateAllToDoByGroupToState(mSelectGroup, ToDo.STATUS_TODO);
                 break;
         }
         return super.onOptionsItemSelected(item);

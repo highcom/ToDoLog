@@ -31,6 +31,10 @@ public class GroupViewModel extends AndroidViewModel {
         mRepository.updateGroupList(groupList);
     }
 
+    public void updateAllToDoByGroupToState(long groupId, int setState) {
+        mRepository.updateAllToDoByGroupToState(groupId, setState);
+    }
+
     public void insert(Group group) {
         mRepository.insert(group);
     }

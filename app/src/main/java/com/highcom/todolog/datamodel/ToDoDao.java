@@ -20,6 +20,9 @@ public interface ToDoDao {
     @Query("SELECT * FROM todo_table WHERE group_id = :groupId AND state = 1 ORDER BY state ASC, todo_order ASC")
     List<ToDoAndLog> getToDoListOnlyToDoByTaskGroupSync(long groupId);
 
+    @Query("SELECT * FROM todo_table WHERE group_id = :groupId AND state = :state ORDER BY todo_order ASC")
+    List<ToDo> getToDoListByTaskGroupAndStateSync(long groupId, int state);
+
     @Query("SELECT todo_id FROM todo_table WHERE group_id = :groupId")
     List<Long> getToDoIdListByTaskGroup(long groupId);
 
