@@ -2,14 +2,14 @@
     <!-- Base application theme. -->
     <style name="Theme.ToDoLog" parent="Theme.AppCompat.Light.DarkActionBar">
         <!-- Primary brand color. -->
-        <item name="colorPrimary">@color/ivy_gray</item>
-        <item name="colorPrimaryDark">@color/ivy_gray</item>
-        <item name="colorPrimaryVariant">@color/ivy_gray</item>
-        <item name="colorAccent">@color/ivy_gray</item>
+        <item name="colorPrimary">@color/french_gray</item>
+        <item name="colorPrimaryDark">@color/french_gray</item>
+        <item name="colorPrimaryVariant">@color/french_gray</item>
+        <item name="colorAccent">@color/french_gray</item>
         <item name="colorOnPrimary">@color/offwhite</item>
         <!-- Secondary brand color. -->
-        <item name="colorSecondary">@color/ivy_gray</item>
-        <item name="colorSecondaryVariant">@color/ivy_gray</item>
+        <item name="colorSecondary">@color/french_gray</item>
+        <item name="colorSecondaryVariant">@color/french_gray</item>
         <item name="colorOnSecondary">@color/offwhite</item>
         <!-- Status bar color. -->
         <item name="android:statusBarColor" tools:targetApi="l">?attr/colorPrimaryVariant</item>
@@ -126,23 +126,23 @@
         <item name="windowNoTitle">true</item>
     </style>
 
-    <style name="Theme.ToDoLog_ivy_gray" parent="Theme.AppCompat.Light.DarkActionBar">
+    <style name="Theme.ToDoLog_french_gray" parent="Theme.AppCompat.Light.DarkActionBar">
         <!-- Primary brand color. -->
-        <item name="colorPrimary">@color/ivy_gray</item>
-        <item name="colorPrimaryDark">@color/ivy_gray</item>
-        <item name="colorPrimaryVariant">@color/ivy_gray</item>
-        <item name="colorAccent">@color/ivy_gray</item>
+        <item name="colorPrimary">@color/french_gray</item>
+        <item name="colorPrimaryDark">@color/french_gray</item>
+        <item name="colorPrimaryVariant">@color/french_gray</item>
+        <item name="colorAccent">@color/french_gray</item>
         <item name="colorOnPrimary">@color/offwhite</item>
         <!-- Secondary brand color. -->
-        <item name="colorSecondary">@color/ivy_gray</item>
-        <item name="colorSecondaryVariant">@color/ivy_gray</item>
+        <item name="colorSecondary">@color/french_gray</item>
+        <item name="colorSecondaryVariant">@color/french_gray</item>
         <item name="colorOnSecondary">@color/offwhite</item>
         <!-- Status bar color. -->
         <item name="android:statusBarColor" tools:targetApi="l">?attr/colorPrimaryVariant</item>
         <!-- Customize your theme here. -->
     </style>
 
-    <style name="Theme.ToDoLog_ivy_gray.NoActionBar_ivy_gray">
+    <style name="Theme.ToDoLog_french_gray.NoActionBar_french_gray">
         <item name="windowActionBar">false</item>
         <item name="windowNoTitle">true</item>
     </style>

@@ -277,7 +277,7 @@ public class ToDoDetailActivity extends AppCompatActivity implements TextWatcher
 
     private void setThemeColor() {
         SharedPreferences data = getSharedPreferences(PREF_FILE_NAME, Context.MODE_PRIVATE);
-        int color = data.getInt(PREF_PARAM_THEME_COLOR, getResources().getColor(R.color.ivy_gray));
+        int color = data.getInt(PREF_PARAM_THEME_COLOR, getResources().getColor(R.color.french_gray));
         if (color == getResources().getColor(R.color.topaz)) {
             setTheme(R.style.Theme_ToDoLog_topaz);
         } else if (color == getResources().getColor(R.color.water_green)) {
@@ -289,7 +289,7 @@ public class ToDoDetailActivity extends AppCompatActivity implements TextWatcher
         } else if (color == getResources().getColor(R.color.mauve)) {
             setTheme(R.style.Theme_ToDoLog_mauve);
         } else {
-            setTheme(R.style.Theme_ToDoLog_ivy_gray);
+            setTheme(R.style.Theme_ToDoLog_french_gray);
         }
     }
 }

@@ -322,7 +322,7 @@ public class ToDoMainActivity extends AppCompatActivity {
 
     private void setThemeNoActionBarColor() {
         SharedPreferences data = getSharedPreferences(PREF_FILE_NAME, Context.MODE_PRIVATE);
-        int color = data.getInt(PREF_PARAM_THEME_COLOR, getResources().getColor(R.color.ivy_gray));
+        int color = data.getInt(PREF_PARAM_THEME_COLOR, getResources().getColor(R.color.french_gray));
         if (color == getResources().getColor(R.color.topaz)) {
             setTheme(R.style.Theme_ToDoLog_topaz_NoActionBar_topaz);
         } else if (color == getResources().getColor(R.color.water_green)) {
@@ -334,7 +334,7 @@ public class ToDoMainActivity extends AppCompatActivity {
         } else if (color == getResources().getColor(R.color.mauve)) {
             setTheme(R.style.Theme_ToDoLog_mauve_NoActionBar_mauve);
         } else {
-            setTheme(R.style.Theme_ToDoLog_ivy_gray_NoActionBar_ivy_gray);
+            setTheme(R.style.Theme_ToDoLog_french_gray_NoActionBar_french_gray);
         }
     }
 

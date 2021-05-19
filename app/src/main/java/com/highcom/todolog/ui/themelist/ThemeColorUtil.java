@@ -29,7 +29,7 @@ public class ThemeColorUtil {
         colors[2] = context.getResources().getColor(R.color.day_dream);
         colors[3] = context.getResources().getColor(R.color.old_rose);
         colors[4] = context.getResources().getColor(R.color.mauve);
-        colors[5] = context.getResources().getColor(R.color.ivy_gray);
+        colors[5] = context.getResources().getColor(R.color.french_gray);
 
         backgroundColorListener = listener;
     }
@@ -55,7 +55,7 @@ public class ThemeColorUtil {
         colorItems.add(new ThemeColorItem(activity.getString(R.string.color_day_dream), colors[2]));
         colorItems.add(new ThemeColorItem(activity.getString(R.string.color_old_rose), colors[3]));
         colorItems.add(new ThemeColorItem(activity.getString(R.string.color_mauve), colors[4]));
-        colorItems.add(new ThemeColorItem(activity.getString(R.string.color_ivy_gray), colors[5]));
+        colorItems.add(new ThemeColorItem(activity.getString(R.string.color_french_gray), colors[5]));
         ThemeColorAdapter adapter = new ThemeColorAdapter(activity, R.layout.row_theme_color, colorItems);
         listView.setAdapter(adapter);
 
