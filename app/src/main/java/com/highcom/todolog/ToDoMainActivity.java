@@ -67,6 +67,7 @@ public class ToDoMainActivity extends AppCompatActivity {
     private SharedPreferences mPreferences;
     private boolean hasBeenFirstGroupHandled;
     private long mSelectGroup;
+    private boolean mMenuVisible;
 
     private FirebaseAnalytics mFirebaseAnalytics;
     private FrameLayout adContainerView;
@@ -77,6 +78,8 @@ public class ToDoMainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setThemeNoActionBarColor();
         setContentView(R.layout.activity_main);
+
+        mMenuVisible = true;
 
         mFirebaseAnalytics = FirebaseAnalytics.getInstance(this);
         MobileAds.initialize(this, new OnInitializationCompleteListener() {
@@ -144,17 +147,13 @@ public class ToDoMainActivity extends AppCompatActivity {
         NavigationView navigationView = findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(item -> false);
 
-        TextView settingTextView = findViewById(R.id.drawer_setting_title);
-        settingTextView.setOnClickListener(v -> {
-            Intent intent = new Intent(getApplicationContext(), SettingActivity.class);
-            startActivity(intent);
-        });
-
         Button groupEditButton = findViewById(R.id.group_edit_button);
         groupEditButton.setOnClickListener(view -> {
             setTitle(R.string.group_edit_title);
             mGroupListFragment = new GroupListFragment();
             mSelectFragment = SELECT_FRAGMENT.FRAGMENT_GROUPLIST;
+            mMenuVisible = false;
+            invalidateOptionsMenu();
             getSupportFragmentManager().beginTransaction().replace(R.id.nav_host_fragment, mGroupListFragment).commit();
             drawer.closeDrawers();
         });
@@ -169,6 +168,8 @@ public class ToDoMainActivity extends AppCompatActivity {
                 setTitle(R.string.group_edit_title);
                 mGroupListFragment = new GroupListFragment();
                 mSelectFragment = SELECT_FRAGMENT.FRAGMENT_GROUPLIST;
+                mMenuVisible = false;
+                invalidateOptionsMenu();
                 getSupportFragmentManager().beginTransaction().replace(R.id.nav_host_fragment, mGroupListFragment).commit();
                 return;
             }
@@ -183,6 +184,8 @@ public class ToDoMainActivity extends AppCompatActivity {
 
             mToDoListFragment = new ToDoListFragment();
             mSelectFragment = SELECT_FRAGMENT.FRAGMENT_TODOLIST;
+            mMenuVisible = true;
+            invalidateOptionsMenu();
 
             mSelectGroup = mPreferences.getLong(SELECT_GROUP, 0);
             boolean isGroupExist = false;
@@ -222,6 +225,8 @@ public class ToDoMainActivity extends AppCompatActivity {
                 mPreferences.edit().putLong(SELECT_GROUP, mSelectGroup).apply();
                 mToDoListFragment = new ToDoListFragment();
                 mSelectFragment = SELECT_FRAGMENT.FRAGMENT_TODOLIST;
+                mMenuVisible = true;
+                invalidateOptionsMenu();
                 Bundle args = new Bundle();
                 args.putLong(SELECT_GROUP, mSelectGroup);
                 mToDoListFragment.setArguments(args);
@@ -274,8 +279,19 @@ public class ToDoMainActivity extends AppCompatActivity {
     }
 
     @Override
+    public boolean onPrepareOptionsMenu(Menu menu) {
+        super.onPrepareOptionsMenu(menu);
+        menu.setGroupVisible(R.id.change_all_group, mMenuVisible);
+        return true;
+    }
+
+    @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         switch (item.getItemId()) {
+            case R.id.action_setting:
+                Intent intent = new Intent(this, SettingActivity.class);
+                startActivity(intent);
+                break;
             case R.id.action_change_all_done:
                 mGroupViewModel.updateAllToDoByGroupToState(mSelectGroup, ToDo.STATUS_DONE);
                 break;

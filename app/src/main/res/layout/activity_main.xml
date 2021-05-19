@@ -29,40 +29,6 @@
             <include layout="@layout/nav_header_main"
                 android:id="@+id/nav_header" />
 
-            <LinearLayout
-                android:orientation="horizontal"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content" >
-
-                <ImageView
-                    android:layout_width="30dp"
-                    android:layout_height="wrap_content"
-                    android:layout_margin="10dp"
-                    android:adjustViewBounds="true"
-                    android:background="@null"
-                    android:scaleType="centerInside"
-                    android:src="@drawable/ic_setting"
-                    android:id="@+id/drawer_setting_icon"
-                    app:tint="@color/lightgray" />
-
-                <TextView
-                    android:id="@+id/drawer_setting_title"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:layout_gravity="center_vertical"
-                    android:textColor="@color/black"
-                    android:textSize="14dp"
-                    android:text="@string/setting_title"
-                    android:gravity="center_vertical" />
-
-            </LinearLayout>
-
-            <View
-                android:id="@+id/divider1"
-                android:layout_width="match_parent"
-                android:layout_height="1dp"
-                android:background="?android:attr/listDivider" />
-
             <ListView
                 android:layout_weight="7"
                 android:layout_width="match_parent"

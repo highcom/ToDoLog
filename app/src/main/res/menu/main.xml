@@ -1,12 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
-    <item android:id="@+id/action_change_all_done"
-        android:title="@string/setting_change_all_done"
-        app:showAsAction="never">
+    <item android:id="@+id/action_setting"
+        android:icon="@drawable/ic_setting"
+        android:title="@string/setting_title"
+        app:showAsAction="always">
     </item>
-    <item android:id="@+id/action_change_all_todo"
-        android:title="@string/setting_change_all_todo"
-        app:showAsAction="never">
-    </item>
+    <group android:id="@+id/change_all_group" >
+        <item android:id="@+id/action_change_all_done"
+            android:title="@string/setting_change_all_done"
+            app:showAsAction="never">
+        </item>
+        <item android:id="@+id/action_change_all_todo"
+            android:title="@string/setting_change_all_todo"
+            app:showAsAction="never">
+        </item>
+    </group>
 </menu>
