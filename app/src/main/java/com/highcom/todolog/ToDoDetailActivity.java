@@ -6,8 +6,6 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
-import android.util.DisplayMetrics;
-import android.view.Display;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.MotionEvent;
@@ -16,7 +14,6 @@ import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
-import android.widget.FrameLayout;
 import android.widget.Spinner;
 
 import androidx.annotation.NonNull;
@@ -26,14 +23,13 @@ import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.google.android.gms.ads.AdRequest;
-import com.google.android.gms.ads.AdSize;
 import com.google.android.gms.ads.AdView;
 import com.highcom.todolog.datamodel.Group;
 import com.highcom.todolog.datamodel.Log;
 import com.highcom.todolog.datamodel.LogViewModel;
 import com.highcom.todolog.datamodel.StringsResource;
 import com.highcom.todolog.datamodel.ToDo;
+import com.highcom.todolog.ui.AdMobLoader;
 import com.highcom.todolog.ui.DividerItemDecoration;
 import com.highcom.todolog.ui.loglist.LogListAdapter;
 
@@ -53,8 +49,7 @@ public class ToDoDetailActivity extends AppCompatActivity implements TextWatcher
 
     private LogViewModel mLogViewModel;
 
-    private FrameLayout adContainerView;
-    private AdView mAdView;
+    AdMobLoader mAdMobLoader;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -62,8 +57,8 @@ public class ToDoDetailActivity extends AppCompatActivity implements TextWatcher
         setThemeColor();
         setContentView(R.layout.activity_tododetail);
 
-        adContainerView = findViewById(R.id.ad_view_frame_tododetail);
-        adContainerView.post(() -> loadBanner());
+        mAdMobLoader = new AdMobLoader(this, findViewById(R.id.ad_view_frame_tododetail), getString(R.string.admob_unit_id_2));
+        mAdMobLoader.load();
 
         setTitle(getString(R.string.detail_title));
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
@@ -84,14 +79,14 @@ public class ToDoDetailActivity extends AppCompatActivity implements TextWatcher
                 if (inputMethodManager != null) {
                     inputMethodManager.showSoftInput(view, 0);
                     // キーボードを表示する時は広告を非表示「にする
-                    mAdView.setVisibility(AdView.GONE);
+                    mAdMobLoader.getAdView().setVisibility(AdView.GONE);
                 }
             });
         });
         mDetailContents.setOnFocusChangeListener((view, b) -> {
             // フォーカスが外れるとキーボードが閉じるので広告を表示する
             if (!b) {
-                mAdView.setVisibility(AdView.VISIBLE);
+                mAdMobLoader.getAdView().setVisibility(AdView.VISIBLE);
             }
         });
 
@@ -167,41 +162,6 @@ public class ToDoDetailActivity extends AppCompatActivity implements TextWatcher
         });
     }
 
-    private void loadBanner() {
-        // Create an ad request.
-        mAdView = new AdView(this);
-        mAdView.setAdUnitId(getString(R.string.admob_unit_id_2));
-        adContainerView.removeAllViews();
-        adContainerView.addView(mAdView);
-
-        AdSize adSize = getAdSize();
-        mAdView.setAdSize(adSize);
-
-        AdRequest adRequest = new AdRequest.Builder().addTestDevice(getString(R.string.admob_test_device)).build();
-
-        // Start loading the ad in the background.
-        mAdView.loadAd(adRequest);
-    }
-
-    private AdSize getAdSize() {
-        // Determine the screen width (less decorations) to use for the ad width.
-        Display display = getWindowManager().getDefaultDisplay();
-        DisplayMetrics outMetrics = new DisplayMetrics();
-        display.getMetrics(outMetrics);
-
-        float density = outMetrics.density;
-
-        float adWidthPixels = adContainerView.getWidth();
-
-        // If the ad hasn't been laid out, default to the full screen width.
-        if (adWidthPixels == 0) {
-            adWidthPixels = outMetrics.widthPixels;
-        }
-
-        int adWidth = (int) (adWidthPixels / density);
-        return AdSize.getCurrentOrientationAnchoredAdaptiveBannerAdSize(this, adWidth);
-    }
-
     @Override
     public boolean onTouchEvent(MotionEvent event) {
         // 内容編集中にフォーカスが外れた場合は、キーボードを閉じる
@@ -271,7 +231,7 @@ public class ToDoDetailActivity extends AppCompatActivity implements TextWatcher
 
     @Override
     protected void onDestroy() {
-        mAdView.destroy();
+        mAdMobLoader.getAdView().destroy();
         super.onDestroy();
     }
 

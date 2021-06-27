@@ -6,18 +6,13 @@ import android.content.SharedPreferences;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
-import android.util.DisplayMetrics;
-import android.view.Display;
 import android.view.MenuItem;
 import android.view.Menu;
 import android.view.View;
 import android.widget.Button;
-import android.widget.FrameLayout;
 import android.widget.ListView;
 import android.widget.TextView;
 
-import com.google.android.gms.ads.AdRequest;
-import com.google.android.gms.ads.AdSize;
 import com.google.android.gms.ads.AdView;
 import com.google.android.gms.ads.MobileAds;
 import com.google.android.gms.ads.RequestConfiguration;
@@ -30,6 +25,7 @@ import com.highcom.todolog.datamodel.Group;
 import com.highcom.todolog.datamodel.GroupViewModel;
 import com.highcom.todolog.datamodel.StringsResource;
 import com.highcom.todolog.datamodel.ToDo;
+import com.highcom.todolog.ui.AdMobLoader;
 import com.highcom.todolog.ui.drawerlist.DrawerListAdapter;
 import com.highcom.todolog.ui.drawerlist.DrawerListItem;
 import com.highcom.todolog.ui.grouplist.GroupListFragment;
@@ -70,8 +66,7 @@ public class ToDoMainActivity extends AppCompatActivity {
     private boolean mMenuVisible;
 
     private FirebaseAnalytics mFirebaseAnalytics;
-    private FrameLayout adContainerView;
-    private AdView mAdView;
+    private AdMobLoader mAdMobLoader;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -87,9 +82,9 @@ public class ToDoMainActivity extends AppCompatActivity {
             public void onInitializationComplete(InitializationStatus initializationStatus) { }
         });
         MobileAds.setRequestConfiguration(
-                new RequestConfiguration.Builder().setTestDeviceIds(Arrays.asList("874848BA4D9A6B9B0A256F7862A47A31")).build());
-        adContainerView = findViewById(R.id.ad_view_frame);
-        adContainerView.post(() -> loadBanner());
+                new RequestConfiguration.Builder().setTestDeviceIds(Arrays.asList(getString(R.string.admob_test_device))).build());
+        mAdMobLoader = new AdMobLoader(this, findViewById(R.id.ad_view_frame), getString(R.string.admob_unit_id));
+        mAdMobLoader.load();
 
         RmpAppirater.appLaunched(this,
             (appLaunchCount, appThisVersionCodeLaunchCount, firstLaunchDate, appVersionCode, previousAppVersionCode, rateClickDate, reminderClickDate, doNotShowAgain) -> {
@@ -236,41 +231,6 @@ public class ToDoMainActivity extends AppCompatActivity {
         });
     }
 
-    private void loadBanner() {
-        // Create an ad request.
-        mAdView = new AdView(this);
-        mAdView.setAdUnitId(getString(R.string.admob_unit_id));
-        adContainerView.removeAllViews();
-        adContainerView.addView(mAdView);
-
-        AdSize adSize = getAdSize();
-        mAdView.setAdSize(adSize);
-
-        AdRequest adRequest = new AdRequest.Builder().addTestDevice(getString(R.string.admob_test_device)).build();
-
-        // Start loading the ad in the background.
-        mAdView.loadAd(adRequest);
-    }
-
-    private AdSize getAdSize() {
-        // Determine the screen width (less decorations) to use for the ad width.
-        Display display = getWindowManager().getDefaultDisplay();
-        DisplayMetrics outMetrics = new DisplayMetrics();
-        display.getMetrics(outMetrics);
-
-        float density = outMetrics.density;
-
-        float adWidthPixels = adContainerView.getWidth();
-
-        // If the ad hasn't been laid out, default to the full screen width.
-        if (adWidthPixels == 0) {
-            adWidthPixels = outMetrics.widthPixels;
-        }
-
-        int adWidth = (int) (adWidthPixels / density);
-        return AdSize.getCurrentOrientationAnchoredAdaptiveBannerAdSize(this, adWidth);
-    }
-
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
@@ -303,20 +263,20 @@ public class ToDoMainActivity extends AppCompatActivity {
     }
 
     public void changeDoneFloatingButton() {
-        mAdView.setVisibility(AdView.GONE);
+        mAdMobLoader.getAdView().setVisibility(AdView.GONE);
         fab.setImageResource(R.drawable.ic_baseline_check_24);
         fab.setOnClickListener(new FloatingButtonDoneClickListener());
     }
 
     public void changeEditFloatingButton() {
-        mAdView.setVisibility(AdView.VISIBLE);
+        mAdMobLoader.getAdView().setVisibility(AdView.VISIBLE);
         fab.setImageResource(R.drawable.ic_new_edit);
         fab.setOnClickListener(new FloatingButtonEditClickListener());
     }
 
     @Override
     protected void onDestroy() {
-        mAdView.destroy();
+        mAdMobLoader.getAdView().destroy();
         super.onDestroy();
     }
 
