@@ -23,6 +23,10 @@ public class GroupViewModel extends AndroidViewModel {
         return mGroupList;
     }
 
+    public LiveData<List<GroupCount>> getCountByGroupId(int state) {
+        return mRepository.getCountByGroupId(state);
+    }
+
     public void update(Group group) {
         mRepository.update(group);
     }

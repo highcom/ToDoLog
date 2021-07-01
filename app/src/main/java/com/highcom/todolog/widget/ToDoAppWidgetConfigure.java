@@ -17,8 +17,10 @@ import android.widget.RemoteViews;
 import com.highcom.todolog.R;
 import com.highcom.todolog.ToDoMainActivity;
 import com.highcom.todolog.datamodel.Group;
+import com.highcom.todolog.datamodel.GroupCount;
 import com.highcom.todolog.datamodel.GroupViewModel;
 import com.highcom.todolog.datamodel.StringsResource;
+import com.highcom.todolog.datamodel.ToDo;
 import com.highcom.todolog.ui.drawerlist.DrawerListAdapter;
 import com.highcom.todolog.ui.drawerlist.DrawerListItem;
 import com.highcom.todolog.ui.todolist.ToDoListFragment;
@@ -57,26 +59,36 @@ public class ToDoAppWidgetConfigure extends AppCompatActivity {
         ListView listView = findViewById(R.id.app_widget_list_view);
         GroupViewModel groupViewModel = new ViewModelProvider(this).get(GroupViewModel.class);
         groupViewModel.getGroupList().observe(this, groupList -> {
-            ArrayList<DrawerListItem> drawerListItem = new ArrayList<>();
+            ArrayList<DrawerListItem> drawerListItems = new ArrayList<>();
             for (Group group : groupList) {
-                drawerListItem.add(new DrawerListItem(group.getGroupName()));
+                drawerListItems.add(new DrawerListItem(group.getGroupId(), group.getGroupName()));
             }
-            DrawerListAdapter adapter = new DrawerListAdapter(this, R.layout.row_drawerlist, drawerListItem);
-            listView.setAdapter(adapter);
+            // 各グループのToDoの数を設定する
+            groupViewModel.getCountByGroupId(ToDo.STATUS_TODO).observe(this, groupCounts -> {
+                for (DrawerListItem item : drawerListItems) {
+                    // 一度0に設定してからToDo残数があるグループだけ更新
+                    item.setGroupCount(0);
+                    for (GroupCount count : groupCounts) {
+                        if (item.getGroupId() == count.mGroupId) item.setGroupCount(count.mGroupCount);
+                    }
+                }
+                DrawerListAdapter adapter = new DrawerListAdapter(this, R.layout.row_drawerlist, drawerListItems);
+                listView.setAdapter(adapter);
 
-            listView.setOnItemClickListener((adapterView, view, i, l) -> {
-                long selectGroupId = groupList.get(i).getGroupId();
-                String selectGroupName = groupList.get(i).getGroupName();
-                saveSelectWidgetGroupPref(getApplicationContext(), mAppWidgetId, selectGroupId, selectGroupName);
-                RemoteViews views = new RemoteViews(getPackageName(), R.layout.todo_appwidget);
-                AppWidgetManager appWidgetManager = AppWidgetManager.getInstance(getApplicationContext());
-                appWidgetManager.updateAppWidget(mAppWidgetId, views);
-                ToDoAppWidgetProvider.updateAppWidget(this.getApplicationContext(), appWidgetManager, mAppWidgetId);
+                listView.setOnItemClickListener((adapterView, view, i, l) -> {
+                    long selectGroupId = groupList.get(i).getGroupId();
+                    String selectGroupName = groupList.get(i).getGroupName();
+                    saveSelectWidgetGroupPref(getApplicationContext(), mAppWidgetId, selectGroupId, selectGroupName);
+                    RemoteViews views = new RemoteViews(getPackageName(), R.layout.todo_appwidget);
+                    AppWidgetManager appWidgetManager = AppWidgetManager.getInstance(getApplicationContext());
+                    appWidgetManager.updateAppWidget(mAppWidgetId, views);
+                    ToDoAppWidgetProvider.updateAppWidget(this.getApplicationContext(), appWidgetManager, mAppWidgetId);
 
-                Intent resultValue = new Intent();
-                resultValue.putExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, mAppWidgetId);
-                setResult(RESULT_OK, resultValue);
-                finish();
+                    Intent resultValue = new Intent();
+                    resultValue.putExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, mAppWidgetId);
+                    setResult(RESULT_OK, resultValue);
+                    finish();
+                });
             });
         });
     }

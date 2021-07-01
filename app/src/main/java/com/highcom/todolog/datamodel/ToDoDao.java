@@ -35,6 +35,9 @@ public interface ToDoDao {
     @Query("SELECT todo_order FROM todo_table WHERE group_id = :groupId AND state = :state ORDER BY todo_order DESC LIMIT 1")
     int getToDoOrderByGroupIdAndState(long groupId, int state);
 
+    @Query("SELECT group_id, COUNT(*) AS count FROM todo_table WHERE state = :state GROUP BY group_id")
+    LiveData<List<GroupCount>> getCountByGroupId(int state);
+
     @Update(onConflict = OnConflictStrategy.REPLACE)
     void update(ToDo todo);
 

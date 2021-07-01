@@ -4,6 +4,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
+import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.core.content.ContextCompat;
@@ -18,6 +19,7 @@ import java.nio.file.attribute.GroupPrincipal;
 public class GroupViewHolder extends RecyclerView.ViewHolder {
     private Group mGroup;
     private EditText mGroupName;
+    private TextView mGroupCount;
 
     private GroupViewHolderListener mGroupViewHolderListener;
     public interface GroupViewHolderListener {
@@ -42,20 +44,29 @@ public class GroupViewHolder extends RecyclerView.ViewHolder {
                 mGroupViewHolderListener.onGroupNameOutOfFocused(view, mGroup, mGroupName.getText().toString());
             }
         });
+        mGroupCount = (TextView)itemView.findViewById(R.id.group_count);
     }
 
     public GroupViewHolder(@NonNull View itemView) {
         super(itemView);
     }
 
-    public void bind(Group group) {
-        mGroup = group;
-        mGroupName.setText(group.getGroupName());
+    public void bind(GroupListItem groupListItem) {
+        mGroup = groupListItem.getGroup();
+        mGroupName.setText(mGroup.getGroupName());
         mGroupName.setTextColor(ContextCompat.getColor(mGroupName.getContext(), android.R.color.black));
 
         // 内容が空の場合、新規に作成されたものなので編集状態にする
-        if (group.getGroupName().equals("")) {
+        if (mGroup.getGroupName().equals("")) {
             mGroupName.performClick();
+        }
+
+        if (groupListItem.getCount() == 0) {
+            mGroupCount.setVisibility(View.GONE);
+            mGroupCount.setText("");
+        } else {
+            mGroupCount.setVisibility(View.VISIBLE);
+            mGroupCount.setText(Integer.toString(groupListItem.getCount()));
         }
     }
 

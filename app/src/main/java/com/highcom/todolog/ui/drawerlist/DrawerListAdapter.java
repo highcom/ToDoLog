@@ -1,5 +1,6 @@
 package com.highcom.todolog.ui.drawerlist;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -28,6 +29,7 @@ public class DrawerListAdapter extends ArrayAdapter<DrawerListItem> {
         mInflater = (LayoutInflater)context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
     }
 
+    @SuppressLint("SetTextI18n")
     @NonNull
     @Override
     public View getView(int position, @Nullable View convertView, @NonNull ViewGroup parent) {
@@ -46,6 +48,16 @@ public class DrawerListAdapter extends ArrayAdapter<DrawerListItem> {
         // グループ名を設定
         TextView title = view.findViewById(R.id.drawer_title);
         title.setText(item.getGroupName());
+
+        // グループのTODOカウントを設定
+        TextView count = view.findViewById(R.id.drawer_count);
+        if (item.getGroupCount() == 0) {
+            count.setVisibility(View.GONE);
+            count.setText("");
+        } else {
+            count.setVisibility(View.VISIBLE);
+            count.setText(Integer.toString(item.getGroupCount()));
+        }
 
         return view;
     }

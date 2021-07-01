@@ -54,6 +54,10 @@ public class ToDoLogRepository {
         return mTodoDao.getToDo(todoId);
     }
 
+    LiveData<List<GroupCount>> getCountByGroupId(int state) {
+        return mTodoDao.getCountByGroupId(state);
+    }
+
     void updateToDoAndLog(ToDo toDo, Log log) {
         ToDoLogRoomDatabase.databaseWriteExtractor.execute(() -> {
             long logRowId = mLogDao.insert(log);

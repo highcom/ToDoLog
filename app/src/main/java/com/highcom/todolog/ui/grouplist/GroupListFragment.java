@@ -22,7 +22,9 @@ import android.view.inputmethod.InputMethodManager;
 import com.highcom.todolog.R;
 import com.highcom.todolog.ToDoMainActivity;
 import com.highcom.todolog.datamodel.Group;
+import com.highcom.todolog.datamodel.GroupCount;
 import com.highcom.todolog.datamodel.GroupViewModel;
+import com.highcom.todolog.datamodel.ToDo;
 import com.highcom.todolog.ui.SimpleCallbackHelper;
 
 import java.util.ArrayList;
@@ -53,25 +55,35 @@ public class GroupListFragment extends Fragment implements SimpleCallbackHelper.
 
         mGroupViewModel = new ViewModelProvider(this).get(GroupViewModel.class);
         mGroupViewModel.getGroupList().observe(getViewLifecycleOwner(), groupList -> {
-            // 新規作成時の最新の順番を設定
-            mLatestGroupOrder = groupList.size();
-            // 並べ替え用のリストを作成する
-            mRearrangeGroupList = new ArrayList<>();
-            for (Group group : groupList) mRearrangeGroupList.add(group.clone());
-            // グループの一覧をバインドする
-            mGroupListAdapter.submitList(groupList);
-            // 初期表示の時は先頭位置にする
-            if (!isInitPositionSet) {
-                recyclerView.scrollToPosition(0);
-                isInitPositionSet = true;
-            }
-            // 新規作成時は対象のセルにフォーカスされるようにスクロールする
-            for (int position = 0; position < groupList.size(); position++) {
-                if (groupList.get(position).getGroupName().equals("")) {
-                    recyclerView.smoothScrollToPosition(position);
-                    break;
+            mGroupViewModel.getCountByGroupId(ToDo.STATUS_TODO).observe(getViewLifecycleOwner(), groupCounts -> {
+                List<GroupListItem> groupListItems = new ArrayList<>();
+                for (Group group : groupList) {
+                    GroupListItem groupListItem = new GroupListItem(group);
+                    for (GroupCount groupCount : groupCounts) {
+                        if (group.getGroupId() == groupCount.mGroupId) groupListItem.setCount(groupCount.mGroupCount);
+                    }
+                    groupListItems.add(groupListItem);
                 }
-            }
+                // 新規作成時の最新の順番を設定
+                mLatestGroupOrder = groupList.size();
+                // 並べ替え用のリストを作成する
+                mRearrangeGroupList = new ArrayList<>();
+                for (Group group : groupList) mRearrangeGroupList.add(group.clone());
+                // グループの一覧をバインドする
+                mGroupListAdapter.submitList(groupListItems);
+                // 初期表示の時は先頭位置にする
+                if (!isInitPositionSet) {
+                    recyclerView.scrollToPosition(0);
+                    isInitPositionSet = true;
+                }
+                // 新規作成時は対象のセルにフォーカスされるようにスクロールする
+                for (int position = 0; position < groupList.size(); position++) {
+                    if (groupList.get(position).getGroupName().equals("")) {
+                        recyclerView.smoothScrollToPosition(position);
+                        break;
+                    }
+                }
+            });
         });
 
         final float scale = getResources().getDisplayMetrics().density;

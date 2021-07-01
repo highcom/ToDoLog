@@ -22,6 +22,7 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.navigation.NavigationView;
 import com.google.firebase.analytics.FirebaseAnalytics;
 import com.highcom.todolog.datamodel.Group;
+import com.highcom.todolog.datamodel.GroupCount;
 import com.highcom.todolog.datamodel.GroupViewModel;
 import com.highcom.todolog.datamodel.StringsResource;
 import com.highcom.todolog.datamodel.ToDo;
@@ -203,30 +204,40 @@ public class ToDoMainActivity extends AppCompatActivity {
         });
         // Drawerに表示するListを設定する
         mGroupViewModel.getGroupList().observe(this, groupList -> {
-            ArrayList<DrawerListItem> drawerListItem = new ArrayList<>();
+            ArrayList<DrawerListItem> drawerListItems = new ArrayList<>();
             for (Group group : groupList) {
-                drawerListItem.add(new DrawerListItem(group.getGroupName()));
+                drawerListItems.add(new DrawerListItem(group.getGroupId(), group.getGroupName()));
                 // グループ編集以外を選択している場合には、タイトルも更新する
                 if (mSelectFragment == SELECT_FRAGMENT.FRAGMENT_TODOLIST && group.getGroupId() == mSelectGroup) {
                     setTitle(group.getGroupName());
                 }
             }
-            DrawerListAdapter adapter = new DrawerListAdapter(this, R.layout.row_drawerlist, drawerListItem);
-            listView.setAdapter(adapter);
-
-            listView.setOnItemClickListener((adapterView, view, i, l) -> {
-                setTitle(groupList.get(i).getGroupName());
-                mSelectGroup = groupList.get(i).getGroupId();
-                mPreferences.edit().putLong(SELECT_GROUP, mSelectGroup).apply();
-                mToDoListFragment = new ToDoListFragment();
-                mSelectFragment = SELECT_FRAGMENT.FRAGMENT_TODOLIST;
-                mMenuVisible = true;
-                invalidateOptionsMenu();
-                Bundle args = new Bundle();
-                args.putLong(SELECT_GROUP, mSelectGroup);
-                mToDoListFragment.setArguments(args);
-                getSupportFragmentManager().beginTransaction().replace(R.id.nav_host_fragment, mToDoListFragment).commit();
-                drawer.closeDrawers();
+            // 各グループのToDoの数を設定する
+            mGroupViewModel.getCountByGroupId(ToDo.STATUS_TODO).observe(this, groupCounts -> {
+                for (DrawerListItem item : drawerListItems) {
+                    // 一度0に設定してからToDo残数があるグループだけ更新
+                    item.setGroupCount(0);
+                    for (GroupCount count : groupCounts) {
+                        if (item.getGroupId() == count.mGroupId) item.setGroupCount(count.mGroupCount);
+                    }
+                }
+                // ドロワーリストを設定する
+                DrawerListAdapter adapter = new DrawerListAdapter(this, R.layout.row_drawerlist, drawerListItems);
+                listView.setAdapter(adapter);
+                listView.setOnItemClickListener((adapterView, view, i, l) -> {
+                    setTitle(groupList.get(i).getGroupName());
+                    mSelectGroup = groupList.get(i).getGroupId();
+                    mPreferences.edit().putLong(SELECT_GROUP, mSelectGroup).apply();
+                    mToDoListFragment = new ToDoListFragment();
+                    mSelectFragment = SELECT_FRAGMENT.FRAGMENT_TODOLIST;
+                    mMenuVisible = true;
+                    invalidateOptionsMenu();
+                    Bundle args = new Bundle();
+                    args.putLong(SELECT_GROUP, mSelectGroup);
+                    mToDoListFragment.setArguments(args);
+                    getSupportFragmentManager().beginTransaction().replace(R.id.nav_host_fragment, mToDoListFragment).commit();
+                    drawer.closeDrawers();
+                });
             });
         });
     }

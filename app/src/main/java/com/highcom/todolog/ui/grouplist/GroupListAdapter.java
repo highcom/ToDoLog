@@ -9,7 +9,7 @@ import androidx.recyclerview.widget.ListAdapter;
 
 import com.highcom.todolog.datamodel.Group;
 
-public class GroupListAdapter extends ListAdapter<Group, GroupViewHolder> implements GroupViewHolder.GroupViewHolderListener {
+public class GroupListAdapter extends ListAdapter<GroupListItem, GroupViewHolder> implements GroupViewHolder.GroupViewHolderListener {
     public static final int TYPE_ITEM = 1;
     public static final int TYPE_FOOTER = 2;
 
@@ -20,7 +20,7 @@ public class GroupListAdapter extends ListAdapter<Group, GroupViewHolder> implem
         void onGroupNameOutOfFocused(View view, Group group, String editGroupName);
     }
 
-    public GroupListAdapter(@NonNull DiffUtil.ItemCallback<Group> diffCallback, GroupListAdapterListener groupListAdapterListener) {
+    public GroupListAdapter(@NonNull DiffUtil.ItemCallback<GroupListItem> diffCallback, GroupListAdapterListener groupListAdapterListener) {
         super(diffCallback);
         mGroupListAdapterListener = groupListAdapterListener;
     }
@@ -42,7 +42,7 @@ public class GroupListAdapter extends ListAdapter<Group, GroupViewHolder> implem
         // フッターセルの場合にはバインドしない
         if (position >= super.getItemCount()) return;
 
-        Group current = getItem(position);
+        GroupListItem current = getItem(position);
         holder.bind(current);
     }
 
@@ -73,16 +73,16 @@ public class GroupListAdapter extends ListAdapter<Group, GroupViewHolder> implem
         mGroupListAdapterListener.onGroupNameOutOfFocused(view, group, editGroupName);
     }
 
-    public static class GroupDiff extends DiffUtil.ItemCallback<Group> {
+    public static class GroupDiff extends DiffUtil.ItemCallback<GroupListItem> {
 
         @Override
-        public boolean areItemsTheSame(@NonNull Group oldItem, @NonNull Group newItem) {
-            return oldItem.getGroupId() == newItem.getGroupId() && oldItem.getGroupOrder() == newItem.getGroupOrder();
+        public boolean areItemsTheSame(@NonNull GroupListItem oldItem, @NonNull GroupListItem newItem) {
+            return oldItem.getGroup().getGroupId() == newItem.getGroup().getGroupId() && oldItem.getGroup().getGroupOrder() == newItem.getGroup().getGroupOrder();
         }
 
         @Override
-        public boolean areContentsTheSame(@NonNull Group oldItem, @NonNull Group newItem) {
-            return oldItem.equals(newItem);
+        public boolean areContentsTheSame(@NonNull GroupListItem oldItem, @NonNull GroupListItem newItem) {
+            return oldItem.getGroup().equals(newItem.getGroup());
         }
     }
 }
