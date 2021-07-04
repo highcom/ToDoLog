@@ -3,12 +3,15 @@ package com.highcom.todolog;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.Bundle;
 import android.view.MenuItem;
+import android.widget.CompoundButton;
+import android.widget.Switch;
 import android.widget.TextView;
 
 import com.google.android.gms.oss.licenses.OssLicensesMenuActivity;
@@ -17,7 +20,9 @@ import com.highcom.todolog.ui.themelist.ThemeColorUtil;
 public class SettingActivity extends AppCompatActivity implements ThemeColorUtil.ThemeColorListener {
 
     public static final String PREF_FILE_NAME ="com.highcom.ToDoLog.UserData";
+    public static final String PREF_PARAM_TODO_COUNT ="ToDoCount";
     public static final String PREF_PARAM_THEME_COLOR ="ThemeColor";
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -26,6 +31,20 @@ public class SettingActivity extends AppCompatActivity implements ThemeColorUtil
 
         setTitle(getString(R.string.setting_title));
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+
+        @SuppressLint("UseSwitchCompatOrMaterialCode")
+        Switch todoCountSwitch = (Switch)findViewById(R.id.todo_count_switch);
+        SharedPreferences data = getSharedPreferences(PREF_FILE_NAME, Context.MODE_PRIVATE);
+        boolean todoCount = data.getBoolean(PREF_PARAM_TODO_COUNT, true);
+        todoCountSwitch.setChecked(todoCount);
+        todoCountSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                SharedPreferences.Editor editor = data.edit();
+                editor.putBoolean(PREF_PARAM_TODO_COUNT, isChecked);
+                editor.apply();
+            }
+        });
 
         TextView themeColorTextView = findViewById(R.id.theme_color_text);
         themeColorTextView.setOnClickListener(v -> colorSelectDialog());

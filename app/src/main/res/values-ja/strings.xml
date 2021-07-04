@@ -37,6 +37,7 @@
     <string name="log_change_contents">内容変更</string>
 
     <string name="setting_title">設定</string>
+    <string name="setting_todo_count">残ToDo数の表示</string>
     <string name="setting_theme_color">テーマカラーの変更</string>
     <string name="setting_license">ライセンス</string>
     <string name="setting_privacy_policy">プライバシーポリシー</string>

@@ -43,11 +43,13 @@ import androidx.lifecycle.ViewModelProvider;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.ArrayList;
+import java.util.List;
 
 import jp.co.recruit_mp.android.rmp_appirater.RmpAppirater;
 
 import static com.highcom.todolog.SettingActivity.PREF_FILE_NAME;
 import static com.highcom.todolog.SettingActivity.PREF_PARAM_THEME_COLOR;
+import static com.highcom.todolog.SettingActivity.PREF_PARAM_TODO_COUNT;
 import static com.highcom.todolog.ui.todolist.ToDoListFragment.SELECT_GROUP;
 
 public class ToDoMainActivity extends AppCompatActivity {
@@ -65,6 +67,7 @@ public class ToDoMainActivity extends AppCompatActivity {
     private boolean hasBeenFirstGroupHandled;
     private long mSelectGroup;
     private boolean mMenuVisible;
+    private boolean mTodoCount;
 
     private FirebaseAnalytics mFirebaseAnalytics;
     private AdMobLoader mAdMobLoader;
@@ -217,8 +220,11 @@ public class ToDoMainActivity extends AppCompatActivity {
                 for (DrawerListItem item : drawerListItems) {
                     // 一度0に設定してからToDo残数があるグループだけ更新
                     item.setGroupCount(0);
-                    for (GroupCount count : groupCounts) {
-                        if (item.getGroupId() == count.mGroupId) item.setGroupCount(count.mGroupCount);
+                    if (mTodoCount) {
+                        for (GroupCount count : groupCounts) {
+                            if (item.getGroupId() == count.mGroupId)
+                                item.setGroupCount(count.mGroupCount);
+                        }
                     }
                 }
                 // ドロワーリストを設定する
@@ -240,6 +246,18 @@ public class ToDoMainActivity extends AppCompatActivity {
                 });
             });
         });
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        SharedPreferences data = getSharedPreferences(PREF_FILE_NAME, Context.MODE_PRIVATE);
+        mTodoCount = data.getBoolean(PREF_PARAM_TODO_COUNT, true);
+        // 更新通知を行うために、同じ値でupdateする
+        List<Group> groupList = mGroupViewModel.getGroupList().getValue();
+        if (groupList != null) {
+            mGroupViewModel.update(groupList);
+        }
     }
 
     @Override

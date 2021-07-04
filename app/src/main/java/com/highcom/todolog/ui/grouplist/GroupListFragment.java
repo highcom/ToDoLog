@@ -3,6 +3,7 @@ package com.highcom.todolog.ui.grouplist;
 import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.os.Bundle;
@@ -30,6 +31,9 @@ import com.highcom.todolog.ui.SimpleCallbackHelper;
 import java.util.ArrayList;
 import java.util.List;
 
+import static com.highcom.todolog.SettingActivity.PREF_FILE_NAME;
+import static com.highcom.todolog.SettingActivity.PREF_PARAM_TODO_COUNT;
+
 public class GroupListFragment extends Fragment implements SimpleCallbackHelper.SimpleCallbackListener, GroupListAdapter.GroupListAdapterListener {
 
     private boolean isInitPositionSet;
@@ -38,6 +42,8 @@ public class GroupListFragment extends Fragment implements SimpleCallbackHelper.
     private GroupListAdapter mGroupListAdapter;
     private GroupViewModel mGroupViewModel;
     private SimpleCallbackHelper mSimpleCallbackHelper;
+    private boolean mTodoCount;
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -59,8 +65,11 @@ public class GroupListFragment extends Fragment implements SimpleCallbackHelper.
                 List<GroupListItem> groupListItems = new ArrayList<>();
                 for (Group group : groupList) {
                     GroupListItem groupListItem = new GroupListItem(group);
-                    for (GroupCount groupCount : groupCounts) {
-                        if (group.getGroupId() == groupCount.mGroupId) groupListItem.setCount(groupCount.mGroupCount);
+                    if (mTodoCount) {
+                        for (GroupCount groupCount : groupCounts) {
+                            if (group.getGroupId() == groupCount.mGroupId)
+                                groupListItem.setCount(groupCount.mGroupCount);
+                        }
                     }
                     groupListItems.add(groupListItem);
                 }
@@ -110,6 +119,18 @@ public class GroupListFragment extends Fragment implements SimpleCallbackHelper.
                 ));
             }
         };
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        SharedPreferences data = getContext().getSharedPreferences(PREF_FILE_NAME, Context.MODE_PRIVATE);
+        mTodoCount = data.getBoolean(PREF_PARAM_TODO_COUNT, true);
+        // 更新通知を行うために、同じ値でupdateする
+        List<Group> groupList = mGroupViewModel.getGroupList().getValue();
+        if (groupList != null) {
+            mGroupViewModel.update(groupList);
+        }
     }
 
     @Override

@@ -26,9 +26,11 @@ import com.highcom.todolog.ui.drawerlist.DrawerListItem;
 import com.highcom.todolog.ui.todolist.ToDoListFragment;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import static com.highcom.todolog.SettingActivity.PREF_FILE_NAME;
 import static com.highcom.todolog.SettingActivity.PREF_PARAM_THEME_COLOR;
+import static com.highcom.todolog.SettingActivity.PREF_PARAM_TODO_COUNT;
 import static com.highcom.todolog.ui.todolist.ToDoListFragment.SELECT_GROUP;
 
 public class ToDoAppWidgetConfigure extends AppCompatActivity {
@@ -36,6 +38,8 @@ public class ToDoAppWidgetConfigure extends AppCompatActivity {
     public static final String SELECT_WIDGET_GROUP_ID = "selectWidgetGroupId";
     public static final String SELECT_WIDGET_GROUP_NAME = "selectWidgetGroupName";
     private int mAppWidgetId = AppWidgetManager.INVALID_APPWIDGET_ID;
+    GroupViewModel mGroupViewModel;
+    private boolean mTodoCount;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -57,19 +61,22 @@ public class ToDoAppWidgetConfigure extends AppCompatActivity {
         }
 
         ListView listView = findViewById(R.id.app_widget_list_view);
-        GroupViewModel groupViewModel = new ViewModelProvider(this).get(GroupViewModel.class);
-        groupViewModel.getGroupList().observe(this, groupList -> {
+        mGroupViewModel = new ViewModelProvider(this).get(GroupViewModel.class);
+        mGroupViewModel.getGroupList().observe(this, groupList -> {
             ArrayList<DrawerListItem> drawerListItems = new ArrayList<>();
             for (Group group : groupList) {
                 drawerListItems.add(new DrawerListItem(group.getGroupId(), group.getGroupName()));
             }
             // 各グループのToDoの数を設定する
-            groupViewModel.getCountByGroupId(ToDo.STATUS_TODO).observe(this, groupCounts -> {
+            mGroupViewModel.getCountByGroupId(ToDo.STATUS_TODO).observe(this, groupCounts -> {
                 for (DrawerListItem item : drawerListItems) {
                     // 一度0に設定してからToDo残数があるグループだけ更新
                     item.setGroupCount(0);
-                    for (GroupCount count : groupCounts) {
-                        if (item.getGroupId() == count.mGroupId) item.setGroupCount(count.mGroupCount);
+                    if (mTodoCount) {
+                        for (GroupCount count : groupCounts) {
+                            if (item.getGroupId() == count.mGroupId)
+                                item.setGroupCount(count.mGroupCount);
+                        }
                     }
                 }
                 DrawerListAdapter adapter = new DrawerListAdapter(this, R.layout.row_drawerlist, drawerListItems);
@@ -91,6 +98,18 @@ public class ToDoAppWidgetConfigure extends AppCompatActivity {
                 });
             });
         });
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        SharedPreferences data = getSharedPreferences(PREF_FILE_NAME, Context.MODE_PRIVATE);
+        mTodoCount = data.getBoolean(PREF_PARAM_TODO_COUNT, true);
+        // 更新通知を行うために、同じ値でupdateする
+        List<Group> groupList = mGroupViewModel.getGroupList().getValue();
+        if (groupList != null) {
+            mGroupViewModel.update(groupList);
+        }
     }
 
     static void saveSelectWidgetGroupPref(Context context, int appWidgetId, long selectGroupId, String selectGroupName) {

@@ -37,6 +37,7 @@
     <string name="log_change_contents">Change contents</string>
 
     <string name="setting_title">Setting</string>
+    <string name="setting_todo_count">Display of ToDo count</string>
     <string name="setting_theme_color">Setting theme color</string>
     <string name="setting_license">Lisence</string>
     <string name="setting_privacy_policy">Privacy policy</string>

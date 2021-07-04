@@ -82,7 +82,7 @@ public class GroupListAdapter extends ListAdapter<GroupListItem, GroupViewHolder
 
         @Override
         public boolean areContentsTheSame(@NonNull GroupListItem oldItem, @NonNull GroupListItem newItem) {
-            return oldItem.getGroup().equals(newItem.getGroup());
+            return oldItem.getGroup().equals(newItem.getGroup()) && oldItem.getCount() == newItem.getCount();
         }
     }
 }
