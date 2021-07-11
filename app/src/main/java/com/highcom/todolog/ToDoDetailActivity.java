@@ -40,37 +40,56 @@ import java.util.List;
 import static com.highcom.todolog.SettingActivity.PREF_FILE_NAME;
 import static com.highcom.todolog.SettingActivity.PREF_PARAM_THEME_COLOR;
 
+/**
+ * ToDo詳細画面表示クラス
+ * ToDo一覧画面で選択されたToDoの詳細内容について表示する
+ */
 public class ToDoDetailActivity extends AppCompatActivity implements TextWatcher {
 
+    // 変更内容比較のための変更前のToDoの内容
     private ToDo mBackupToDo;
+    // 変更中のToDoの内容
     private ToDo mEditToDo;
+    // ToDoの内容
     private EditText mDetailContents;
+    // タスクグループ一覧
     private List<Group> mGroupList;
-
+    // ログデータ用のViewModel
     private LogViewModel mLogViewModel;
 
     AdMobLoader mAdMobLoader;
 
+    /**
+     * ToDo詳細画面の初期設定
+     * IntentでToDo詳細を表示するIDをもらう。
+     * ToDoの内容とToDoに紐づくLog一覧を取得してRecyclerViewに表示する。
+     * @param savedInstanceState
+     */
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setThemeColor();
         setContentView(R.layout.activity_tododetail);
 
+        // AdMobのロード
         mAdMobLoader = new AdMobLoader(this, findViewById(R.id.ad_view_frame_tododetail), getString(R.string.admob_unit_id_2));
         mAdMobLoader.load();
 
+        // タイトルの設定
         setTitle(getString(R.string.detail_title));
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         mLogViewModel = new ViewModelProvider(this).get(LogViewModel.class);
 
+        // ToDo一覧画面で選択されてToDoのIDを取得する
         Intent intent = getIntent();
         long todoId = intent.getLongExtra("TODO_ID", -1);
 
+        // ToDoの内容を選択された場合のイベントリスナー設定
         mDetailContents = findViewById(R.id.detail_contents_edit);
         mDetailContents.addTextChangedListener(this);
         mDetailContents.setOnClickListener(view -> {
+            // キーボードを確実に表示させるために、スレッドで処理を実行する
             view.post(() -> {
                 view.setFocusable(true);
                 view.setFocusableInTouchMode(true);
@@ -127,6 +146,7 @@ public class ToDoDetailActivity extends AppCompatActivity implements TextWatcher
             }
         });
 
+        // Log一覧を表示するためのRecyclerViewの初期設定
         RecyclerView recyclerView = (RecyclerView) findViewById(R.id.detail_log_view);
         LogListAdapter adapter = new LogListAdapter(new LogListAdapter.LogDiff());
         RecyclerView.ItemDecoration itemDecoration = new DividerItemDecoration(this, DividerItemDecoration.VERTICAL_LIST);
@@ -162,6 +182,13 @@ public class ToDoDetailActivity extends AppCompatActivity implements TextWatcher
         });
     }
 
+    /**
+     * ToDo内容入力状態でのタッチイベント処理。
+     * ToDo内容入力エリア以外の部分をタッチされた場合に、入力を終了する
+     *
+     * @param event
+     * @return
+     */
     @Override
     public boolean onTouchEvent(MotionEvent event) {
         // 内容編集中にフォーカスが外れた場合は、キーボードを閉じる
@@ -175,12 +202,26 @@ public class ToDoDetailActivity extends AppCompatActivity implements TextWatcher
         return super.onTouchEvent(event);
     }
 
+    /**
+     * 入力完了のメニュー作成処理
+     *
+     * @param menu
+     * @return
+     */
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.activity_detail_menu, menu);
         return super.onCreateOptionsMenu(menu);
     }
 
+    /**
+     * アイテム選択時の処理
+     * 戻るメニューが押された場合には、データ更新せずに終了する。
+     * 完了メニューが選択された場合は、変更があればデータを更新する。
+     *
+     * @param item
+     * @return
+     */
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         switch (item.getItemId()) {
@@ -212,6 +253,12 @@ public class ToDoDetailActivity extends AppCompatActivity implements TextWatcher
 
     }
 
+    /**
+     * ToDo内容変更処理
+     * 変更された内容で変更中のToDO内容を更新する
+     *
+     * @param editable
+     */
     @Override
     public void afterTextChanged(Editable editable) {
         mEditToDo.setContents(editable.toString());
@@ -229,12 +276,19 @@ public class ToDoDetailActivity extends AppCompatActivity implements TextWatcher
         return Log.LOG_NOCHANGE;
     }
 
+    /**
+     * admobを終了させる。
+     */
     @Override
     protected void onDestroy() {
         mAdMobLoader.getAdView().destroy();
         super.onDestroy();
     }
 
+    /**
+     * 設定されたカラーテーマに合わせた色変更処理
+     * アクションバーをユーザーが設定したカラーテーマに変更する。
+     */
     private void setThemeColor() {
         SharedPreferences data = getSharedPreferences(PREF_FILE_NAME, Context.MODE_PRIVATE);
         int color = data.getInt(PREF_PARAM_THEME_COLOR, getResources().getColor(R.color.french_gray));

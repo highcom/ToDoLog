@@ -13,7 +13,20 @@ import android.widget.RemoteViews;
 import com.highcom.todolog.R;
 import com.highcom.todolog.ToDoMainActivity;
 
+/**
+ * ウィジェットに対するブロードキャストを処理するクラス
+ * RemoteViewsServiceを呼び出してコレクションのウィジェットを生成する。
+ */
 public class ToDoAppWidgetProvider extends AppWidgetProvider {
+
+    /**
+     * ウィジェット配置時の画面更新処理
+     * 配置されたウィジェットの数分のIDを引数で受け取り、ウィジェットIDに合わせた更新処理を行うように指示する。
+     *
+     * @param context ウィジェット画面のコンテキスト
+     * @param appWidgetManager ウィジェット管理クラス
+     * @param appWidgetIds 配置されているウィジェットIDのリスト
+     */
     @Override
     public void onUpdate(Context context, AppWidgetManager appWidgetManager, int[] appWidgetIds) {
         final int N = appWidgetIds.length;
@@ -26,6 +39,16 @@ public class ToDoAppWidgetProvider extends AppWidgetProvider {
         }
     }
 
+    /**
+     * ウィジェットに設定するデータの更新処理
+     * onUpdateからと設定アクティビティで選択した際に明示的に呼び出される。
+     * 設定アクティビティからの呼び出しは、選択したデータをSharedPreferenceに保存してから改めてウィジェットを更新するため。
+     * onUpdateの呼び出しは、再起動時に保存されたSharedPreferenceからデータを読み出して呼び出される。
+     *
+     * @param context ウィジェット画面のコンテキスト
+     * @param appWidgetManager ウィジェット管理クラス
+     * @param appWidgetId 更新対象のウィジェットID
+     */
     static void updateAppWidget(Context context, AppWidgetManager appWidgetManager, int appWidgetId) {
         String selectGroupName = ToDoAppWidgetConfigure.loadSelectWidgetGroupNamePref(context, appWidgetId);
         RemoteViews views = new RemoteViews(context.getPackageName(), R.layout.todo_appwidget);
@@ -51,12 +74,23 @@ public class ToDoAppWidgetProvider extends AppWidgetProvider {
         appWidgetManager.updateAppWidget(appWidgetId, views);
     }
 
+    /**
+     * 外側のアプリからウィジェットに対してイベントを発行する処理
+     *
+     * @param context ウィジェット画面のコンテキスト
+     */
     public static void sendRefreshBroadcast(Context context) {
         Intent intent = new Intent(AppWidgetManager.ACTION_APPWIDGET_UPDATE);
         intent.setComponent(new ComponentName(context, ToDoAppWidgetProvider.class));
         context.sendBroadcast(intent);
     }
 
+    /**
+     * ウィジェット自身がイベントを受信する事ができるようにする処理
+     *
+     * @param context
+     * @param intent
+     */
     @Override
     public void onReceive(final Context context, Intent intent) {
         final String action = intent.getAction();

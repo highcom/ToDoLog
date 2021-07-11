@@ -17,6 +17,10 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
 
+/**
+ * コレクションのウィジェットを生成する場合の本体となるクラス
+ * ListViewを利用する場合のAdapterクラスと同じ位置付けのもの。
+ */
 public class ToDoWidgetRemoteViewsFactory implements RemoteViewsService.RemoteViewsFactory {
     private Context mContext;
     private int mAppWidgetId;
@@ -24,6 +28,13 @@ public class ToDoWidgetRemoteViewsFactory implements RemoteViewsService.RemoteVi
     private static final int NUMBER_OF_THREADS = 4;
     static final ExecutorService databaseWriteExtractor = Executors.newFixedThreadPool(NUMBER_OF_THREADS);
 
+    /**
+     * コンストラクタ
+     * ToDoAppWidgetProviderからUriで渡されたデータであるウィジェットIDを取得する。
+     *
+     * @param applicationContext
+     * @param intent
+     */
     public ToDoWidgetRemoteViewsFactory(Context applicationContext, Intent intent) {
         mContext = applicationContext;
         if (intent.getData() != null) {
@@ -35,6 +46,10 @@ public class ToDoWidgetRemoteViewsFactory implements RemoteViewsService.RemoteVi
     public void onCreate() {
     }
 
+    /**
+     * 変更データ読み出し処理
+     * このメソッドは変更がある度に呼び出される。
+     */
     @Override
     public void onDataSetChanged() {
         final long identityToken = Binder.clearCallingIdentity();
@@ -58,16 +73,32 @@ public class ToDoWidgetRemoteViewsFactory implements RemoteViewsService.RemoteVi
         Binder.restoreCallingIdentity(identityToken);
     }
 
+    /**
+     * 対応するウィジェットIDのSharedPreferenceのデータを削除するための処理
+     * ウィジェットが削除される際に呼び出される。
+     */
     @Override
     public void onDestroy() {
         ToDoAppWidgetConfigure.deleteSelectWidgetGroupPref(mContext, mAppWidgetId);
     }
 
+    /**
+     * コレクションであるListViewに表示する数を返却する
+     *
+     * @return データ数
+     */
     @Override
     public int getCount() {
         return mTodoAndLogList.size();
     }
 
+    /**
+     * 引数で渡されている要素の順番を利用してデータを設定する処理
+     * 各セル単位で呼び出される。
+     *
+     * @param i セルの行番号
+     * @return セルに表示するView
+     */
     @Override
     public RemoteViews getViewAt(int i) {
         if (i == AdapterView.INVALID_POSITION) {

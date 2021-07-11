@@ -52,26 +52,49 @@ import static com.highcom.todolog.SettingActivity.PREF_PARAM_THEME_COLOR;
 import static com.highcom.todolog.SettingActivity.PREF_PARAM_TODO_COUNT;
 import static com.highcom.todolog.ui.todolist.ToDoListFragment.SELECT_GROUP;
 
+/**
+ * ToDoリスト一覧表示クラス
+ * DrawerLayout、ActionBar、FloatingButtonの制御を行う
+ * 前回表示していたタスクグループでFragmentを生成する
+ */
 public class ToDoMainActivity extends AppCompatActivity {
 
+    // Fragmentの種別
     private enum SELECT_FRAGMENT {
         FRAGMENT_TODOLIST,
         FRAGMENT_GROUPLIST,
     }
     private SELECT_FRAGMENT mSelectFragment;
+    // ToDoの追加フローティングボタン
     private FloatingActionButton fab;
+    // ToDo一覧表示用のフラグメント
     private ToDoListFragment mToDoListFragment;
+    // タスクグループ一覧表示用のフラグメント
     private GroupListFragment mGroupListFragment;
+    // タスクグループ用のViewModel
     private GroupViewModel mGroupViewModel;
+    // ユーザー設定値
     private SharedPreferences mPreferences;
+    // 最初のグループが設定されたか
     private boolean hasBeenFirstGroupHandled;
+    // 前回選択していたGroup
     private long mSelectGroup;
+    // メニューアイコン表示設定
     private boolean mMenuVisible;
+    // 残ToDo数の表示設定
     private boolean mTodoCount;
 
     private FirebaseAnalytics mFirebaseAnalytics;
     private AdMobLoader mAdMobLoader;
 
+    /**
+     * ToDoリスト一覧画面の初期設定
+     * 最初にFirebase、Admobのロード、アプリ評価ダイアログの初期設定を行う。
+     * 前回選択されていたグループを取得してFragmentを生成する。
+     * DrawerLayoutにグループの一覧情報を設定する。
+     *
+     * @param savedInstanceState
+     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -80,6 +103,7 @@ public class ToDoMainActivity extends AppCompatActivity {
 
         mMenuVisible = true;
 
+        // Firebaseの初期設定
         mFirebaseAnalytics = FirebaseAnalytics.getInstance(this);
         MobileAds.initialize(this, new OnInitializationCompleteListener() {
             @Override
@@ -87,9 +111,11 @@ public class ToDoMainActivity extends AppCompatActivity {
         });
         MobileAds.setRequestConfiguration(
                 new RequestConfiguration.Builder().setTestDeviceIds(Arrays.asList(getString(R.string.admob_test_device))).build());
+        // AdMobをロードする
         mAdMobLoader = new AdMobLoader(this, findViewById(R.id.ad_view_frame), getString(R.string.admob_unit_id));
         mAdMobLoader.load();
 
+        // 一定基準を満たしたらアプリ評価ダイアログを表示
         RmpAppirater.appLaunched(this,
             (appLaunchCount, appThisVersionCodeLaunchCount, firstLaunchDate, appVersionCode, previousAppVersionCode, rateClickDate, reminderClickDate, doNotShowAgain) -> {
                 // 現在のアプリのバージョンで10回以上起動したか
@@ -119,11 +145,13 @@ public class ToDoMainActivity extends AppCompatActivity {
             }
         );
 
+        // ユーザー設定値取得
         mPreferences = PreferenceManager.getDefaultSharedPreferences(this);
         StringsResource.create(this);
 
         hasBeenFirstGroupHandled = false;
 
+        // DrawerLayoutのヘッダにアプリのバージョンを設定する
         TextView headerTitle = findViewById(R.id.nav_header_title);
         try {
             PackageInfo info = getPackageManager().getPackageInfo(getPackageName(), PackageManager.GET_META_DATA);
@@ -132,6 +160,7 @@ public class ToDoMainActivity extends AppCompatActivity {
             e.printStackTrace();
         }
 
+        // ツールバーに設定しているボタンの各種イベントリスナー設定
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         fab = findViewById(R.id.fab);
@@ -143,9 +172,11 @@ public class ToDoMainActivity extends AppCompatActivity {
         drawer.addDrawerListener(actionBarDrawerToggle);
         actionBarDrawerToggle.syncState();
 
+        // DrawlerLayoutの内容を設定
         NavigationView navigationView = findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(item -> false);
 
+        // グループリスト編集ボタンのイベントリスナー設定
         Button groupEditButton = findViewById(R.id.group_edit_button);
         groupEditButton.setOnClickListener(view -> {
             setTitle(R.string.group_edit_title);
@@ -186,6 +217,7 @@ public class ToDoMainActivity extends AppCompatActivity {
             mMenuVisible = true;
             invalidateOptionsMenu();
 
+            // 前回選択されていたグループに応じた初期画面データ設定
             mSelectGroup = mPreferences.getLong(SELECT_GROUP, 0);
             boolean isGroupExist = false;
             for (Group group : groupList) if (group.getGroupId() == mSelectGroup) isGroupExist = true;
@@ -248,6 +280,9 @@ public class ToDoMainActivity extends AppCompatActivity {
         });
     }
 
+    /**
+     * 設定画面で変更された残ToDo数の表示設定を取得し、DrawerLayoutの表示を更新する。
+     */
     @Override
     protected void onResume() {
         super.onResume();
@@ -260,6 +295,12 @@ public class ToDoMainActivity extends AppCompatActivity {
         }
     }
 
+    /**
+     * メニューのドロップダウンリストのinflateを行う。
+     *
+     * @param menu
+     * @return
+     */
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
@@ -267,6 +308,12 @@ public class ToDoMainActivity extends AppCompatActivity {
         return true;
     }
 
+    /**
+     * メニューのドロップダウンリストの表示設定。
+     *
+     * @param menu
+     * @return
+     */
     @Override
     public boolean onPrepareOptionsMenu(Menu menu) {
         super.onPrepareOptionsMenu(menu);
@@ -274,6 +321,13 @@ public class ToDoMainActivity extends AppCompatActivity {
         return true;
     }
 
+    /**
+     * メニュー選択時の処理
+     * 現在表示しているグループのToDo全てに対して、ToDoのステータスを更新する。
+     *
+     * @param item
+     * @return
+     */
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         switch (item.getItemId()) {
@@ -291,24 +345,37 @@ public class ToDoMainActivity extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
+    /**
+     * フローティングボタンをToDo記入完了ボタンに設定する。
+     */
     public void changeDoneFloatingButton() {
         mAdMobLoader.getAdView().setVisibility(AdView.GONE);
         fab.setImageResource(R.drawable.ic_baseline_check_24);
         fab.setOnClickListener(new FloatingButtonDoneClickListener());
     }
 
+    /**
+     * フローティングボタンをToDo記入開始ボタンに設定する。
+     */
     public void changeEditFloatingButton() {
         mAdMobLoader.getAdView().setVisibility(AdView.VISIBLE);
         fab.setImageResource(R.drawable.ic_new_edit);
         fab.setOnClickListener(new FloatingButtonEditClickListener());
     }
 
+    /**
+     * admobを終了させる。
+     */
     @Override
     protected void onDestroy() {
         mAdMobLoader.getAdView().destroy();
         super.onDestroy();
     }
 
+    /**
+     * 設定されたカラーテーマに合わせた色変更処理
+     * アクションバーをユーザーが設定したカラーテーマに変更する。
+     */
     private void setThemeNoActionBarColor() {
         SharedPreferences data = getSharedPreferences(PREF_FILE_NAME, Context.MODE_PRIVATE);
         int color = data.getInt(PREF_PARAM_THEME_COLOR, getResources().getColor(R.color.french_gray));
@@ -327,8 +394,18 @@ public class ToDoMainActivity extends AppCompatActivity {
         }
     }
 
+    /**
+     * フローティングボタンのToDo入力開始イベントリスナー
+     */
     public class FloatingButtonEditClickListener implements View.OnClickListener {
 
+        /**
+         * 入力された内容をデータベースに登録する。
+         * ToDoが入力されていた場合はToDoを追加する。
+         * グループ編集が入力されていた場合は、グループを追加する。
+         *
+         * @param v
+         */
         @Override
         public void onClick(View v) {
             switch (mSelectFragment) {
@@ -344,8 +421,15 @@ public class ToDoMainActivity extends AppCompatActivity {
         }
     }
 
+    /**
+     * フローティングボタンのToDo入力完了イベントリスナー
+     */
     public class FloatingButtonDoneClickListener implements View.OnClickListener {
 
+        /**
+         * 入力完了時にEditTextからフォーカスを外す
+         * @param v
+         */
         @Override
         public void onClick(View v) {
             // フォーカスをfabにすることで内容からフォーカスを外して入力を完了させる
