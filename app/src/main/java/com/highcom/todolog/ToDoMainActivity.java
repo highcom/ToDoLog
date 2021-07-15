@@ -31,6 +31,7 @@ import com.highcom.todolog.ui.drawerlist.DrawerListAdapter;
 import com.highcom.todolog.ui.drawerlist.DrawerListItem;
 import com.highcom.todolog.ui.grouplist.GroupListFragment;
 import com.highcom.todolog.ui.todolist.ToDoListFragment;
+import com.highcom.todolog.ui.todolist.ToDoViewHolder;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBarDrawerToggle;
@@ -332,14 +333,19 @@ public class ToDoMainActivity extends AppCompatActivity {
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         switch (item.getItemId()) {
             case R.id.action_setting:
-                Intent intent = new Intent(this, SettingActivity.class);
-                startActivity(intent);
+                Intent settingIntent = new Intent(this, SettingActivity.class);
+                startActivity(settingIntent);
                 break;
             case R.id.action_change_all_done:
                 mGroupViewModel.updateAllToDoByGroupToState(mSelectGroup, ToDo.STATUS_DONE);
                 break;
             case R.id.action_change_all_todo:
                 mGroupViewModel.updateAllToDoByGroupToState(mSelectGroup, ToDo.STATUS_TODO);
+                break;
+            case R.id.action_show_log_chart:
+                Intent logChartIntent = new Intent(this, LogChartActivity.class);
+                logChartIntent.putExtra("GROUP_ID", mSelectGroup);
+                startActivity(logChartIntent);
                 break;
         }
         return super.onOptionsItemSelected(item);

@@ -15,5 +15,9 @@
             android:title="@string/setting_change_all_todo"
             app:showAsAction="never">
         </item>
+        <item android:id="@+id/action_show_log_chart"
+            android:title="@string/setting_show_log_chart"
+            app:showAsAction="never">
+        </item>
     </group>
 </menu>

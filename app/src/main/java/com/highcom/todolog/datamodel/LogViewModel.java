@@ -30,6 +30,10 @@ public class LogViewModel extends AndroidViewModel {
         return mGroupList;
     }
 
+    public LiveData<List<LogCount>> getCountByLogOperation(long group_id) {
+        return mRepository.getCountByLogOperation(group_id);
+    }
+
     public void updateToDoAndLog(ToDo todo, Log log) {
         mRepository.updateToDoAndLog(todo, log);
     }

@@ -45,6 +45,7 @@
 
     <string name="setting_change_all_done">全てチェックを設定</string>
     <string name="setting_change_all_todo">全てチェックを解除</string>
+    <string name="setting_show_log_chart">ログ統計表示</string>
 
     <string name="privacy_policy_url">https://high-commu.amebaownd.com/pages/2891722/page_201905200001</string>
     <string name="star_url">https://play.google.com/store/apps/details?id=com.highcom.todolog</string>

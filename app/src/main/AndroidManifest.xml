@@ -13,6 +13,7 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.ToDoLog">
+        <activity android:name=".LogChartActivity"></activity>
         <activity android:name=".widget.ToDoAppWidgetConfigure">
             <intent-filter>
                 <action android:name="android.appwidget.action.APPWIDGET_CONFIGURE" />
@@ -51,8 +52,9 @@
                 android:resource="@xml/todo_appwidget_info" />
         </receiver>
 
-        <service android:name=".widget.ToDoWidgetRemoteViewsService"
-            android:permission="android.permission.BIND_REMOTEVIEWS"></service>
+        <service
+            android:name=".widget.ToDoWidgetRemoteViewsService"
+            android:permission="android.permission.BIND_REMOTEVIEWS" />
     </application>
 
 </manifest>
