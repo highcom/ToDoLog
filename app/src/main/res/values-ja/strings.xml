@@ -30,6 +30,7 @@
     <string name="detail_status_todo">ToDo</string>
     <string name="detail_status_done">完了</string>
 
+    <string name="log_kind_title">ログ種別</string>
     <string name="log_create_new">新規作成</string>
     <string name="log_change_status_todo">ToDoにステータスを変更</string>
     <string name="log_change_status_done">完了にステータスを変更</string>

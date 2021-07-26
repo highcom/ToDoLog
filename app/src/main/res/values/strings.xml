@@ -30,6 +30,7 @@
     <string name="detail_status_todo">ToDo</string>
     <string name="detail_status_done">Done</string>
 
+    <string name="log_kind_title">Log Kind</string>
     <string name="log_create_new">Create new</string>
     <string name="log_change_status_todo">Change status to ToDo</string>
     <string name="log_change_status_done">Change status to Done</string>

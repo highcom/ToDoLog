@@ -13,13 +13,17 @@ import com.github.mikephil.charting.data.ChartData;
 import com.github.mikephil.charting.data.LineData;
 import com.highcom.todolog.R;
 
+import java.sql.Date;
+import java.util.List;
+
 public class LineChartItem extends ChartItem {
 
+    private List<Date> mDateRange;
 //    private final Typeface mTf;
 
-    public LineChartItem(ChartData<?> cd, Context c) {
+    public LineChartItem(List<Date> dateRange, ChartData<?> cd, Context c) {
         super(cd);
-
+        mDateRange = dateRange;
 //        mTf = Typeface.createFromAsset(c.getAssets(), "OpenSans-Regular.ttf");
     }
 
@@ -56,6 +60,7 @@ public class LineChartItem extends ChartItem {
         XAxis xAxis = holder.chart.getXAxis();
         xAxis.setPosition(XAxis.XAxisPosition.BOTTOM);
 //        xAxis.setTypeface(mTf);
+        xAxis.setValueFormatter(new DateValueFormatter(mDateRange));
         xAxis.setDrawGridLines(false);
         xAxis.setDrawAxisLine(true);
 

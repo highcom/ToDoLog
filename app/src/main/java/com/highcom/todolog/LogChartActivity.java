@@ -23,7 +23,8 @@ import com.github.mikephil.charting.data.PieData;
 import com.github.mikephil.charting.data.PieDataSet;
 import com.github.mikephil.charting.data.PieEntry;
 import com.github.mikephil.charting.interfaces.datasets.ILineDataSet;
-import com.github.mikephil.charting.utils.ColorTemplate;
+import com.highcom.todolog.datamodel.DoneCount;
+import com.highcom.todolog.datamodel.Log;
 import com.highcom.todolog.datamodel.LogCount;
 import com.highcom.todolog.datamodel.LogViewModel;
 import com.highcom.todolog.ui.ChartItem.BarChartItem;
@@ -31,13 +32,18 @@ import com.highcom.todolog.ui.ChartItem.ChartItem;
 import com.highcom.todolog.ui.ChartItem.LineChartItem;
 import com.highcom.todolog.ui.ChartItem.PieChartItem;
 
+import java.sql.Date;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.HashMap;
 import java.util.List;
 
 public class LogChartActivity extends AppCompatActivity {
     private long mGroupId;
     // ログデータ用のViewModel
     private LogViewModel mLogViewModel;
+    // チャート表示用アダプタ
+    ChartDataAdapter mCda;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -51,18 +57,26 @@ public class LogChartActivity extends AppCompatActivity {
 
         ArrayList<ChartItem> list = new ArrayList<>();
 
-        list.add(new LineChartItem(generateDataLine(1), getApplicationContext()));
-        list.add(new BarChartItem(generateDataBar(1), getApplicationContext()));
 
         if (mGroupId != -1) {
             mLogViewModel = new ViewModelProvider(this).get(LogViewModel.class);
+
+            mLogViewModel.getDoneCountByLogDate(mGroupId).observe(this, doneCounts -> {
+                List<Date> dateRange = createDateRange(doneCounts);
+                HashMap<Date, Integer> dateHashMap = summarizeDateCount(doneCounts);
+                list.add(new LineChartItem(dateRange, generateDataLine(dateRange, dateHashMap), getApplicationContext()));
+                list.add(new BarChartItem(dateRange, generateDataBar(dateRange, dateHashMap), getApplicationContext()));
+                lv.setAdapter(mCda);
+            });
+
             mLogViewModel.getCountByLogOperation(mGroupId).observe(this, logCounts -> {
                 list.add(new PieChartItem(generateDataPie(logCounts), getApplicationContext()));
-
-                ChartDataAdapter cda = new ChartDataAdapter(getApplicationContext(), list);
-                lv.setAdapter(cda);
+                lv.setAdapter(mCda);
             });
         }
+
+        mCda = new ChartDataAdapter(getApplicationContext(), list);
+        lv.setAdapter(mCda);
     }
 
     /** adapter that supports 3 different item types */
@@ -93,41 +107,113 @@ public class LogChartActivity extends AppCompatActivity {
     }
 
     /**
+     * 与えられた日時の時分秒を切り捨てて返却する
+     *
+     * @param date 日時
+     * @return 時分秒を切り捨てた日時
+     */
+    private Date adjustDate(Date date) {
+        Calendar c = Calendar.getInstance();
+        c.setTime(date);
+        c.set(Calendar.HOUR_OF_DAY, 0);
+        c.set(Calendar.MINUTE, 0);
+        c.set(Calendar.SECOND, 0);
+        c.set(Calendar.MILLISECOND, 0);
+        return new Date(c.getTime().getTime());
+    }
+
+    /**
+     * 与えられた完了日時データから、日付の始まりから終わりまでの日付のリストを作成する
+     *
+     * @param doneCounts 完了日時データ
+     * @return 日付のリスト
+     */
+    private List<Date> createDateRange(List<DoneCount> doneCounts) {
+        if (doneCounts.size() == 0) return null;
+
+        List<Date> dateRange = new ArrayList<>();
+        Date firstDate = adjustDate(doneCounts.get(0).mDate);
+        Date lastDate = adjustDate(doneCounts.get(doneCounts.size() - 1).mDate);
+        Calendar c = Calendar.getInstance();
+        c.setTime(firstDate);
+
+        for (Date date = firstDate; c.getTime().getTime() <= lastDate.getTime(); c.add(Calendar.DATE, 1)) {
+            dateRange.add(date);
+            date = new Date(c.getTime().getTime());
+        }
+        dateRange.add(lastDate);
+
+        return dateRange;
+    }
+
+    /**
+     * 与えられた完了日時データから、日付単位で数をカウントする
+     *
+     * @param doneCounts 完了日時データ
+     * @return 日付単位で完了数をサマリしたデータ
+     */
+    private HashMap<Date, Integer> summarizeDateCount(List<DoneCount> doneCounts) {
+        HashMap<Date, Integer> dateHashMap = new HashMap<>();
+
+        for (DoneCount doneCount : doneCounts) {
+            Date date = adjustDate(doneCount.mDate);
+            Integer count = dateHashMap.get(date);
+            if (count != null) {
+                count += doneCount.mDoneCount;
+                dateHashMap.put(date, count);
+            } else {
+                dateHashMap.put(date, doneCount.mDoneCount);
+            }
+        }
+
+        return dateHashMap;
+    }
+
+    /**
      * generates a random ChartData object with just one DataSet
      *
      * @return Line data
      */
-    private LineData generateDataLine(int cnt) {
+    private LineData generateDataLine(List<Date> dateRange, HashMap<Date, Integer> dateHashMap) {
 
         ArrayList<Entry> values1 = new ArrayList<>();
 
-        for (int i = 0; i < 12; i++) {
-            values1.add(new Entry(i, (int) (Math.random() * 65) + 40));
+        if (dateHashMap.size() > 0) {
+            int cnt = 0;
+            int total = 0;
+            for (Date date : dateRange) {
+                Integer count = dateHashMap.get(date);
+                if (count != null) {
+                    total += count;
+                }
+                values1.add(new Entry(cnt, total));
+                cnt++;
+            }
         }
 
-        LineDataSet d1 = new LineDataSet(values1, "New DataSet " + cnt + ", (1)");
+        LineDataSet d1 = new LineDataSet(values1, "New DataSet ");
         d1.setLineWidth(2.5f);
         d1.setCircleRadius(4.5f);
         d1.setHighLightColor(Color.rgb(244, 117, 117));
         d1.setDrawValues(false);
 
-        ArrayList<Entry> values2 = new ArrayList<>();
+//        ArrayList<Entry> values2 = new ArrayList<>();
 
-        for (int i = 0; i < 12; i++) {
-            values2.add(new Entry(i, values1.get(i).getY() - 30));
-        }
-
-        LineDataSet d2 = new LineDataSet(values2, "New DataSet " + cnt + ", (2)");
-        d2.setLineWidth(2.5f);
-        d2.setCircleRadius(4.5f);
-        d2.setHighLightColor(Color.rgb(244, 117, 117));
-        d2.setColor(ColorTemplate.VORDIPLOM_COLORS[0]);
-        d2.setCircleColor(ColorTemplate.VORDIPLOM_COLORS[0]);
-        d2.setDrawValues(false);
+//        for (int i = 0; i < 12; i++) {
+//            values2.add(new Entry(i, values1.get(i).getY() - 30));
+//        }
+//
+//        LineDataSet d2 = new LineDataSet(values2, "New DataSet " + cnt + ", (2)");
+//        d2.setLineWidth(2.5f);
+//        d2.setCircleRadius(4.5f);
+//        d2.setHighLightColor(Color.rgb(244, 117, 117));
+//        d2.setColor(ColorTemplate.VORDIPLOM_COLORS[0]);
+//        d2.setCircleColor(ColorTemplate.VORDIPLOM_COLORS[0]);
+//        d2.setDrawValues(false);
 
         ArrayList<ILineDataSet> sets = new ArrayList<>();
         sets.add(d1);
-        sets.add(d2);
+//        sets.add(d2);
 
         return new LineData(sets);
     }
@@ -137,16 +223,24 @@ public class LogChartActivity extends AppCompatActivity {
      *
      * @return Bar data
      */
-    private BarData generateDataBar(int cnt) {
-
+    private BarData generateDataBar(List<Date> dateRange, HashMap<Date, Integer> dateHashMap) {
         ArrayList<BarEntry> entries = new ArrayList<>();
 
-        for (int i = 0; i < 12; i++) {
-            entries.add(new BarEntry(i, (int) (Math.random() * 70) + 30));
+        if (dateHashMap.size() > 0) {
+            int cnt = 0;
+            for (Date date : dateRange) {
+                Integer count = dateHashMap.get(date);
+                if (count != null) {
+                    entries.add(new BarEntry(cnt, count));
+                } else {
+                    entries.add(new BarEntry(cnt, 0));
+                }
+                cnt++;
+            }
         }
 
-        BarDataSet d = new BarDataSet(entries, "New DataSet " + cnt);
-        d.setColors(ColorTemplate.VORDIPLOM_COLORS);
+        BarDataSet d = new BarDataSet(entries, "New DataSet");
+        d.setColor(rgb(Log.LOG_CHANGE_STATUS_DONE_COLOR));
         d.setHighLightAlpha(255);
 
         BarData cd = new BarData(d);
@@ -162,17 +256,80 @@ public class LogChartActivity extends AppCompatActivity {
     private PieData generateDataPie(List<LogCount> logCounts) {
 
         ArrayList<PieEntry> entries = new ArrayList<>();
+        ArrayList<Integer> colors = new ArrayList<>();
 
         for (LogCount logCount : logCounts) {
-            entries.add(new PieEntry(logCount.mLogCount, "OpeNum " + logCount.mOperation));
+            colors.add(getOperationColor(logCount.mOperation));
+            entries.add(new PieEntry(logCount.mLogCount, getOperationName(logCount.mOperation)));
         }
 
-        PieDataSet d = new PieDataSet(entries, "");
+        PieDataSet d = new PieDataSet(entries, getString(R.string.log_kind_title));
 
         // space between slices
         d.setSliceSpace(2f);
-        d.setColors(ColorTemplate.VORDIPLOM_COLORS);
+        d.setColors(colors);
 
         return new PieData(d);
+    }
+
+    private String getOperationName(int operation) {
+        String operationName;
+        switch (operation) {
+            case Log.LOG_NOCHANGE:
+                operationName = "";
+                break;
+            case Log.LOG_CREATE_NEW:
+            default:
+                operationName = getString(R.string.log_create_new);
+                break;
+            case Log.LOG_CHANGE_STATUS_TODO:
+                operationName = getString(R.string.log_change_status_todo);
+                break;
+            case Log.LOG_CHANGE_STATUS_DONE:
+                operationName = getString(R.string.log_change_status_done);
+                break;
+            case Log.LOG_CHANGE_GROUP:
+                operationName = getString(R.string.log_change_group);
+                break;
+            case Log.LOG_CHANGE_CONTENTS:
+                operationName = getString(R.string.log_change_contents);
+                break;
+        }
+        return operationName;
+
+    }
+
+    private int getOperationColor(int operation) {
+        int rgbColor;
+        switch (operation) {
+            case Log.LOG_NOCHANGE:
+                rgbColor = rgb(Log.LOG_NOCHANGE_COLOR);
+                break;
+            case Log.LOG_CREATE_NEW:
+            default:
+                rgbColor = rgb(Log.LOG_CREATE_NEW_COLOR);
+                break;
+            case Log.LOG_CHANGE_STATUS_TODO:
+                rgbColor = rgb(Log.LOG_CHANGE_STATUS_TODO_COLOR);
+                break;
+            case Log.LOG_CHANGE_STATUS_DONE:
+                rgbColor = rgb(Log.LOG_CHANGE_STATUS_DONE_COLOR);
+                break;
+            case Log.LOG_CHANGE_GROUP:
+                rgbColor = rgb(Log.LOG_CHANGE_GROUP_COLOR);
+                break;
+            case Log.LOG_CHANGE_CONTENTS:
+                rgbColor = rgb(Log.LOG_CHANGE_CONTENTS_COLOR);
+                break;
+        }
+        return rgbColor;
+    }
+
+    private int rgb(String hex) {
+        int color = (int) Long.parseLong(hex.replace("#", ""), 16);
+        int r = (color >> 16) & 0xFF;
+        int g = (color >> 8) & 0xFF;
+        int b = (color >> 0) & 0xFF;
+        return Color.rgb(r, g, b);
     }
 }

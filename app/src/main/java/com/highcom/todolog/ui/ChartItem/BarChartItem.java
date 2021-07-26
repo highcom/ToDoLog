@@ -2,7 +2,6 @@ package com.highcom.todolog.ui.ChartItem;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
-import android.graphics.Typeface;
 import android.view.LayoutInflater;
 import android.view.View;
 
@@ -11,15 +10,21 @@ import com.github.mikephil.charting.components.XAxis;
 import com.github.mikephil.charting.components.YAxis;
 import com.github.mikephil.charting.data.BarData;
 import com.github.mikephil.charting.data.ChartData;
+import com.github.mikephil.charting.formatter.ValueFormatter;
 import com.highcom.todolog.R;
+
+import java.sql.Date;
+import java.text.SimpleDateFormat;
+import java.util.List;
 
 public class BarChartItem extends ChartItem {
 
+    private List<Date> mDateRange;
 //    private final Typeface mTf;
 
-    public BarChartItem(ChartData<?> cd, Context c) {
+    public BarChartItem(List<Date> dateRange, ChartData<?> cd, Context c) {
         super(cd);
-
+        mDateRange = dateRange;
 //        mTf = Typeface.createFromAsset(c.getAssets(), "OpenSans-Regular.ttf");
     }
 
@@ -56,6 +61,7 @@ public class BarChartItem extends ChartItem {
         XAxis xAxis = holder.chart.getXAxis();
         xAxis.setPosition(XAxis.XAxisPosition.BOTTOM);
 //        xAxis.setTypeface(mTf);
+        xAxis.setValueFormatter(new DateValueFormatter(mDateRange));
         xAxis.setDrawGridLines(false);
         xAxis.setDrawAxisLine(true);
 

@@ -58,6 +58,10 @@ public class ToDoLogRepository {
         return mTodoDao.getCountByGroupId(state);
     }
 
+    LiveData<List<DoneCount>> getDoneCountByLogDate(long group_id) {
+        return mLogDao.getDoneCountByLogDate(group_id);
+    }
+
     LiveData<List<LogCount>> getCountByLogOperation(long group_id) {
         return mLogDao.getCountByLogOperation(group_id);
     }
