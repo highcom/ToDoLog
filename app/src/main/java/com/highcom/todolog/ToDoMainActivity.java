@@ -31,7 +31,6 @@ import com.highcom.todolog.ui.drawerlist.DrawerListAdapter;
 import com.highcom.todolog.ui.drawerlist.DrawerListItem;
 import com.highcom.todolog.ui.grouplist.GroupListFragment;
 import com.highcom.todolog.ui.todolist.ToDoListFragment;
-import com.highcom.todolog.ui.todolist.ToDoViewHolder;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBarDrawerToggle;
@@ -80,6 +79,7 @@ public class ToDoMainActivity extends AppCompatActivity {
     private boolean hasBeenFirstGroupHandled;
     // 前回選択していたGroup
     private long mSelectGroup;
+    private String mSelectGroupName;
     // メニューアイコン表示設定
     private boolean mMenuVisible;
     // 残ToDo数の表示設定
@@ -245,7 +245,8 @@ public class ToDoMainActivity extends AppCompatActivity {
                 drawerListItems.add(new DrawerListItem(group.getGroupId(), group.getGroupName()));
                 // グループ編集以外を選択している場合には、タイトルも更新する
                 if (mSelectFragment == SELECT_FRAGMENT.FRAGMENT_TODOLIST && group.getGroupId() == mSelectGroup) {
-                    setTitle(group.getGroupName());
+                    mSelectGroupName = group.getGroupName();
+                    setTitle(mSelectGroupName);
                 }
             }
             // 各グループのToDoの数を設定する
@@ -345,6 +346,7 @@ public class ToDoMainActivity extends AppCompatActivity {
             case R.id.action_show_log_chart:
                 Intent logChartIntent = new Intent(this, LogChartActivity.class);
                 logChartIntent.putExtra("GROUP_ID", mSelectGroup);
+                logChartIntent.putExtra("GROUP_NAME", mSelectGroupName);
                 startActivity(logChartIntent);
                 break;
         }

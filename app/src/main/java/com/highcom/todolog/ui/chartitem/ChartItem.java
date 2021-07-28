@@ -1,4 +1,4 @@
-package com.highcom.todolog.ui.ChartItem;
+package com.highcom.todolog.ui.chartitem;
 
 import android.content.Context;
 import android.view.View;

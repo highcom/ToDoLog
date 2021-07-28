@@ -6,8 +6,11 @@ import androidx.lifecycle.ViewModelProvider;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
@@ -22,15 +25,16 @@ import com.github.mikephil.charting.data.LineDataSet;
 import com.github.mikephil.charting.data.PieData;
 import com.github.mikephil.charting.data.PieDataSet;
 import com.github.mikephil.charting.data.PieEntry;
+import com.github.mikephil.charting.formatter.ValueFormatter;
 import com.github.mikephil.charting.interfaces.datasets.ILineDataSet;
 import com.highcom.todolog.datamodel.DoneCount;
 import com.highcom.todolog.datamodel.Log;
 import com.highcom.todolog.datamodel.LogCount;
 import com.highcom.todolog.datamodel.LogViewModel;
-import com.highcom.todolog.ui.ChartItem.BarChartItem;
-import com.highcom.todolog.ui.ChartItem.ChartItem;
-import com.highcom.todolog.ui.ChartItem.LineChartItem;
-import com.highcom.todolog.ui.ChartItem.PieChartItem;
+import com.highcom.todolog.ui.chartitem.BarChartItem;
+import com.highcom.todolog.ui.chartitem.ChartItem;
+import com.highcom.todolog.ui.chartitem.LineChartItem;
+import com.highcom.todolog.ui.chartitem.PieChartItem;
 
 import java.sql.Date;
 import java.util.ArrayList;
@@ -38,8 +42,12 @@ import java.util.Calendar;
 import java.util.HashMap;
 import java.util.List;
 
+import static com.highcom.todolog.SettingActivity.PREF_FILE_NAME;
+import static com.highcom.todolog.SettingActivity.PREF_PARAM_THEME_COLOR;
+
 public class LogChartActivity extends AppCompatActivity {
     private long mGroupId;
+    private String mGroupName;
     // ログデータ用のViewModel
     private LogViewModel mLogViewModel;
     // チャート表示用アダプタ
@@ -48,12 +56,16 @@ public class LogChartActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setThemeColor();
         setContentView(R.layout.activity_log_chart);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         ListView lv = findViewById(R.id.logChartListView);
 
         Intent intent = getIntent();
         mGroupId = intent.getLongExtra("GROUP_ID", -1);
+        mGroupName = intent.getStringExtra("GROUP_NAME");
+        if (mGroupName != null) setTitle(mGroupName);
 
         ArrayList<ChartItem> list = new ArrayList<>();
 
@@ -67,16 +79,64 @@ public class LogChartActivity extends AppCompatActivity {
                 list.add(new LineChartItem(dateRange, generateDataLine(dateRange, dateHashMap), getApplicationContext()));
                 list.add(new BarChartItem(dateRange, generateDataBar(dateRange, dateHashMap), getApplicationContext()));
                 lv.setAdapter(mCda);
-            });
 
-            mLogViewModel.getCountByLogOperation(mGroupId).observe(this, logCounts -> {
-                list.add(new PieChartItem(generateDataPie(logCounts), getApplicationContext()));
-                lv.setAdapter(mCda);
+                // 最後にPieChartを表示する
+                mLogViewModel.getCountByLogOperation(mGroupId).observe(this, logCounts -> {
+                    list.add(new PieChartItem(generateDataPie(logCounts), getApplicationContext()));
+                    lv.setAdapter(mCda);
+                });
             });
         }
 
         mCda = new ChartDataAdapter(getApplicationContext(), list);
         lv.setAdapter(mCda);
+    }
+
+    /**
+     * メニューのドロップダウンリストのinflateを行う。
+     *
+     * @param menu
+     * @return
+     */
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        // Inflate the menu; this adds items to the action bar if it is present.
+        getMenuInflater().inflate(R.menu.main, menu);
+        return true;
+    }
+
+    /**
+     * メニューのドロップダウンリストの表示設定。
+     *
+     * @param menu
+     * @return
+     */
+    @Override
+    public boolean onPrepareOptionsMenu(Menu menu) {
+        super.onPrepareOptionsMenu(menu);
+        menu.setGroupVisible(R.id.change_all_group, false);
+        return true;
+    }
+
+    /**
+     * メニュー選択時の処理
+     * 現在表示しているグループのToDo全てに対して、ToDoのステータスを更新する。
+     *
+     * @param item
+     * @return
+     */
+    @Override
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                finish();
+                break;
+            case R.id.action_setting:
+                Intent settingIntent = new Intent(this, SettingActivity.class);
+                startActivity(settingIntent);
+                break;
+        }
+        return super.onOptionsItemSelected(item);
     }
 
     /** adapter that supports 3 different item types */
@@ -191,7 +251,7 @@ public class LogChartActivity extends AppCompatActivity {
             }
         }
 
-        LineDataSet d1 = new LineDataSet(values1, "New DataSet ");
+        LineDataSet d1 = new LineDataSet(values1, getString(R.string.chart_line_guide));
         d1.setLineWidth(2.5f);
         d1.setCircleRadius(4.5f);
         d1.setHighLightColor(Color.rgb(244, 117, 117));
@@ -239,9 +299,20 @@ public class LogChartActivity extends AppCompatActivity {
             }
         }
 
-        BarDataSet d = new BarDataSet(entries, "New DataSet");
+        BarDataSet d = new BarDataSet(entries, getString(R.string.chart_bar_guide));
         d.setColor(rgb(Log.LOG_CHANGE_STATUS_DONE_COLOR));
         d.setHighLightAlpha(255);
+        // Barグラフ上の数値を整数にする
+        d.setValueFormatter(new ValueFormatter() {
+            @Override
+            public String getFormattedValue(float value) {
+                if ((int) value == 0) {
+                    return "";
+                } else {
+                    return "" + (int) value;
+                }
+            }
+        });
 
         BarData cd = new BarData(d);
         cd.setBarWidth(0.9f);
@@ -263,7 +334,7 @@ public class LogChartActivity extends AppCompatActivity {
             entries.add(new PieEntry(logCount.mLogCount, getOperationName(logCount.mOperation)));
         }
 
-        PieDataSet d = new PieDataSet(entries, getString(R.string.log_kind_title));
+        PieDataSet d = new PieDataSet(entries, getString(R.string.chart_pie_guide));
 
         // space between slices
         d.setSliceSpace(2f);
@@ -331,5 +402,27 @@ public class LogChartActivity extends AppCompatActivity {
         int g = (color >> 8) & 0xFF;
         int b = (color >> 0) & 0xFF;
         return Color.rgb(r, g, b);
+    }
+
+    /**
+     * 設定されたカラーテーマに合わせた色変更処理
+     * アクションバーをユーザーが設定したカラーテーマに変更する。
+     */
+    private void setThemeColor() {
+        SharedPreferences data = getSharedPreferences(PREF_FILE_NAME, Context.MODE_PRIVATE);
+        int color = data.getInt(PREF_PARAM_THEME_COLOR, getResources().getColor(R.color.french_gray));
+        if (color == getResources().getColor(R.color.topaz)) {
+            setTheme(R.style.Theme_ToDoLog_topaz);
+        } else if (color == getResources().getColor(R.color.water_green)) {
+            setTheme(R.style.Theme_ToDoLog_water_green);
+        } else if (color == getResources().getColor(R.color.day_dream)) {
+            setTheme(R.style.Theme_ToDoLog_day_dream);
+        } else if (color == getResources().getColor(R.color.old_rose)) {
+            setTheme(R.style.Theme_ToDoLog_old_rose);
+        } else if (color == getResources().getColor(R.color.mauve)) {
+            setTheme(R.style.Theme_ToDoLog_mauve);
+        } else {
+            setTheme(R.style.Theme_ToDoLog_french_gray);
+        }
     }
 }

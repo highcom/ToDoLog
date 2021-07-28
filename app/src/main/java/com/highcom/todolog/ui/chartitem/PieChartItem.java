@@ -1,9 +1,8 @@
-package com.highcom.todolog.ui.ChartItem;
+package com.highcom.todolog.ui.chartitem;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.graphics.Color;
-import android.graphics.Typeface;
 import android.text.SpannableString;
 import android.text.style.ForegroundColorSpan;
 import android.text.style.RelativeSizeSpan;

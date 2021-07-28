@@ -1,4 +1,4 @@
-package com.highcom.todolog.ui.ChartItem;
+package com.highcom.todolog.ui.chartitem;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
@@ -10,11 +10,9 @@ import com.github.mikephil.charting.components.XAxis;
 import com.github.mikephil.charting.components.YAxis;
 import com.github.mikephil.charting.data.BarData;
 import com.github.mikephil.charting.data.ChartData;
-import com.github.mikephil.charting.formatter.ValueFormatter;
 import com.highcom.todolog.R;
 
 import java.sql.Date;
-import java.text.SimpleDateFormat;
 import java.util.List;
 
 public class BarChartItem extends ChartItem {
