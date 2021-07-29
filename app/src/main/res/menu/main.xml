@@ -7,13 +7,19 @@
         app:showAsAction="always">
     </item>
     <group android:id="@+id/change_all_group" >
-        <item android:id="@+id/action_change_all_done"
-            android:title="@string/setting_change_all_done"
+        <item android:id="@+id/action_check_operation"
+            android:title="@string/setting_check_operation"
             app:showAsAction="never">
-        </item>
-        <item android:id="@+id/action_change_all_todo"
-            android:title="@string/setting_change_all_todo"
-            app:showAsAction="never">
+            <menu>
+                <item android:id="@+id/action_change_all_done"
+                    android:title="@string/setting_change_all_done"
+                    app:showAsAction="never">
+                </item>
+                <item android:id="@+id/action_change_all_todo"
+                    android:title="@string/setting_change_all_todo"
+                    app:showAsAction="never">
+                </item>
+            </menu>
         </item>
         <item android:id="@+id/action_show_log_chart"
             android:title="@string/setting_show_log_chart"

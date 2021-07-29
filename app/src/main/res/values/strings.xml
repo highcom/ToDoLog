@@ -16,6 +16,7 @@
 
     <string name="swipe_button_delete">Delete</string>
     <string name="swipe_button_detail">Detail</string>
+    <string name="swipe_button_chart">Chart</string>
 
     <string name="group_edit_title">Edit task list</string>
     <string name="group_default_name">Things to do</string>
@@ -43,6 +44,7 @@
     <string name="setting_privacy_policy">Privacy policy</string>
     <string name="setting_star">Rate this app</string>
 
+    <string name="setting_check_operation">Check operation</string>
     <string name="setting_change_all_done">Check all</string>
     <string name="setting_change_all_todo">Uncheck all</string>
     <string name="setting_show_log_chart">Show log chart</string>

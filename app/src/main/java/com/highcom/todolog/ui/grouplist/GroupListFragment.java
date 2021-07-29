@@ -3,6 +3,7 @@ package com.highcom.todolog.ui.grouplist;
 import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
@@ -20,13 +21,16 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
 
+import com.highcom.todolog.LogChartActivity;
 import com.highcom.todolog.R;
+import com.highcom.todolog.ToDoDetailActivity;
 import com.highcom.todolog.ToDoMainActivity;
 import com.highcom.todolog.datamodel.Group;
 import com.highcom.todolog.datamodel.GroupCount;
 import com.highcom.todolog.datamodel.GroupViewModel;
 import com.highcom.todolog.datamodel.ToDo;
 import com.highcom.todolog.ui.SimpleCallbackHelper;
+import com.highcom.todolog.ui.todolist.ToDoViewHolder;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -115,6 +119,18 @@ public class GroupListFragment extends Fragment implements SimpleCallbackHelper.
                                     .setPositiveButton(getString(R.string.group_dialog_ok), (dialog1, which) -> mGroupViewModel.deleteGroupByGroupId(((GroupViewHolder)holder).getGroupId()))
                                     .setNegativeButton(getString(R.string.group_dialog_cancel), null)
                                     .show();
+                        }
+                ));
+                underlayButtons.add(new SimpleCallbackHelper.UnderlayButton(
+                        getString(R.string.swipe_button_chart),
+                        BitmapFactory.decodeResource(getResources(), R.drawable.ic_chart),
+                        Color.parseColor(getString(R.color.lightgray)),
+                        (RecyclerView.ViewHolder) viewHolder,
+                        (holder, pos) -> {
+                            Intent intent = new Intent(getContext(), LogChartActivity.class);
+                            intent.putExtra("GROUP_ID", ((GroupViewHolder)holder).getGroup().getGroupId());
+                            intent.putExtra("GROUP_NAME", ((GroupViewHolder)holder).getGroup().getGroupName());
+                            startActivity(intent);
                         }
                 ));
             }

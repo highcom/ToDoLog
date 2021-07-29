@@ -16,6 +16,7 @@
 
     <string name="swipe_button_delete">削除</string>
     <string name="swipe_button_detail">詳細</string>
+    <string name="swipe_button_chart">統計</string>
 
     <string name="group_edit_title">タスクリスト編集</string>
     <string name="group_default_name">やること</string>
@@ -43,6 +44,7 @@
     <string name="setting_privacy_policy">プライバシーポリシー</string>
     <string name="setting_star">このアプリを評価する</string>
 
+    <string name="setting_check_operation">チェック操作</string>
     <string name="setting_change_all_done">全てチェックを設定</string>
     <string name="setting_change_all_todo">全てチェックを解除</string>
     <string name="setting_show_log_chart">ログ統計表示</string>
