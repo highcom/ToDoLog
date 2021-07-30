@@ -7,7 +7,16 @@
     <ListView
         android:id="@+id/logChartListView"
         android:layout_width="match_parent"
+        android:layout_weight="1"
         android:layout_height="match_parent" >
     </ListView>
+
+    <FrameLayout
+        android:id="@+id/ad_view_frame_logchart"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center|bottom"
+        android:layout_centerInParent="true"
+        android:layout_alignParentBottom="true" />
 
 </LinearLayout>

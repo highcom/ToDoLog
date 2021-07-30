@@ -31,6 +31,7 @@ import com.highcom.todolog.datamodel.DoneCount;
 import com.highcom.todolog.datamodel.Log;
 import com.highcom.todolog.datamodel.LogCount;
 import com.highcom.todolog.datamodel.LogViewModel;
+import com.highcom.todolog.ui.AdMobLoader;
 import com.highcom.todolog.ui.chartitem.BarChartItem;
 import com.highcom.todolog.ui.chartitem.ChartItem;
 import com.highcom.todolog.ui.chartitem.LineChartItem;
@@ -53,12 +54,18 @@ public class LogChartActivity extends AppCompatActivity {
     // チャート表示用アダプタ
     ChartDataAdapter mCda;
 
+    AdMobLoader mAdMobLoader;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setThemeColor();
         setContentView(R.layout.activity_log_chart);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+
+        // AdMobのロード
+        mAdMobLoader = new AdMobLoader(this, findViewById(R.id.ad_view_frame_logchart), getString(R.string.admob_unit_id_3));
+        mAdMobLoader.load();
 
         ListView lv = findViewById(R.id.logChartListView);
 
@@ -137,6 +144,15 @@ public class LogChartActivity extends AppCompatActivity {
                 break;
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    /**
+     * admobを終了させる。
+     */
+    @Override
+    protected void onDestroy() {
+        mAdMobLoader.getAdView().destroy();
+        super.onDestroy();
     }
 
     /** adapter that supports 3 different item types */
