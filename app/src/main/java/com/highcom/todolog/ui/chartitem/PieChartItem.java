@@ -19,13 +19,11 @@ import com.highcom.todolog.R;
 
 public class PieChartItem extends ChartItem {
 
-//    private final Typeface mTf;
     private final SpannableString mCenterText;
 
     public PieChartItem(ChartData<?> cd, Context c) {
         super(cd);
 
-//        mTf = Typeface.createFromAsset(c.getAssets(), "OpenSans-Regular.ttf");
         mCenterText = generateCenterText();
     }
 
@@ -59,13 +57,11 @@ public class PieChartItem extends ChartItem {
         holder.chart.setHoleRadius(52f);
         holder.chart.setTransparentCircleRadius(57f);
         holder.chart.setCenterText(mCenterText);
-//        holder.chart.setCenterTextTypeface(mTf);
         holder.chart.setCenterTextSize(9f);
         holder.chart.setUsePercentValues(true);
         holder.chart.setExtraOffsets(5, 10, 50, 10);
 
         mChartData.setValueFormatter(new PercentFormatter());
-//        mChartData.setValueTypeface(mTf);
         mChartData.setValueTextSize(11f);
         mChartData.setValueTextColor(Color.WHITE);
         // set data
@@ -80,7 +76,6 @@ public class PieChartItem extends ChartItem {
         l.setYOffset(0f);
 
         // do not forget to refresh the chart
-        // holder.chart.invalidate();
         holder.chart.animateY(900);
 
         return convertView;

@@ -18,12 +18,10 @@ import java.util.List;
 public class BarChartItem extends ChartItem {
 
     private List<Date> mDateRange;
-//    private final Typeface mTf;
 
     public BarChartItem(List<Date> dateRange, ChartData<?> cd, Context c) {
         super(cd);
         mDateRange = dateRange;
-//        mTf = Typeface.createFromAsset(c.getAssets(), "OpenSans-Regular.ttf");
     }
 
     @Override
@@ -58,31 +56,25 @@ public class BarChartItem extends ChartItem {
 
         XAxis xAxis = holder.chart.getXAxis();
         xAxis.setPosition(XAxis.XAxisPosition.BOTTOM);
-//        xAxis.setTypeface(mTf);
         xAxis.setValueFormatter(new DateValueFormatter(mDateRange));
         xAxis.setDrawGridLines(false);
         xAxis.setDrawAxisLine(true);
 
         YAxis leftAxis = holder.chart.getAxisLeft();
-//        leftAxis.setTypeface(mTf);
         leftAxis.setLabelCount(5, false);
         leftAxis.setSpaceTop(20f);
         leftAxis.setAxisMinimum(0f); // this replaces setStartAtZero(true)
 
         YAxis rightAxis = holder.chart.getAxisRight();
-//        rightAxis.setTypeface(mTf);
         rightAxis.setLabelCount(5, false);
         rightAxis.setSpaceTop(20f);
         rightAxis.setAxisMinimum(0f); // this replaces setStartAtZero(true)
-
-//        mChartData.setValueTypeface(mTf);
 
         // set data
         holder.chart.setData((BarData) mChartData);
         holder.chart.setFitBars(true);
 
         // do not forget to refresh the chart
-//        holder.chart.invalidate();
         holder.chart.animateY(700);
 
         return convertView;

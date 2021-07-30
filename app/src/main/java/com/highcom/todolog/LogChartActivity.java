@@ -46,6 +46,11 @@ import java.util.List;
 import static com.highcom.todolog.SettingActivity.PREF_FILE_NAME;
 import static com.highcom.todolog.SettingActivity.PREF_PARAM_THEME_COLOR;
 
+/**
+ * 操作ログをグラフで表示するクラス
+ * LineChart、BarChartで完了ToDo数をグラフで表示する
+ * PieChartで操作ログ種別毎の割合を表示する
+ */
 public class LogChartActivity extends AppCompatActivity {
     private long mGroupId;
     private String mGroupName;
@@ -56,6 +61,12 @@ public class LogChartActivity extends AppCompatActivity {
 
     AdMobLoader mAdMobLoader;
 
+    /**
+     * 操作ログをグラフで表示する画面の初期設定
+     * 選択されているグループの操作ログ情報を取得して各種Chartに設定する。
+     *
+     * @param savedInstanceState
+     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -76,7 +87,7 @@ public class LogChartActivity extends AppCompatActivity {
 
         ArrayList<ChartItem> list = new ArrayList<>();
 
-
+        // 選択グループがある場合には対応するデータを取得する
         if (mGroupId != -1) {
             mLogViewModel = new ViewModelProvider(this).get(LogViewModel.class);
 
@@ -272,23 +283,8 @@ public class LogChartActivity extends AppCompatActivity {
         d1.setHighLightColor(Color.rgb(244, 117, 117));
         d1.setDrawValues(false);
 
-//        ArrayList<Entry> values2 = new ArrayList<>();
-
-//        for (int i = 0; i < 12; i++) {
-//            values2.add(new Entry(i, values1.get(i).getY() - 30));
-//        }
-//
-//        LineDataSet d2 = new LineDataSet(values2, "New DataSet " + cnt + ", (2)");
-//        d2.setLineWidth(2.5f);
-//        d2.setCircleRadius(4.5f);
-//        d2.setHighLightColor(Color.rgb(244, 117, 117));
-//        d2.setColor(ColorTemplate.VORDIPLOM_COLORS[0]);
-//        d2.setCircleColor(ColorTemplate.VORDIPLOM_COLORS[0]);
-//        d2.setDrawValues(false);
-
         ArrayList<ILineDataSet> sets = new ArrayList<>();
         sets.add(d1);
-//        sets.add(d2);
 
         return new LineData(sets);
     }
@@ -358,6 +354,12 @@ public class LogChartActivity extends AppCompatActivity {
         return new PieData(d);
     }
 
+    /**
+     * 操作ログ種別名称取得
+     *
+     * @param operation 操作ログ種別
+     * @return 操作ログ種別名称
+     */
     private String getOperationName(int operation) {
         String operationName;
         switch (operation) {
@@ -385,6 +387,12 @@ public class LogChartActivity extends AppCompatActivity {
 
     }
 
+    /**
+     * 操作ログ種別に対応する色を取得する
+     *
+     * @param operation 操作ログ種別
+     * @return 操作ログ種別に対応する色
+     */
     private int getOperationColor(int operation) {
         int rgbColor;
         switch (operation) {
@@ -411,6 +419,12 @@ public class LogChartActivity extends AppCompatActivity {
         return rgbColor;
     }
 
+    /**
+     * 文字列で表現された色をRGB値に変換する
+     *
+     * @param hex 色の文字列
+     * @return RGB値
+     */
     private int rgb(String hex) {
         int color = (int) Long.parseLong(hex.replace("#", ""), 16);
         int r = (color >> 16) & 0xFF;

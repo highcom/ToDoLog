@@ -18,12 +18,10 @@ import java.util.List;
 public class LineChartItem extends ChartItem {
 
     private List<Date> mDateRange;
-//    private final Typeface mTf;
 
     public LineChartItem(List<Date> dateRange, ChartData<?> cd, Context c) {
         super(cd);
         mDateRange = dateRange;
-//        mTf = Typeface.createFromAsset(c.getAssets(), "OpenSans-Regular.ttf");
     }
 
     @Override
@@ -52,24 +50,20 @@ public class LineChartItem extends ChartItem {
         }
 
         // apply styling
-        // holder.chart.setValueTypeface(mTf);
         holder.chart.getDescription().setEnabled(false);
         holder.chart.setDrawGridBackground(false);
 
         XAxis xAxis = holder.chart.getXAxis();
         xAxis.setPosition(XAxis.XAxisPosition.BOTTOM);
-//        xAxis.setTypeface(mTf);
         xAxis.setValueFormatter(new DateValueFormatter(mDateRange));
         xAxis.setDrawGridLines(false);
         xAxis.setDrawAxisLine(true);
 
         YAxis leftAxis = holder.chart.getAxisLeft();
-//        leftAxis.setTypeface(mTf);
         leftAxis.setLabelCount(5, false);
         leftAxis.setAxisMinimum(0f); // this replaces setStartAtZero(true)
 
         YAxis rightAxis = holder.chart.getAxisRight();
-//        rightAxis.setTypeface(mTf);
         rightAxis.setLabelCount(5, false);
         rightAxis.setDrawGridLines(false);
         rightAxis.setAxisMinimum(0f); // this replaces setStartAtZero(true)
@@ -78,7 +72,6 @@ public class LineChartItem extends ChartItem {
         holder.chart.setData((LineData) mChartData);
 
         // do not forget to refresh the chart
-        // holder.chart.invalidate();
         holder.chart.animateX(750);
 
         return convertView;
