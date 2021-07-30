@@ -196,12 +196,11 @@ public class LogChartActivity extends AppCompatActivity {
         Date lastDate = adjustDate(doneCounts.get(doneCounts.size() - 1).mDate);
         Calendar c = Calendar.getInstance();
         c.setTime(firstDate);
-
-        for (Date date = firstDate; c.getTime().getTime() <= lastDate.getTime(); c.add(Calendar.DATE, 1)) {
+        // 開始日の1日前からをグラフにする(完了数を0スタートで表示させるため)
+        for (c.add(Calendar.DATE, -1); c.getTime().getTime() <= lastDate.getTime(); c.add(Calendar.DATE, 1)) {
+            Date date = new Date(c.getTime().getTime());
             dateRange.add(date);
-            date = new Date(c.getTime().getTime());
         }
-        dateRange.add(lastDate);
 
         return dateRange;
     }

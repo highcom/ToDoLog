@@ -51,7 +51,7 @@
 
     <string name="chart_line_title">ToDo完了数の累計</string>
     <string name="chart_bar_title">日別のToDo完了数</string>
-    <string name="chart_pie_title">操作ログ毎の割合</string>
+    <string name="chart_pie_title">現在の操作種別の割合</string>
     <string name="chart_line_guide">累計完了数</string>
     <string name="chart_bar_guide">ToDo完了数</string>
     <string name="chart_pie_guide">ログ種別</string>

@@ -51,7 +51,7 @@
 
     <string name="chart_line_title">Total of done count</string>
     <string name="chart_bar_title">Done count of daily</string>
-    <string name="chart_pie_title">Percentage per operation log</string>
+    <string name="chart_pie_title">Percentage of current operation types</string>
     <string name="chart_line_guide">Total</string>
     <string name="chart_bar_guide">Done count</string>
     <string name="chart_pie_guide">Log Kind</string>

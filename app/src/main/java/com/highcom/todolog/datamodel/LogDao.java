@@ -16,7 +16,7 @@ public interface LogDao {
     @Query("SELECT log_table.date, COUNT(log_table.operation = 3) AS count FROM log_table INNER JOIN todo_table ON log_table.todo_id = todo_table.todo_id WHERE todo_table.group_id = :group_id GROUP BY log_table.date")
     LiveData<List<DoneCount>> getDoneCountByLogDate(long group_id);
 
-    @Query("SELECT log_table.operation, COUNT(*) AS count FROM log_table INNER JOIN todo_table ON log_table.todo_id = todo_table.todo_id WHERE todo_table.group_id = :group_id GROUP BY log_table.operation")
+    @Query("SELECT log_table.operation, COUNT(*) AS count FROM log_table INNER JOIN todo_table ON log_table.log_id = todo_table.latest_log_id WHERE todo_table.group_id = :group_id GROUP BY log_table.operation")
     LiveData<List<LogCount>> getCountByLogOperation(long group_id);
 
     @Insert(onConflict = OnConflictStrategy.IGNORE)
