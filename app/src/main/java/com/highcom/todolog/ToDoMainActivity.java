@@ -267,6 +267,7 @@ public class ToDoMainActivity extends AppCompatActivity {
                 listView.setOnItemClickListener((adapterView, view, i, l) -> {
                     setTitle(groupList.get(i).getGroupName());
                     mSelectGroup = groupList.get(i).getGroupId();
+                    mSelectGroupName = groupList.get(i).getGroupName();
                     mPreferences.edit().putLong(SELECT_GROUP, mSelectGroup).apply();
                     mToDoListFragment = new ToDoListFragment();
                     mSelectFragment = SELECT_FRAGMENT.FRAGMENT_TODOLIST;
