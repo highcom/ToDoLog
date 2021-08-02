@@ -77,6 +77,8 @@ abstract class ToDoLogRoomDatabase extends RoomDatabase {
                 logDao.insert(new Log(19, 13, new Date(currentTime), Log.LOG_CHANGE_STATUS_DONE));
                 logDao.insert(new Log(20, 8, new Date(currentTime - (1000 * 60 * 60 * 24)), Log.LOG_CHANGE_STATUS_TODO));
                 logDao.insert(new Log(21, 8, new Date(currentTime), Log.LOG_CHANGE_STATUS_DONE));
+                logDao.insert(new Log(22, 16, new Date(currentTime), Log.LOG_CREATE_NEW));
+                logDao.insert(new Log(23, 17, new Date(currentTime), Log.LOG_CREATE_NEW));
 
                 ToDoDao todoDao = INSTANCE.toDoDao();
                 todoDao.deleteAll();
@@ -97,6 +99,9 @@ abstract class ToDoLogRoomDatabase extends RoomDatabase {
                 todoDao.insert(new ToDo(13, 1, 2, 3, mContext.getString(R.string.todo_data_13), 19));
                 todoDao.insert(new ToDo(14, 3, 1, 3, mContext.getString(R.string.todo_data_14), 16));
                 todoDao.insert(new ToDo(15, 4, 1, 3, mContext.getString(R.string.todo_data_15), 17));
+
+                todoDao.insert(new ToDo(16, 7, 1, 1, mContext.getString(R.string.todo_data_16), 22));
+                todoDao.insert(new ToDo(17, 8, 1, 1, mContext.getString(R.string.todo_data_17), 23));
             });
         }
     };

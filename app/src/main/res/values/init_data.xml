@@ -1,15 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="group_data_1">Operation Description</string>
-    <string name="group_data_2">Daily Things to do</string>
-    <string name="group_data_3">Work Schedule</string>
+    <string name="group_data_2">Ex. Daily Things to do</string>
+    <string name="group_data_3">Ex. Work Schedule</string>
 
     <string name="todo_data_1">Tap the bottom right button to add a new To-Do. You can also write long sentences with line breaks.</string>
     <string name="todo_data_2">Tap the checkbox to complete the process.</string>
     <string name="todo_data_3">Slide to the left to see the Details button and the Delete button.</string>
     <string name="todo_data_4">Long Press the handle icon on the right to reorder.</string>
-    <string name="todo_data_5">You can switch between the task lists by opening the menu in the upper left corner.</string>
-    <string name="todo_data_6">You can also delete a task from the Task List edit screen.</string>
+    <string name="todo_data_5">You can switch between the group by opening the menu in the upper left corner.</string>
+    <string name="todo_data_6">You can edit the group name from the group edit screen, and you can add or delete it.</string>
     <string name="todo_data_7">take breakfast.</string>
     <string name="todo_data_8">Feeding pets.</string>
     <string name="todo_data_9">Stretching.</string>
@@ -19,4 +19,6 @@
     <string name="todo_data_13">Write a weekly report.</string>
     <string name="todo_data_14">Review the reports that were submitted last week. Make a list of the points raised and reply to them by email.</string>
     <string name="todo_data_15">Check the details of the problem and assign a person to work on it.</string>
+    <string name="todo_data_16">You can check and uncheck all from the operation menu on the upper right.</string>
+    <string name="todo_data_17">From the log statistics screen, you can see the number of completed tasks so far in a graph.</string>
 </resources>

@@ -6,8 +6,8 @@
     <string name="nav_header_subtitle">android.studio@android.com</string>
     <string name="nav_header_desc">Navigation header</string>
     <string name="action_settings">Settings</string>
-    <string name="group_edit">Edit task list</string>
-    <string name="group_select">Select task list</string>
+    <string name="group_edit">Edit group</string>
+    <string name="group_select">Select group</string>
 
     <string name="widget_title">Loading...</string>
 
@@ -18,23 +18,23 @@
     <string name="swipe_button_detail">Detail</string>
     <string name="swipe_button_chart">Chart</string>
 
-    <string name="group_edit_title">Edit task list</string>
+    <string name="group_edit_title">Edit group</string>
     <string name="group_default_name">Things to do</string>
     <string name="group_dialog_title"> : Delete？</string>
-    <string name="group_dialog_detail">ToDo list registered in the task are also deleted. Is it OK?</string>
+    <string name="group_dialog_detail">ToDo list registered in the group are also deleted. Is it OK?</string>
     <string name="group_dialog_ok">OK</string>
     <string name="group_dialog_cancel">Cancel</string>
 
     <string name="detail_title">Detail</string>
     <string name="detail_status">Status</string>
-    <string name="detail_taskgroup">task</string>
+    <string name="detail_taskgroup">Group</string>
     <string name="detail_status_todo">ToDo</string>
     <string name="detail_status_done">Done</string>
 
     <string name="log_create_new">Create new</string>
     <string name="log_change_status_todo">Change status to ToDo</string>
     <string name="log_change_status_done">Change status to Done</string>
-    <string name="log_change_group">Change registered task</string>
+    <string name="log_change_group">Change registered group</string>
     <string name="log_change_contents">Change contents</string>
 
     <string name="setting_title">Setting</string>
@@ -54,7 +54,7 @@
     <string name="chart_pie_title">Percentage of current operation types</string>
     <string name="chart_line_guide">Total</string>
     <string name="chart_bar_guide">Done count</string>
-    <string name="chart_pie_guide">Log Kind</string>
+    <string name="chart_pie_guide">Log Kind (%)</string>
 
     <string name="privacy_policy_url">https://high-commu.amebaownd.com/pages/2891722/page_201905200001</string>
     <string name="star_url">https://play.google.com/store/apps/details?id=com.highcom.todolog</string>

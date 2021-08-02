@@ -1,15 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="group_data_1">操作説明</string>
-    <string name="group_data_2">毎日のやること</string>
-    <string name="group_data_3">仕事の予定</string>
+    <string name="group_data_2">例）毎日のやること</string>
+    <string name="group_data_3">例）仕事の予定</string>
 
     <string name="todo_data_1">右下のボタンをタップで新規のToDoが追加できます。改行が出来るので長い文章も書けます</string>
     <string name="todo_data_2">チェックボックスをタップする事で完了に出来ます</string>
-    <string name="todo_data_3">左にスライドすると、詳細ボタンと削除ボタンが現れます</string>
+    <string name="todo_data_3">左方向にスライドすると、詳細ボタンと削除ボタンが現れます</string>
     <string name="todo_data_4">右側のハンドルアイコンを長押しすると並べ替えができます</string>
-    <string name="todo_data_5">左上のメニューを開いてタスクリストを切り替えられます</string>
-    <string name="todo_data_6">タスクリスト編集からタスクごと削除する事もできます</string>
+    <string name="todo_data_5">左上のメニューを開いてグループを切り替えられます</string>
+    <string name="todo_data_6">グループ編集画面からグループ名の編集、追加や削除ができます</string>
     <string name="todo_data_7">お弁当を作る</string>
     <string name="todo_data_8">ペットにご飯あげる</string>
     <string name="todo_data_9">ストレッチする</string>
@@ -19,4 +19,6 @@
     <string name="todo_data_13">週報を書く</string>
     <string name="todo_data_14">先週提出されたレポートについてレビューする。指摘内容はリストにしてメールで返信する</string>
     <string name="todo_data_15">不具合としてあがっている内容を確認して、作業担当者を振り分ける</string>
+    <string name="todo_data_16">右上の操作メニューから全チェックの設定・解除ができます</string>
+    <string name="todo_data_17">ログ統計表示画面からこれまでのToDo完了数などがグラフで見られます</string>
 </resources>

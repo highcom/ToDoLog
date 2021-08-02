@@ -94,8 +94,8 @@ public class LogChartActivity extends AppCompatActivity {
             mLogViewModel.getDoneCountByLogDate(mGroupId).observe(this, doneCounts -> {
                 List<Date> dateRange = createDateRange(doneCounts);
                 HashMap<Date, Integer> dateHashMap = summarizeDateCount(doneCounts);
-                list.add(new LineChartItem(dateRange, generateDataLine(dateRange, dateHashMap), getApplicationContext()));
                 list.add(new BarChartItem(dateRange, generateDataBar(dateRange, dateHashMap), getApplicationContext()));
+                list.add(new LineChartItem(dateRange, generateDataLine(dateRange, dateHashMap), getApplicationContext()));
                 lv.setAdapter(mCda);
 
                 // 最後にPieChartを表示する

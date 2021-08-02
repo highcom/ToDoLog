@@ -29,13 +29,6 @@
             <include layout="@layout/nav_header_main"
                 android:id="@+id/nav_header" />
 
-            <ListView
-                android:layout_weight="7"
-                android:layout_width="match_parent"
-                android:layout_height="0dp"
-                android:id="@+id/task_list_view_inside_nav">
-            </ListView>
-
             <Button
                 android:id="@+id/group_edit_button"
                 android:layout_width="match_parent"
@@ -46,6 +39,13 @@
                 android:textColor="@color/french_gray"
                 android:textSize="12dp"
                 android:text="@string/group_edit"/>
+
+            <ListView
+                android:layout_weight="7"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:id="@+id/task_list_view_inside_nav">
+            </ListView>
 
         </LinearLayout>
     </com.google.android.material.navigation.NavigationView>
