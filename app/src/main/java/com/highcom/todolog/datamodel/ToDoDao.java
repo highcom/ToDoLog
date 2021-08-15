@@ -2,6 +2,7 @@ package com.highcom.todolog.datamodel;
 
 import androidx.lifecycle.LiveData;
 import androidx.room.Dao;
+import androidx.room.Entity;
 import androidx.room.Insert;
 import androidx.room.OnConflictStrategy;
 import androidx.room.Query;
@@ -14,14 +15,25 @@ import java.util.List;
 public interface ToDoDao {
     @Transaction
     @Query("SELECT * FROM todo_table WHERE group_id = :groupId ORDER BY state ASC, todo_order ASC")
-    LiveData<List<ToDoAndLog>> getToDoListByTaskGroup(long groupId);
+    LiveData<List<ToDoAndLog>> getToDoListByTaskGroupAsc(long groupId);
+
+    @Transaction
+    @Query("SELECT * FROM todo_table WHERE group_id = :groupId ORDER BY state ASC, todo_order DESC")
+    LiveData<List<ToDoAndLog>> getToDoListByTaskGroupDesc(long groupId);
 
     @Transaction
     @Query("SELECT * FROM todo_table WHERE group_id = :groupId AND state = 1 ORDER BY state ASC, todo_order ASC")
-    List<ToDoAndLog> getToDoListOnlyToDoByTaskGroupSync(long groupId);
+    List<ToDoAndLog> getToDoListOnlyToDoByTaskGroupSyncAsc(long groupId);
+
+    @Transaction
+    @Query("SELECT * FROM todo_table WHERE group_id = :groupId AND state = 1 ORDER BY state ASC, todo_order DESC")
+    List<ToDoAndLog> getToDoListOnlyToDoByTaskGroupSyncDesc(long groupId);
 
     @Query("SELECT * FROM todo_table WHERE group_id = :groupId AND state = :state ORDER BY todo_order ASC")
-    List<ToDo> getToDoListByTaskGroupAndStateSync(long groupId, int state);
+    List<ToDo> getToDoListByTaskGroupAndStateSyncAsc(long groupId, int state);
+
+    @Query("SELECT * FROM todo_table WHERE group_id = :groupId AND state = :state ORDER BY todo_order DESC")
+    List<ToDo> getToDoListByTaskGroupAndStateSyncDesc(long groupId, int state);
 
     @Query("SELECT todo_id FROM todo_table WHERE group_id = :groupId")
     List<Long> getToDoIdListByTaskGroup(long groupId);

@@ -1,10 +1,12 @@
 package com.highcom.todolog;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.net.Uri;
@@ -15,7 +17,11 @@ import android.widget.Switch;
 import android.widget.TextView;
 
 import com.google.android.gms.oss.licenses.OssLicensesMenuActivity;
+import com.highcom.todolog.datamodel.ToDoLogRepository;
 import com.highcom.todolog.ui.themelist.ThemeColorUtil;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * 設定画面クラス
@@ -28,8 +34,12 @@ public class SettingActivity extends AppCompatActivity implements ThemeColorUtil
     public static final String PREF_FILE_NAME ="com.highcom.ToDoLog.UserData";
     // ToDoの残数表示設定名称
     public static final String PREF_PARAM_TODO_COUNT ="ToDoCount";
+    // 新規ToDo追加位置設定名称
+    public static final String PREF_PARAM_NEW_TODO_ORDER ="NewToDoOrder";
     // カラーテーマの色設定名称
     public static final String PREF_PARAM_THEME_COLOR ="ThemeColor";
+    // ユーザー設定データ
+    private SharedPreferences sharedPreferences;
 
     /**
      * 各設定項目のイベントリスナーを登録する
@@ -39,6 +49,7 @@ public class SettingActivity extends AppCompatActivity implements ThemeColorUtil
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        sharedPreferences = getSharedPreferences(PREF_FILE_NAME, Context.MODE_PRIVATE);
         setThemeColor();
         setContentView(R.layout.activity_setting);
 
@@ -48,17 +59,27 @@ public class SettingActivity extends AppCompatActivity implements ThemeColorUtil
         // ToDoの残数表示状態のユーザー設定値の取得とイベントリスナーの設定
         @SuppressLint("UseSwitchCompatOrMaterialCode")
         Switch todoCountSwitch = (Switch)findViewById(R.id.todo_count_switch);
-        SharedPreferences data = getSharedPreferences(PREF_FILE_NAME, Context.MODE_PRIVATE);
-        boolean todoCount = data.getBoolean(PREF_PARAM_TODO_COUNT, true);
+        boolean todoCount = sharedPreferences.getBoolean(PREF_PARAM_TODO_COUNT, true);
         todoCountSwitch.setChecked(todoCount);
         todoCountSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                SharedPreferences.Editor editor = data.edit();
+                SharedPreferences.Editor editor = sharedPreferences.edit();
                 editor.putBoolean(PREF_PARAM_TODO_COUNT, isChecked);
                 editor.apply();
             }
         });
+
+        // 新規ToDo追加位置の設定
+        TextView newToDoOrderView = findViewById(R.id.new_todo_order_text);
+        newToDoOrderView.setOnClickListener(v -> newToDoOrderDialog());
+        int order = sharedPreferences.getInt(PREF_PARAM_NEW_TODO_ORDER, ToDoLogRepository.ORDER_ASC);
+        TextView newToDoOrderSelect = findViewById(R.id.new_todo_order_select);
+        if (order == ToDoLogRepository.ORDER_DESC) {
+            newToDoOrderSelect.setText(getString(R.string.order_top));
+        } else {
+            newToDoOrderSelect.setText(getString(R.string.order_bottom));
+        }
 
         // カラーテーマ設定
         TextView themeColorTextView = findViewById(R.id.theme_color_text);
@@ -105,6 +126,37 @@ public class SettingActivity extends AppCompatActivity implements ThemeColorUtil
     }
 
     /**
+     * 新規ToDo追加位置ダイアログ
+     */
+    private void newToDoOrderDialog() {
+        final String[] items = {getString(R.string.order_bottom_detail), getString(R.string.order_top_detail)};
+        int defaultItem = sharedPreferences.getInt(PREF_PARAM_NEW_TODO_ORDER, ToDoLogRepository.ORDER_ASC);
+        final List<Integer> checkedItems = new ArrayList<>();
+        checkedItems.add(defaultItem);
+        new AlertDialog.Builder(this)
+                .setTitle("Selector")
+                .setSingleChoiceItems(items, defaultItem, (dialog, which) -> {
+                    checkedItems.clear();
+                    checkedItems.add(which);
+                })
+                .setPositiveButton("OK", (dialog, which) -> {
+                    if (!checkedItems.isEmpty()) {
+                        TextView newToDoOrderSelect = findViewById(R.id.new_todo_order_select);
+                        if (checkedItems.get(0) == ToDoLogRepository.ORDER_DESC) {
+                            newToDoOrderSelect.setText(getString(R.string.order_top));
+                        } else {
+                            newToDoOrderSelect.setText(getString(R.string.order_bottom));
+                        }
+                        SharedPreferences.Editor editor = sharedPreferences.edit();
+                        editor.putInt(PREF_PARAM_NEW_TODO_ORDER, checkedItems.get(0));
+                        editor.apply();
+                    }
+                })
+                .setNegativeButton("Cancel", null)
+                .show();
+    }
+
+    /**
      * テーマカラー選択ダイアログ表示
      */
     private void colorSelectDialog() {
@@ -117,8 +169,7 @@ public class SettingActivity extends AppCompatActivity implements ThemeColorUtil
      * アクションバーをユーザーが設定したカラーテーマに変更する。
      */
     private void setThemeColor() {
-        SharedPreferences data = getSharedPreferences(PREF_FILE_NAME, Context.MODE_PRIVATE);
-        int color = data.getInt(PREF_PARAM_THEME_COLOR, getResources().getColor(R.color.french_gray));
+        int color = sharedPreferences.getInt(PREF_PARAM_THEME_COLOR, getResources().getColor(R.color.french_gray));
         if (color == getResources().getColor(R.color.topaz)) {
             setTheme(R.style.Theme_ToDoLog_topaz);
         } else if (color == getResources().getColor(R.color.water_green)) {
@@ -140,8 +191,7 @@ public class SettingActivity extends AppCompatActivity implements ThemeColorUtil
      */
     @Override
     public void onSelectColorClicked(int color) {
-        SharedPreferences data = getSharedPreferences(PREF_FILE_NAME, Context.MODE_PRIVATE);
-        SharedPreferences.Editor editor = data.edit();
+        SharedPreferences.Editor editor = sharedPreferences.edit();
         editor.putInt(PREF_PARAM_THEME_COLOR, color);
         editor.commit();
         Intent intent = new Intent(this, ToDoMainActivity.class);

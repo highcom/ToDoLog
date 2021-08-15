@@ -16,6 +16,7 @@ import android.view.inputmethod.InputMethodManager;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.LiveData;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -46,6 +47,7 @@ public class ToDoListFragment extends Fragment implements SimpleCallbackHelper.S
     private ToDoViewModel mToDoViewModel;
     private SimpleCallbackHelper mSimpleCallbackHelper;
     private Animation mScaleAnimation;
+    private LiveData<List<ToDoAndLog>> obj;
 
     @Override
     public void onSaveInstanceState(@NonNull Bundle outState) {
@@ -83,7 +85,8 @@ public class ToDoListFragment extends Fragment implements SimpleCallbackHelper.S
         recyclerView.smoothScrollToPosition(0);
 
         mToDoViewModel = new ViewModelProvider(this).get(ToDoViewModel.class);
-        mToDoViewModel.getToDoListByTaskGroup(mSelectGroupId).observe(getViewLifecycleOwner(), toDoAndLogList -> {
+        obj = mToDoViewModel.getToDoListByTaskGroup(mSelectGroupId);
+        obj.observe(getViewLifecycleOwner(), toDoAndLogList -> {
             // 新規作成時の最新の順番を設定
             mLatestToDoOrder = 0;
             mLatestDoneOrder = 0;
@@ -143,6 +146,19 @@ public class ToDoListFragment extends Fragment implements SimpleCallbackHelper.S
                 ));
             }
         };
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        List<ToDoAndLog> toDoAndLogList = obj.getValue();
+        if (toDoAndLogList != null) {
+            List<ToDo> toDoList = new ArrayList<>();
+            for (ToDoAndLog toDoAndLog : toDoAndLogList) {
+                toDoList.add(toDoAndLog.toDo);
+            }
+            mToDoViewModel.update(toDoList);
+        }
     }
 
     @Override

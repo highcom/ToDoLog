@@ -39,6 +39,7 @@
 
     <string name="setting_title">Setting</string>
     <string name="setting_todo_count">Display of ToDo count</string>
+    <string name="setting_new_todo_order">Position to add new ToDo</string>
     <string name="setting_theme_color">Setting theme color</string>
     <string name="setting_license">Lisence</string>
     <string name="setting_privacy_policy">Privacy policy</string>
@@ -58,6 +59,11 @@
 
     <string name="privacy_policy_url">https://high-commu.amebaownd.com/pages/2891722/page_201905200001</string>
     <string name="star_url">https://play.google.com/store/apps/details?id=com.highcom.todolog</string>
+
+    <string name="order_bottom">Add to bottom</string>
+    <string name="order_bottom_detail">Add to bottom (Sorted in ascending order)</string>
+    <string name="order_top">Add to top</string>
+    <string name="order_top_detail">Add to top (Sorted in descending order)</string>
 
     <string name="color_topaz">Topaz</string>
     <string name="color_water_green">Water green</string>

@@ -1,19 +1,28 @@
 package com.highcom.todolog.datamodel;
 
 import android.content.Context;
+import android.content.SharedPreferences;
 
 import androidx.lifecycle.LiveData;
 
 import java.sql.Date;
 import java.util.List;
 
+import static com.highcom.todolog.SettingActivity.PREF_FILE_NAME;
+import static com.highcom.todolog.SettingActivity.PREF_PARAM_NEW_TODO_ORDER;
+
 public class ToDoLogRepository {
+    public static final int ORDER_ASC = 0;
+    public static final int ORDER_DESC = 1;
+
     private static ToDoLogRepository instance;
 
     private GroupDao mGroupDao;
     private ToDoDao mTodoDao;
     private LogDao mLogDao;
     private LiveData<List<Group>> mGroupList;
+
+    private SharedPreferences sharedPreferences;
 
     public static ToDoLogRepository getInstance(Context context) {
         if (instance == null) {
@@ -32,6 +41,7 @@ public class ToDoLogRepository {
         mGroupList = mGroupDao.getGroupList();
         mTodoDao = db.toDoDao();
         mLogDao = db.logDao();
+        sharedPreferences = context.getSharedPreferences(PREF_FILE_NAME, Context.MODE_PRIVATE);
     }
 
     LiveData<List<Group>> getGroupList() {
@@ -39,11 +49,19 @@ public class ToDoLogRepository {
     }
 
     LiveData<List<ToDoAndLog>> getTodoListByTaskGroup(long groupId) {
-        return mTodoDao.getToDoListByTaskGroup(groupId);
+        if (sharedPreferences.getInt(PREF_PARAM_NEW_TODO_ORDER, ORDER_ASC) == ORDER_DESC) {
+            return mTodoDao.getToDoListByTaskGroupDesc(groupId);
+        } else {
+            return mTodoDao.getToDoListByTaskGroupAsc(groupId);
+        }
     }
 
     public List<ToDoAndLog> getTodoListOnlyToDoByTaskGroupSync(long groupId) {
-        return mTodoDao.getToDoListOnlyToDoByTaskGroupSync(groupId);
+        if (sharedPreferences.getInt(PREF_PARAM_NEW_TODO_ORDER, ORDER_ASC) == ORDER_DESC) {
+            return mTodoDao.getToDoListOnlyToDoByTaskGroupSyncDesc(groupId);
+        } else {
+            return mTodoDao.getToDoListOnlyToDoByTaskGroupSyncAsc(groupId);
+        }
     }
 
     LiveData<List<Log>> getLogListByTodoId(long todoId) {
@@ -103,7 +121,12 @@ public class ToDoLogRepository {
                 logOperation = Log.LOG_CHANGE_STATUS_DONE;
             }
 
-            List<ToDo> toDoList = mTodoDao.getToDoListByTaskGroupAndStateSync(groupId, getState);
+            List<ToDo> toDoList;
+            if (sharedPreferences.getInt(PREF_PARAM_NEW_TODO_ORDER, ORDER_ASC) == ORDER_DESC) {
+                toDoList = mTodoDao.getToDoListByTaskGroupAndStateSyncDesc(groupId, getState);
+            } else {
+                toDoList = mTodoDao.getToDoListByTaskGroupAndStateSyncAsc(groupId, getState);
+            }
             for (ToDo toDo : toDoList) {
                 toDo.setState(setState);
                 Log log = new Log(0, toDo.getTodoId(), new Date(System.currentTimeMillis()), logOperation);
