@@ -3,6 +3,7 @@ package com.highcom.todolog.ui.todolist;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.os.Bundle;
@@ -22,17 +23,21 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.highcom.todolog.R;
+import com.highcom.todolog.SettingActivity;
 import com.highcom.todolog.ToDoDetailActivity;
 import com.highcom.todolog.ToDoMainActivity;
 import com.highcom.todolog.datamodel.Log;
 import com.highcom.todolog.datamodel.ToDo;
 import com.highcom.todolog.datamodel.ToDoAndLog;
+import com.highcom.todolog.datamodel.ToDoLogRepository;
 import com.highcom.todolog.datamodel.ToDoViewModel;
 import com.highcom.todolog.ui.SimpleCallbackHelper;
 import com.highcom.todolog.widget.ToDoAppWidgetProvider;
 
 import java.sql.Date;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
 public class ToDoListFragment extends Fragment implements SimpleCallbackHelper.SimpleCallbackListener, ToDoListAdapter.ToDoListAdapterListener {
@@ -48,6 +53,7 @@ public class ToDoListFragment extends Fragment implements SimpleCallbackHelper.S
     private SimpleCallbackHelper mSimpleCallbackHelper;
     private Animation mScaleAnimation;
     private LiveData<List<ToDoAndLog>> obj;
+    private SharedPreferences sharedPreferences;
 
     @Override
     public void onSaveInstanceState(@NonNull Bundle outState) {
@@ -65,6 +71,7 @@ public class ToDoListFragment extends Fragment implements SimpleCallbackHelper.S
         Bundle args = getArguments();
         mSelectGroupId = args.getLong(SELECT_GROUP);
         isInitPositionSet = false;
+        sharedPreferences = getContext().getSharedPreferences(SettingActivity.PREF_FILE_NAME, Context.MODE_PRIVATE);
     }
 
     @Nullable
@@ -90,23 +97,39 @@ public class ToDoListFragment extends Fragment implements SimpleCallbackHelper.S
             // 新規作成時の最新の順番を設定
             mLatestToDoOrder = 0;
             mLatestDoneOrder = 0;
+            List<ToDoAndLog> todoList = new ArrayList<>();
+            List<ToDoAndLog> doneList = new ArrayList<>();
+            List<ToDoAndLog> toDoAndLogSortedList = new ArrayList<>();
             for (ToDoAndLog toDoAndLog : toDoAndLogList) {
-                if (toDoAndLog.toDo.getState() == ToDo.STATUS_TODO) mLatestToDoOrder = toDoAndLog.toDo.getTodoOrder();
-                if (toDoAndLog.toDo.getState() == ToDo.STATUS_DONE) mLatestDoneOrder = toDoAndLog.toDo.getTodoOrder();
+                if (toDoAndLog.toDo.getState() == ToDo.STATUS_TODO) {
+                    mLatestToDoOrder = toDoAndLog.toDo.getTodoOrder();
+                    todoList.add(toDoAndLog);
+                }
+                if (toDoAndLog.toDo.getState() == ToDo.STATUS_DONE) {
+                    mLatestDoneOrder = toDoAndLog.toDo.getTodoOrder();
+                    doneList.add(toDoAndLog);
+                }
             }
+
+            Collections.sort(todoList, new OrderComparator());
+            Collections.sort(doneList, new OrderComparator());
+            toDoAndLogSortedList.addAll(todoList);
+            toDoAndLogSortedList.addAll(doneList);
+            // 変数を置き換える
+
             // 並べ替え用のToDoリストを作成する
             mRearrangeToDoList = new ArrayList<>();
-            for (ToDoAndLog toDoAndLog : toDoAndLogList) mRearrangeToDoList.add(toDoAndLog.toDo.clone());
+            for (ToDoAndLog toDoAndLog : toDoAndLogSortedList) mRearrangeToDoList.add(toDoAndLog.toDo.clone());
             // Todoの一覧が読み込まれたらバインドする
-            mToDoListAdapter.submitList(toDoAndLogList);
+            mToDoListAdapter.submitList(toDoAndLogSortedList);
             // 初期表示の時は先頭位置にする
             if (!isInitPositionSet) {
                 recyclerView.scrollToPosition(0);
                 isInitPositionSet = true;
             }
             // 新規作成時は対象のセルにフォーカスされるようにスクロールする
-            for (int position = 0; position < toDoAndLogList.size(); position++) {
-                if (toDoAndLogList.get(position).toDo.getContents().equals("")) {
+            for (int position = 0; position < toDoAndLogSortedList.size(); position++) {
+                if (toDoAndLogSortedList.get(position).toDo.getContents().equals("")) {
                     recyclerView.smoothScrollToPosition(position);
                     break;
                 }
@@ -269,6 +292,19 @@ public class ToDoListFragment extends Fragment implements SimpleCallbackHelper.S
         } else {
             Log log = new Log(0, toDoAndLog.toDo.getTodoId(), new Date(System.currentTimeMillis()), Log.LOG_CHANGE_CONTENTS);
             mToDoViewModel.updateToDoAndLog(toDo, log);
+        }
+    }
+
+    public class OrderComparator implements Comparator<ToDoAndLog> {
+
+        @Override
+        public int compare(ToDoAndLog o1, ToDoAndLog o2) {
+            int order = sharedPreferences.getInt(SettingActivity.PREF_PARAM_NEW_TODO_ORDER, ToDoLogRepository.ORDER_ASC);
+            if (order == ToDoLogRepository.ORDER_DESC) {
+                return o2.toDo.getTodoOrder() - o1.toDo.getTodoOrder();
+            } else {
+                return o1.toDo.getTodoOrder() - o2.toDo.getTodoOrder();
+            }
         }
     }
 }

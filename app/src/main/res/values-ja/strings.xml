@@ -61,9 +61,9 @@
     <string name="star_url">https://play.google.com/store/apps/details?id=com.highcom.todolog</string>
 
     <string name="order_bottom">下に追加</string>
-    <string name="order_bottom_detail">下に追加(昇順ソートされます)</string>
+    <string name="order_bottom_detail">下に追加\n(昇順ソートされます)</string>
     <string name="order_top">上に追加</string>
-    <string name="order_top_detail">上に追加(降順ソートされます)</string>
+    <string name="order_top_detail">上に追加\n(降順ソートされます)</string>
 
     <string name="color_topaz">トパーズ</string>
     <string name="color_water_green">ウォーターグリーン</string>
