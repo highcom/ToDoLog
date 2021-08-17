@@ -6,7 +6,6 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.net.Uri;
@@ -134,12 +133,12 @@ public class SettingActivity extends AppCompatActivity implements ThemeColorUtil
         final List<Integer> checkedItems = new ArrayList<>();
         checkedItems.add(defaultItem);
         new AlertDialog.Builder(this)
-                .setTitle("Selector")
+                .setTitle(getString(R.string.setting_new_todo_order))
                 .setSingleChoiceItems(items, defaultItem, (dialog, which) -> {
                     checkedItems.clear();
                     checkedItems.add(which);
                 })
-                .setPositiveButton("OK", (dialog, which) -> {
+                .setPositiveButton(getString(R.string.ok), (dialog, which) -> {
                     if (!checkedItems.isEmpty()) {
                         TextView newToDoOrderSelect = findViewById(R.id.new_todo_order_select);
                         if (checkedItems.get(0) == ToDoLogRepository.ORDER_DESC) {
@@ -152,7 +151,7 @@ public class SettingActivity extends AppCompatActivity implements ThemeColorUtil
                         editor.apply();
                     }
                 })
-                .setNegativeButton("Cancel", null)
+                .setNegativeButton(getString(R.string.cancel), null)
                 .show();
     }
 

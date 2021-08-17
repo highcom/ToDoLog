@@ -94,28 +94,30 @@ public class ToDoListFragment extends Fragment implements SimpleCallbackHelper.S
         mToDoViewModel = new ViewModelProvider(this).get(ToDoViewModel.class);
         obj = mToDoViewModel.getToDoListByTaskGroup(mSelectGroupId);
         obj.observe(getViewLifecycleOwner(), toDoAndLogList -> {
-            // 新規作成時の最新の順番を設定
             mLatestToDoOrder = 0;
             mLatestDoneOrder = 0;
+            // 新規ToDo追加位置の設定に合わせてソートするためのリストを作成する
             List<ToDoAndLog> todoList = new ArrayList<>();
             List<ToDoAndLog> doneList = new ArrayList<>();
             List<ToDoAndLog> toDoAndLogSortedList = new ArrayList<>();
             for (ToDoAndLog toDoAndLog : toDoAndLogList) {
                 if (toDoAndLog.toDo.getState() == ToDo.STATUS_TODO) {
+                    // 昇順でデータが来るので一番最後を新規作成時の最新の順番として設定
                     mLatestToDoOrder = toDoAndLog.toDo.getTodoOrder();
                     todoList.add(toDoAndLog);
                 }
                 if (toDoAndLog.toDo.getState() == ToDo.STATUS_DONE) {
+                    // 昇順でデータが来るので一番最後を完了時の最新の順番として設定
                     mLatestDoneOrder = toDoAndLog.toDo.getTodoOrder();
                     doneList.add(toDoAndLog);
                 }
             }
 
+            // ToDo追加位置の設定に合わせて昇順・降順ソートをする
             Collections.sort(todoList, new OrderComparator());
             Collections.sort(doneList, new OrderComparator());
             toDoAndLogSortedList.addAll(todoList);
             toDoAndLogSortedList.addAll(doneList);
-            // 変数を置き換える
 
             // 並べ替え用のToDoリストを作成する
             mRearrangeToDoList = new ArrayList<>();

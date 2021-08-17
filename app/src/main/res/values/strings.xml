@@ -45,6 +45,9 @@
     <string name="setting_privacy_policy">Privacy policy</string>
     <string name="setting_star">Rate this app</string>
 
+    <string name="ok">OK</string>
+    <string name="cancel">CANCEL</string>
+
     <string name="setting_check_operation">Check operation</string>
     <string name="setting_change_all_done">Check all</string>
     <string name="setting_change_all_todo">Uncheck all</string>
@@ -61,9 +64,9 @@
     <string name="star_url">https://play.google.com/store/apps/details?id=com.highcom.todolog</string>
 
     <string name="order_bottom">Add to bottom</string>
-    <string name="order_bottom_detail">Add to bottom\n(Sorted in ascending order)</string>
+    <string name="order_bottom_detail">Add to bottom\n  (Sorted in ascending order)</string>
     <string name="order_top">Add to top</string>
-    <string name="order_top_detail">Add to top\n(Sorted in descending order)</string>
+    <string name="order_top_detail">Add to top\n  (Sorted in descending order)</string>
 
     <string name="color_topaz">Topaz</string>
     <string name="color_water_green">Water green</string>
