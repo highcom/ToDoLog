@@ -41,12 +41,17 @@
     <string name="setting_todo_count">残ToDo数の表示</string>
     <string name="setting_new_todo_order">新規ToDo追加位置</string>
     <string name="setting_theme_color">テーマカラーの変更</string>
+    <string name="setting_backup_restore">バックアップと復元</string>
     <string name="setting_license">ライセンス</string>
     <string name="setting_privacy_policy">プライバシーポリシー</string>
     <string name="setting_star">このアプリを評価する</string>
 
     <string name="ok">完了</string>
     <string name="cancel">取消</string>
+    <string name="next">次へ</string>
+    <string name="exec">実行</string>
+    <string name="move">移動</string>
+    <string name="end">終了</string>
 
     <string name="setting_check_operation">チェック操作</string>
     <string name="setting_change_all_done">全チェック設定</string>
@@ -74,4 +79,21 @@
     <string name="color_old_rose">オールドローズ</string>
     <string name="color_mauve">モーブ</string>
     <string name="color_french_gray">フレンチグレイ</string>
+
+    <string name="data_select_operation">操作選択</string>
+    <string name="data_backup">バックアップ</string>
+    <string name="data_restore">復元</string>
+    <string name="data_select_operation_err_message">操作が選択されていません。</string>
+    <string name="backup_message_front"></string>
+    <string name="backup_message_rear">にバックアップします</string>
+    <string name="no_access_message">アクセス権限がありません。\nアプリの権限を設定して下さい。\n設定に移動しますか？</string>
+    <string name="backup_complete_message">バックアップ完了しました</string>
+    <string name="backup_failed_message">バックアップに失敗しました</string>
+    <string name="restore_message_front"></string>
+    <string name="restore_message_rear">から復元します</string>
+    <string name="restore_confirm_message">すべでのデータは上書きされます。実行しますか？</string>
+    <string name="restore_processing">復元中</string>
+    <string name="restore_complete_message">復元が完了しました</string>
+    <string name="restore_failed_message">復元に失敗しました</string>
+
 </resources>

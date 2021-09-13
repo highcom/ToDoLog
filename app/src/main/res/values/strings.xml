@@ -41,12 +41,17 @@
     <string name="setting_todo_count">Display of ToDo count</string>
     <string name="setting_new_todo_order">Position to add new ToDo</string>
     <string name="setting_theme_color">Setting theme color</string>
+    <string name="setting_backup_restore">Backup and restore</string>
     <string name="setting_license">Lisence</string>
     <string name="setting_privacy_policy">Privacy policy</string>
     <string name="setting_star">Rate this app</string>
 
     <string name="ok">OK</string>
     <string name="cancel">CANCEL</string>
+    <string name="next">Next</string>
+    <string name="exec">Exec</string>
+    <string name="move">Move</string>
+    <string name="end">End</string>
 
     <string name="setting_check_operation">Check operation</string>
     <string name="setting_change_all_done">Check all</string>
@@ -74,4 +79,20 @@
     <string name="color_old_rose">Old rose</string>
     <string name="color_mauve">Mauve</string>
     <string name="color_french_gray">French gray</string>
+
+    <string name="data_select_operation">Select operation</string>
+    <string name="data_backup">Backup</string>
+    <string name="data_restore">Restore</string>
+    <string name="data_select_operation_err_message">No operation is selected.</string>
+    <string name="backup_message_front">Backup to </string>
+    <string name="backup_message_rear"></string>
+    <string name="no_access_message">You do not have access.\nPlease set the permission of the application.\nDo you want to go to settings?</string>
+    <string name="backup_complete_message">Backup completed</string>
+    <string name="backup_failed_message">Backup failed</string>
+    <string name="restore_message_front">Restore from </string>
+    <string name="restore_message_rear"></string>
+    <string name="restore_confirm_message">All data will be overwritten. Do you want to run it?</string>
+    <string name="restore_processing">Restoring</string>
+    <string name="restore_complete_message">Restore completed</string>
+    <string name="restore_failed_message">Restore failed</string>
 </resources>

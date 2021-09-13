@@ -5,12 +5,14 @@ import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.annotation.SuppressLint;
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.Bundle;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.CompoundButton;
 import android.widget.Switch;
 import android.widget.TextView;
@@ -18,8 +20,13 @@ import android.widget.TextView;
 import com.google.android.gms.oss.licenses.OssLicensesMenuActivity;
 import com.highcom.todolog.datamodel.ToDoLogRepository;
 import com.highcom.todolog.ui.themelist.ThemeColorUtil;
+import com.highcom.todolog.util.InputExternalFile;
+import com.highcom.todolog.util.OutputExternalFile;
+import com.highcom.todolog.util.SelectInputOutputFileDialog;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -27,7 +34,11 @@ import java.util.List;
  * 各設定のイベントリスナーの登録
  * 変更した設定をSharedPreferenceに登録する
  */
-public class SettingActivity extends AppCompatActivity implements ThemeColorUtil.ThemeColorListener {
+public class SettingActivity extends AppCompatActivity implements ThemeColorUtil.ThemeColorListener, SelectInputOutputFileDialog.InputOutputFileDialogListener, InputExternalFile.InputExternalFileListener {
+
+    // アクティビティの結果コード定義
+    private static final int DATA_BACKUP = 1001;
+    private static final int DATA_RESTORE = 1002;
 
     // SharedPreferenceの保存ファイル名
     public static final String PREF_FILE_NAME ="com.highcom.ToDoLog.UserData";
@@ -83,6 +94,10 @@ public class SettingActivity extends AppCompatActivity implements ThemeColorUtil
         // カラーテーマ設定
         TextView themeColorTextView = findViewById(R.id.theme_color_text);
         themeColorTextView.setOnClickListener(v -> colorSelectDialog());
+
+        // バックアップと復元
+        TextView backupRestoreTextView = findViewById(R.id.backup_restore_text);
+        backupRestoreTextView.setOnClickListener(v -> backupRestoreDialog());
 
         // ライセンス一覧の設定
         TextView licenseTextView = findViewById(R.id.license_text);
@@ -193,6 +208,71 @@ public class SettingActivity extends AppCompatActivity implements ThemeColorUtil
         SharedPreferences.Editor editor = sharedPreferences.edit();
         editor.putInt(PREF_PARAM_THEME_COLOR, color);
         editor.commit();
+        Intent intent = new Intent(this, ToDoMainActivity.class);
+        intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK); // 起動しているActivityをすべて削除し、新しいタスクでMainActivityを起動する
+        startActivity(intent);
+    }
+
+    private void backupRestoreDialog() {
+        SelectInputOutputFileDialog selectInputOutputFileDialog = new SelectInputOutputFileDialog(this, this);
+        selectInputOutputFileDialog.createOpenFileDialog().show();
+    }
+
+    @Override
+    public void onSelectOperationClicked(String path) {
+        if (path.equals(getString(R.string.data_backup))) {
+            confirmOutputSelectFile();
+        } else if (path.equals(getString(R.string.data_restore))) {
+            confirmInputSelectFile();
+        }
+    }
+
+    private void confirmOutputSelectFile() {
+        String fileName = "ToDoLog_" + getNowDateString() + ".db";
+
+        Intent intent = new Intent(Intent.ACTION_CREATE_DOCUMENT);
+        intent.addCategory(Intent.CATEGORY_OPENABLE);
+        intent.setType("*/db");
+        intent.putExtra(Intent.EXTRA_TITLE, fileName);
+
+        startActivityForResult(intent, DATA_BACKUP);
+    }
+
+    private void confirmInputSelectFile() {
+        Intent intent = new Intent(Intent.ACTION_OPEN_DOCUMENT);
+        intent.addCategory(Intent.CATEGORY_OPENABLE);
+        intent.setType("*/db");
+
+        startActivityForResult(intent, DATA_RESTORE);
+    }
+
+    private String getNowDateString(){
+        Date date = new Date();
+        final SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd");
+        return sdf.format(date);
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent resultData) {
+        super.onActivityResult(requestCode, resultCode, resultData );
+
+        if (resultCode == Activity.RESULT_OK && resultData.getData() != null) {
+            Uri uri = resultData.getData();
+            switch (requestCode) {
+                case DATA_BACKUP:
+                    OutputExternalFile outputExternalFile = new OutputExternalFile(this);
+                    outputExternalFile.outputSelectFolder(uri);
+                    break;
+                case DATA_RESTORE:
+                    InputExternalFile inputExternalFile = new InputExternalFile(this, this);
+                    inputExternalFile.inputSelectFolder(uri);
+                    break;
+            }
+        }
+    }
+
+    @Override
+    public void importComplete() {
         Intent intent = new Intent(this, ToDoMainActivity.class);
         intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK); // 起動しているActivityをすべて削除し、新しいタスクでMainActivityを起動する
         startActivity(intent);

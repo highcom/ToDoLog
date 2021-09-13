@@ -16,6 +16,7 @@ public class ToDoLogRepository {
     public static final int ORDER_DESC = 1;
 
     private static ToDoLogRepository instance;
+    private ToDoLogRoomDatabase db;
 
     private GroupDao mGroupDao;
     private ToDoDao mTodoDao;
@@ -34,11 +35,15 @@ public class ToDoLogRepository {
     }
 
     private ToDoLogRepository(Context context) {
-        ToDoLogRoomDatabase db = ToDoLogRoomDatabase.getDatabase(context);
+        db = ToDoLogRoomDatabase.getDatabase(context);
         mGroupDao = db.groupDao();
         mGroupList = mGroupDao.getGroupList();
         mTodoDao = db.toDoDao();
         mLogDao = db.logDao();
+    }
+
+    public void close() {
+        db.close();
     }
 
     LiveData<List<Group>> getGroupList() {
