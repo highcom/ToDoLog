@@ -41,6 +41,16 @@ abstract class ToDoLogRoomDatabase extends RoomDatabase {
         return INSTANCE;
     }
 
+    static boolean isOpenDatabase () {
+        if (INSTANCE == null) return false;
+        return INSTANCE.isOpen();
+    }
+
+    static void closeDatabase() {
+        INSTANCE.close();
+        INSTANCE = null;
+    }
+
     private static RoomDatabase.Callback sRoomDatabaseCallback = new RoomDatabase.Callback() {
         @Override
         public void onCreate(@NonNull SupportSQLiteDatabase db) {

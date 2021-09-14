@@ -46,7 +46,21 @@ public class InputExternalFile {
         @WorkerThread
         @Override
         public void run() {
-            ToDoLogRepository.getInstance(context).close();
+            ToDoLogRepository.getInstance(context).closeDatabase();
+            String shmPath = context.getDatabasePath("todolog_database-shm").getPath();
+            File shmFile = new File (shmPath);
+            shmFile.delete();
+            String walPath = context.getDatabasePath("todolog_database-wal").getPath();
+            File walFile = new File (walPath);
+            walFile.delete();
+            String destPath = context.getDatabasePath("todolog_database").getPath();
+            File destFile = new File (destPath);
+            destFile.delete();
+            String srcPath = context.getDatabasePath("todolog_database_tmp").getPath();
+            File srcFile = new File (srcPath);
+            srcFile.renameTo(destFile);
+            ToDoLogRepository.getInstance(context).openDatabase();
+
             progressBar.setProgress(100);
             PostExecutor postExecutor = new PostExecutor();
             _handler.post(postExecutor);
@@ -58,11 +72,15 @@ public class InputExternalFile {
         @Override
         public void run() {
             progressAlertDialog.dismiss();
-            listener.importComplete();
             new AlertDialog.Builder(context)
                     .setTitle(context.getString(R.string.data_restore))
                     .setMessage(context.getString(R.string.restore_complete_message) + System.getProperty("line.separator") + uri.getPath().replace(":", "/"))
-                    .setPositiveButton(R.string.ok, null)
+                    .setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            listener.importComplete();
+                        }
+                    })
                     .show();
         }
     }
@@ -86,7 +104,14 @@ public class InputExternalFile {
                         }
                     }
                 })
-                .setNegativeButton(R.string.cancel, null)
+                .setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        String path = context.getDatabasePath("todolog_database_tmp").getPath();
+                        File file = new File (path);
+                        file.delete();
+                    }
+                })
                 .show();
     }
 
@@ -95,7 +120,7 @@ public class InputExternalFile {
         try {
             inputStream = context.getContentResolver().openInputStream(uri);
 
-            String path = context.getDatabasePath("todolog_database").getPath();
+            String path = context.getDatabasePath("todolog_database_tmp").getPath();
             File file = new File (path);
             OutputStream outputStream = new FileOutputStream(file);
             byte[] buf = new byte[1024];

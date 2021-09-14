@@ -9,13 +9,13 @@ import android.provider.Settings;
 import android.widget.Toast;
 
 import com.highcom.todolog.R;
+import com.highcom.todolog.datamodel.ToDoLogRepository;
 
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.io.PrintWriter;
 
 public class OutputExternalFile {
     private Context context;
@@ -39,9 +39,9 @@ public class OutputExternalFile {
     }
 
     private boolean exportDatabase(final Uri uri) {
-        PrintWriter printWriter = null;
         OutputStream outputStream = null;
         try {
+//            ToDoLogRepository.getInstance(context).closeDatabase();
             String path = context.getDatabasePath("todolog_database").getPath();
             File file = new File (path);
             InputStream inputStream = new FileInputStream(file);
@@ -51,6 +51,7 @@ public class OutputExternalFile {
             while ((len = inputStream.read(buf)) > 0) {
                 outputStream.write(buf, 0, len);
             }
+//            ToDoLogRepository.getInstance(context).openDatabase();
         } catch (FileNotFoundException exc) {
             new AlertDialog.Builder(context)
                     .setTitle(context.getString(R.string.data_backup))
