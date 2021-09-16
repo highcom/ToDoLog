@@ -9,13 +9,13 @@ import android.provider.Settings;
 import android.widget.Toast;
 
 import com.highcom.todolog.R;
-import com.highcom.todolog.datamodel.ToDoLogRepository;
 
-import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.util.zip.ZipEntry;
+import java.util.zip.ZipOutputStream;
 
 public class OutputExternalFile {
     private Context context;
@@ -39,19 +39,38 @@ public class OutputExternalFile {
     }
 
     private boolean exportDatabase(final Uri uri) {
+        InputStream inputStream = null;
         OutputStream outputStream = null;
         try {
-//            ToDoLogRepository.getInstance(context).closeDatabase();
-            String path = context.getDatabasePath("todolog_database").getPath();
-            File file = new File (path);
-            InputStream inputStream = new FileInputStream(file);
+            String pathList[] = new String[3];
+            pathList[0] = context.getDatabasePath(SelectInputOutputFileDialog.TODOLOG_DB_NAME).getPath();
+            pathList[1] = context.getDatabasePath(SelectInputOutputFileDialog.TODOLOG_DB_NAME_SHM).getPath();
+            pathList[2] = context.getDatabasePath(SelectInputOutputFileDialog.TODOLOG_DB_NAME_WAL).getPath();
+            String fileList[] = new String[3];
+            fileList[0] = SelectInputOutputFileDialog.TODOLOG_DB_NAME;
+            fileList[1] = SelectInputOutputFileDialog.TODOLOG_DB_NAME_SHM;
+            fileList[2] = SelectInputOutputFileDialog.TODOLOG_DB_NAME_WAL;
+
             outputStream = context.getContentResolver().openOutputStream(uri);
-            byte[] buf = new byte[1024];
-            int len;
-            while ((len = inputStream.read(buf)) > 0) {
-                outputStream.write(buf, 0, len);
+            ZipOutputStream zipOutputStream = new ZipOutputStream(outputStream);
+
+            for (int i = 0; i < pathList.length; i++) {
+                inputStream = new FileInputStream(pathList[i]);
+                ZipEntry zipEntry = new ZipEntry(fileList[i]);
+                zipOutputStream.putNextEntry(zipEntry);
+
+                byte[] buf = new byte[1024];
+                int len;
+                while ((len = inputStream.read(buf)) > 0) {
+                    zipOutputStream.write(buf, 0, len);
+                }
+
+                inputStream.close();
+                zipOutputStream.closeEntry();
             }
-//            ToDoLogRepository.getInstance(context).openDatabase();
+
+            zipOutputStream.close();
+            outputStream.close();
         } catch (FileNotFoundException exc) {
             new AlertDialog.Builder(context)
                     .setTitle(context.getString(R.string.data_backup))

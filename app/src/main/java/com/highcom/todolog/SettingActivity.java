@@ -228,11 +228,11 @@ public class SettingActivity extends AppCompatActivity implements ThemeColorUtil
     }
 
     private void confirmOutputSelectFile() {
-        String fileName = "ToDoLog_" + getNowDateString() + ".db";
+        String fileName = "ToDoLogDB_" + getNowDateString() + ".zip";
 
         Intent intent = new Intent(Intent.ACTION_CREATE_DOCUMENT);
         intent.addCategory(Intent.CATEGORY_OPENABLE);
-        intent.setType("*/db");
+        intent.setType("*/zip");
         intent.putExtra(Intent.EXTRA_TITLE, fileName);
 
         startActivityForResult(intent, DATA_BACKUP);
@@ -241,7 +241,7 @@ public class SettingActivity extends AppCompatActivity implements ThemeColorUtil
     private void confirmInputSelectFile() {
         Intent intent = new Intent(Intent.ACTION_OPEN_DOCUMENT);
         intent.addCategory(Intent.CATEGORY_OPENABLE);
-        intent.setType("*/db");
+        intent.setType("*/*");
 
         startActivityForResult(intent, DATA_RESTORE);
     }

@@ -4,9 +4,11 @@ import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.database.Cursor;
 import android.net.Uri;
 import android.os.Handler;
 import android.os.Looper;
+import android.provider.MediaStore;
 import android.widget.ProgressBar;
 import android.widget.Toast;
 
@@ -17,12 +19,13 @@ import androidx.core.os.HandlerCompat;
 import com.highcom.todolog.R;
 import com.highcom.todolog.datamodel.ToDoLogRepository;
 
+import java.io.BufferedOutputStream;
 import java.io.File;
 import java.io.FileOutputStream;
-import java.io.InputStream;
-import java.io.OutputStream;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import java.util.zip.ZipEntry;
+import java.util.zip.ZipInputStream;
 
 public class InputExternalFile {
     private Context context;
@@ -47,23 +50,60 @@ public class InputExternalFile {
         @Override
         public void run() {
             ToDoLogRepository.getInstance(context).closeDatabase();
-            String shmPath = context.getDatabasePath("todolog_database-shm").getPath();
-            File shmFile = new File (shmPath);
-            shmFile.delete();
-            String walPath = context.getDatabasePath("todolog_database-wal").getPath();
-            File walFile = new File (walPath);
-            walFile.delete();
-            String destPath = context.getDatabasePath("todolog_database").getPath();
-            File destFile = new File (destPath);
-            destFile.delete();
-            String srcPath = context.getDatabasePath("todolog_database_tmp").getPath();
-            File srcFile = new File (srcPath);
-            srcFile.renameTo(destFile);
-            ToDoLogRepository.getInstance(context).openDatabase();
 
-            progressBar.setProgress(100);
-            PostExecutor postExecutor = new PostExecutor();
-            _handler.post(postExecutor);
+            ZipInputStream zipInputStream = null;
+            ZipEntry zipEntry = null;
+            BufferedOutputStream outputStream = null;
+            int len = 0;
+            int progressParam = 0;
+
+            try {
+                zipInputStream = new ZipInputStream(context.getContentResolver().openInputStream(uri));
+                // ZIPファイルにDBファイルと異なるファイルが入っていた場合はエラーとする
+                while ((zipEntry = zipInputStream.getNextEntry()) != null) {
+                    File newfile = new File(zipEntry.getName());
+
+                    // 出力用ファイルストリームの生成
+                    outputStream = new BufferedOutputStream(new FileOutputStream(context.getDatabasePath(newfile.getName()).getPath()));
+
+                    // エントリの内容を出力
+                    byte[] buffer = new byte[1024];
+                    while ((len = zipInputStream.read(buffer)) != -1) {
+                        outputStream.write(buffer, 0, len);
+                    }
+
+                    zipInputStream.closeEntry();
+                    outputStream.close();
+                    if (progressParam + 30 < 100) {
+                        progressParam += 30;
+                        progressBar.setProgress(progressParam);
+                    }
+                }
+
+                zipInputStream.close();
+            } catch (Exception exc) {
+                Toast ts = Toast.makeText(context, context.getString(R.string.restore_failed_message), Toast.LENGTH_SHORT);
+                ts.show();
+            } finally {
+                try {
+                    if (zipInputStream != null) {
+                        zipInputStream.close();
+                    }
+
+                    if (outputStream != null) {
+                        outputStream.close();
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+
+                progressBar.setProgress(100);
+
+                ToDoLogRepository.getInstance(context).openDatabase();
+
+                PostExecutor postExecutor = new PostExecutor();
+                _handler.post(postExecutor);
+            }
         }
     }
 
@@ -74,7 +114,7 @@ public class InputExternalFile {
             progressAlertDialog.dismiss();
             new AlertDialog.Builder(context)
                     .setTitle(context.getString(R.string.data_restore))
-                    .setMessage(context.getString(R.string.restore_complete_message) + System.getProperty("line.separator") + uri.getPath().replace(":", "/"))
+                    .setMessage(context.getString(R.string.restore_complete_message) + System.getProperty("line.separator") + getFileNameByUri(context, uri))
                     .setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialog, int which) {
@@ -95,59 +135,79 @@ public class InputExternalFile {
         this.uri = uri;
         new AlertDialog.Builder(context)
                 .setTitle(context.getString(R.string.data_restore))
-                .setMessage(context.getString(R.string.restore_message_front) + uri.getPath().replace(":", "/") + System.getProperty("line.separator") + context.getString(R.string.restore_message_rear))
+                .setMessage(context.getString(R.string.restore_message_front) + getFileNameByUri(context, uri) + System.getProperty("line.separator") + context.getString(R.string.restore_message_rear))
                 .setPositiveButton(R.string.exec, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         if (importDatabase(uri)) {
                             execImportDatabase();
+                        } else {
+                            // 指定されたバックアップファイルが正しくないエラーを表示する
+                            new AlertDialog.Builder(context)
+                                    .setTitle(context.getString(R.string.data_restore))
+                                    .setMessage(context.getString(R.string.restore_failed_error_data_message))
+                                    .setPositiveButton(R.string.ok, null)
+                                    .show();
                         }
                     }
                 })
-                .setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        String path = context.getDatabasePath("todolog_database_tmp").getPath();
-                        File file = new File (path);
-                        file.delete();
-                    }
-                })
+                .setNegativeButton(R.string.cancel, null)
                 .show();
     }
 
     private boolean importDatabase(final Uri uri) {
-        InputStream inputStream = null;
+        boolean fileValidate[] = {false, false, false};
+        ZipInputStream zipInputStream = null;
+        ZipEntry zipEntry = null;
         try {
-            inputStream = context.getContentResolver().openInputStream(uri);
+            zipInputStream = new ZipInputStream(context.getContentResolver().openInputStream(uri));
 
-            String path = context.getDatabasePath("todolog_database_tmp").getPath();
-            File file = new File (path);
-            OutputStream outputStream = new FileOutputStream(file);
-            byte[] buf = new byte[1024];
-            int len;
-            while ((len = inputStream.read(buf)) > 0) {
-                outputStream.write(buf, 0, len);
+            // ZIPファイルにDBファイルと異なるファイルが入っていた場合はエラーとする
+            while ((zipEntry = zipInputStream.getNextEntry()) != null) {
+                String fileName = zipEntry.getName();
+                if (fileName.equals(SelectInputOutputFileDialog.TODOLOG_DB_NAME)) {
+                    fileValidate[0] = true;
+                    continue;
+                }
+
+                if (fileName.equals(SelectInputOutputFileDialog.TODOLOG_DB_NAME_SHM)) {
+                    fileValidate[1] = true;
+                    continue;
+                }
+
+                if (fileName.equals(SelectInputOutputFileDialog.TODOLOG_DB_NAME_WAL)) {
+                    fileValidate[2] = true;
+                    continue;
+                }
+
+                fileValidate[0] = false;
+                fileValidate[1] = false;
+                fileValidate[2] = false;
             }
-            inputStream.close();
+
+            zipInputStream.close();
+
+            if (fileValidate[0] && fileValidate[1] && fileValidate[2]) {
+                return true;
+            }
         } catch (Exception exc) {
             Toast ts = Toast.makeText(context, context.getString(R.string.restore_failed_message), Toast.LENGTH_SHORT);
             ts.show();
             return false;
         } finally {
-            if (inputStream != null) {
+            if (zipInputStream != null) {
                 try {
-                    inputStream.close();
+                    zipInputStream.close();
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
             }
         }
 
-        return true;
+        return false;
     }
 
-    private void execImportDatabase()
-    {
+    private void execImportDatabase() {
         new AlertDialog.Builder(context)
                 .setTitle(context.getString(R.string.data_restore))
                 .setMessage(context.getString(R.string.restore_confirm_message))
@@ -174,5 +234,21 @@ public class InputExternalFile {
                 })
                 .setNegativeButton(R.string.cancel, null)
                 .show();
+    }
+
+    private String getFileNameByUri(Context context, Uri uri) {
+        String fileName = "";
+        String[] projection = {MediaStore.MediaColumns.DISPLAY_NAME};
+        Cursor cursor = context.getContentResolver()
+                .query(uri, projection, null, null, null);
+        if (cursor != null) {
+            if (cursor.moveToFirst()) {
+                fileName = cursor.getString(
+                        cursor.getColumnIndexOrThrow(MediaStore.MediaColumns.DISPLAY_NAME));
+            }
+            cursor.close();
+        }
+
+        return fileName;
     }
 }

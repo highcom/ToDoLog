@@ -52,8 +52,6 @@ public class ToDoLogRepository {
 
     public void closeDatabase() {
         ToDoLogRoomDatabase.closeDatabase();
-//        db.getOpenHelper().getWritableDatabase().disableWriteAheadLogging();
-//        db.getOpenHelper().getReadableDatabase().disableWriteAheadLogging();
     }
 
     LiveData<List<Group>> getGroupList() {

@@ -95,4 +95,5 @@
     <string name="restore_processing">Restoring</string>
     <string name="restore_complete_message">Restore completed</string>
     <string name="restore_failed_message">Restore failed</string>
+    <string name="restore_failed_error_data_message">The specified file could not be recognized as backup data</string>
 </resources>

@@ -8,6 +8,9 @@ import android.widget.Toast;
 import com.highcom.todolog.R;
 
 public class SelectInputOutputFileDialog {
+    public static final String TODOLOG_DB_NAME = "todolog_database";
+    public static final String TODOLOG_DB_NAME_SHM = "todolog_database-shm";
+    public static final String TODOLOG_DB_NAME_WAL = "todolog_database-wal";
     private Context context;
     private InputOutputFileDialogListener inputOutputFileDialogListener;
     private int checkedItem = -1;

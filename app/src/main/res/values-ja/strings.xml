@@ -95,5 +95,6 @@
     <string name="restore_processing">復元中</string>
     <string name="restore_complete_message">復元が完了しました</string>
     <string name="restore_failed_message">復元に失敗しました</string>
+    <string name="restore_failed_error_data_message">指定されたファイルがバックアップデータと認識できませんでした</string>
 
 </resources>
