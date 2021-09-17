@@ -83,17 +83,17 @@
     <string name="data_select_operation">Select operation</string>
     <string name="data_backup">Backup</string>
     <string name="data_restore">Restore</string>
-    <string name="data_select_operation_err_message">No operation is selected.</string>
+    <string name="data_select_operation_err_message">No operation is selected</string>
     <string name="backup_message_front">Backup to </string>
     <string name="backup_message_rear"></string>
     <string name="no_access_message">You do not have access.\nPlease set the permission of the application.\nDo you want to go to settings?</string>
-    <string name="backup_complete_message">Backup completed</string>
+    <string name="backup_complete_message">Backup completed.</string>
     <string name="backup_failed_message">Backup failed</string>
     <string name="restore_message_front">Restore from </string>
     <string name="restore_message_rear"></string>
-    <string name="restore_confirm_message">All data will be overwritten. Do you want to run it?</string>
+    <string name="restore_confirm_message">All data will be overwritten.\nDo you want to run it?</string>
     <string name="restore_processing">Restoring</string>
-    <string name="restore_complete_message">Restore completed</string>
+    <string name="restore_complete_message">Restore completed.\nRestart the app.</string>
     <string name="restore_failed_message">Restore failed</string>
-    <string name="restore_failed_error_data_message">The specified file could not be recognized as backup data</string>
+    <string name="restore_failed_error_data_message">The specified file could not be recognized as backup data.</string>
 </resources>

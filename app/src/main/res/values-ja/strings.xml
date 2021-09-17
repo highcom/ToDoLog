@@ -83,18 +83,18 @@
     <string name="data_select_operation">操作選択</string>
     <string name="data_backup">バックアップ</string>
     <string name="data_restore">復元</string>
-    <string name="data_select_operation_err_message">操作が選択されていません。</string>
+    <string name="data_select_operation_err_message">操作が選択されていません</string>
     <string name="backup_message_front"></string>
-    <string name="backup_message_rear">にバックアップします</string>
+    <string name="backup_message_rear">にバックアップします。</string>
     <string name="no_access_message">アクセス権限がありません。\nアプリの権限を設定して下さい。\n設定に移動しますか？</string>
-    <string name="backup_complete_message">バックアップ完了しました</string>
+    <string name="backup_complete_message">バックアップ完了しました。</string>
     <string name="backup_failed_message">バックアップに失敗しました</string>
     <string name="restore_message_front"></string>
-    <string name="restore_message_rear">から復元します</string>
-    <string name="restore_confirm_message">すべでのデータは上書きされます。実行しますか？</string>
+    <string name="restore_message_rear">から復元します。</string>
+    <string name="restore_confirm_message">すべでのデータは上書きされます。\n実行しますか？</string>
     <string name="restore_processing">復元中</string>
-    <string name="restore_complete_message">復元が完了しました</string>
+    <string name="restore_complete_message">復元が完了しました。\nアプリを再起動します。</string>
     <string name="restore_failed_message">復元に失敗しました</string>
-    <string name="restore_failed_error_data_message">指定されたファイルがバックアップデータと認識できませんでした</string>
+    <string name="restore_failed_error_data_message">指定されたファイルがバックアップデータと認識できませんでした。</string>
 
 </resources>

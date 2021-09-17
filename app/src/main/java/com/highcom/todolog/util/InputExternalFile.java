@@ -59,9 +59,15 @@ public class InputExternalFile {
 
             try {
                 zipInputStream = new ZipInputStream(context.getContentResolver().openInputStream(uri));
-                // ZIPファイルにDBファイルと異なるファイルが入っていた場合はエラーとする
+                // ZIPファイルからDBファイルだけを抽出する
                 while ((zipEntry = zipInputStream.getNextEntry()) != null) {
                     File newfile = new File(zipEntry.getName());
+
+                    if (!newfile.getName().equals(SelectInputOutputFileDialog.TODOLOG_DB_NAME_WAL)
+                        && !newfile.getName().equals(SelectInputOutputFileDialog.TODOLOG_DB_NAME_SHM)
+                        && !newfile.getName().equals(SelectInputOutputFileDialog.TODOLOG_DB_NAME)) {
+                        continue;
+                    }
 
                     // 出力用ファイルストリームの生成
                     outputStream = new BufferedOutputStream(new FileOutputStream(context.getDatabasePath(newfile.getName()).getPath()));
@@ -162,27 +168,23 @@ public class InputExternalFile {
         try {
             zipInputStream = new ZipInputStream(context.getContentResolver().openInputStream(uri));
 
-            // ZIPファイルにDBファイルと異なるファイルが入っていた場合はエラーとする
+            // ZIPファイルにDBファイルが全て含まれているか確認する
             while ((zipEntry = zipInputStream.getNextEntry()) != null) {
                 String fileName = zipEntry.getName();
-                if (fileName.equals(SelectInputOutputFileDialog.TODOLOG_DB_NAME)) {
-                    fileValidate[0] = true;
-                    continue;
-                }
-
-                if (fileName.equals(SelectInputOutputFileDialog.TODOLOG_DB_NAME_SHM)) {
-                    fileValidate[1] = true;
-                    continue;
-                }
-
-                if (fileName.equals(SelectInputOutputFileDialog.TODOLOG_DB_NAME_WAL)) {
+                if (fileName.contains(SelectInputOutputFileDialog.TODOLOG_DB_NAME_WAL)) {
                     fileValidate[2] = true;
                     continue;
                 }
 
-                fileValidate[0] = false;
-                fileValidate[1] = false;
-                fileValidate[2] = false;
+                if (fileName.contains(SelectInputOutputFileDialog.TODOLOG_DB_NAME_SHM)) {
+                    fileValidate[1] = true;
+                    continue;
+                }
+
+                if (fileName.contains(SelectInputOutputFileDialog.TODOLOG_DB_NAME)) {
+                    fileValidate[0] = true;
+                    continue;
+                }
             }
 
             zipInputStream.close();
