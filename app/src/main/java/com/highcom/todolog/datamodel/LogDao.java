@@ -13,7 +13,7 @@ public interface LogDao {
     @Query("SELECT * FROM log_table WHERE todo_id = :id ORDER BY log_id DESC")
     LiveData<List<Log>> getLogByTodoId(long id);
 
-    @Query("SELECT log_table.date, COUNT(log_table.operation = 3) AS count FROM log_table INNER JOIN todo_table ON log_table.todo_id = todo_table.todo_id WHERE todo_table.group_id = :group_id GROUP BY log_table.date")
+    @Query("SELECT log_table.date, COUNT(*) AS count FROM log_table INNER JOIN todo_table ON log_table.todo_id = todo_table.todo_id WHERE todo_table.group_id = :group_id AND log_table.operation = 3 GROUP BY log_table.date ORDER BY log_table.date ASC")
     LiveData<List<DoneCount>> getDoneCountByLogDate(long group_id);
 
     @Query("SELECT log_table.operation, COUNT(*) AS count FROM log_table INNER JOIN todo_table ON log_table.log_id = todo_table.latest_log_id WHERE todo_table.group_id = :group_id GROUP BY log_table.operation")
