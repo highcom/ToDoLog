@@ -1,4 +1,4 @@
-# ComicMemoリポジトリの概要
+# ToDoLogリポジトリの概要
 このリポジトリで管理されているコードはGoogle Playストアにて「[履歴が残るToDoリスト](https://play.google.com/store/apps/details?id=com.highcom.todolog&hl=ja)」アプリとして公開されています。
 ## このアプリの機能
 仕事のタスクや日々のやることの実行した記録を履歴として自動で残してくれる無料のtodoリストです。<br>
