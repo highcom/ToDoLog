@@ -1,5 +1,6 @@
 package com.highcom.todolog;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -167,11 +168,9 @@ public class ToDoMainActivity extends AppCompatActivity {
         fab = findViewById(R.id.fab);
         fab.setOnClickListener(new FloatingButtonEditClickListener());
         DrawerLayout drawer = findViewById(R.id.drawer_layout);
-        ActionBarDrawerToggle actionBarDrawerToggle =
-                new ActionBarDrawerToggle(
-                        this, drawer, toolbar, R.string.drawer_open, R.string.drawer_close);
-        drawer.addDrawerListener(actionBarDrawerToggle);
-        actionBarDrawerToggle.syncState();
+        ToDoActionBarDrawerToggle toDoActionBarDrawerToggle = new ToDoActionBarDrawerToggle(this, drawer, toolbar, R.string.drawer_open, R.string.drawer_close);
+        drawer.addDrawerListener(toDoActionBarDrawerToggle);
+        toDoActionBarDrawerToggle.syncState();
 
         // DrawlerLayoutの内容を設定
         NavigationView navigationView = findViewById(R.id.nav_view);
@@ -180,12 +179,10 @@ public class ToDoMainActivity extends AppCompatActivity {
         // グループリスト編集ボタンのイベントリスナー設定
         Button groupEditButton = findViewById(R.id.group_edit_button);
         groupEditButton.setOnClickListener(view -> {
-            setTitle(R.string.group_edit_title);
             mGroupListFragment = new GroupListFragment();
             mSelectFragment = SELECT_FRAGMENT.FRAGMENT_GROUPLIST;
             mMenuVisible = false;
             invalidateOptionsMenu();
-            getSupportFragmentManager().beginTransaction().replace(R.id.nav_host_fragment, mGroupListFragment).commit();
             drawer.closeDrawers();
         });
 
@@ -265,7 +262,6 @@ public class ToDoMainActivity extends AppCompatActivity {
                 DrawerListAdapter adapter = new DrawerListAdapter(this, R.layout.row_drawerlist, drawerListItems);
                 listView.setAdapter(adapter);
                 listView.setOnItemClickListener((adapterView, view, i, l) -> {
-                    setTitle(groupList.get(i).getGroupName());
                     mSelectGroup = groupList.get(i).getGroupId();
                     mSelectGroupName = groupList.get(i).getGroupName();
                     mPreferences.edit().putLong(SELECT_GROUP, mSelectGroup).apply();
@@ -276,7 +272,6 @@ public class ToDoMainActivity extends AppCompatActivity {
                     Bundle args = new Bundle();
                     args.putLong(SELECT_GROUP, mSelectGroup);
                     mToDoListFragment.setArguments(args);
-                    getSupportFragmentManager().beginTransaction().replace(R.id.nav_host_fragment, mToDoListFragment).commit();
                     drawer.closeDrawers();
                 });
             });
@@ -400,6 +395,57 @@ public class ToDoMainActivity extends AppCompatActivity {
             setTheme(R.style.Theme_ToDoLog_mauve_NoActionBar_mauve);
         } else {
             setTheme(R.style.Theme_ToDoLog_french_gray_NoActionBar_french_gray);
+        }
+    }
+
+    /**
+     * ドロワーの開閉時の処理を定義するクラス
+     */
+    private class ToDoActionBarDrawerToggle extends ActionBarDrawerToggle {
+
+        public ToDoActionBarDrawerToggle(Activity activity, DrawerLayout drawerLayout, Toolbar toolbar, int openDrawerContentDescRes, int closeDrawerContentDescRes) {
+            super(activity, drawerLayout, toolbar, openDrawerContentDescRes, closeDrawerContentDescRes);
+        }
+
+        @Override
+        public void onDrawerSlide(@NonNull View drawerView, float slideOffset) {
+            super.onDrawerSlide(drawerView, slideOffset);
+        }
+
+        @Override
+        public void onDrawerOpened(@NonNull View drawerView) {
+            super.onDrawerOpened(drawerView);
+        }
+
+        /**
+         * ドロワーを選択して閉じた後にFragmentの更新を行う
+         *
+         * @param drawerView
+         */
+        @Override
+        public void onDrawerClosed(@NonNull View drawerView) {
+            switch (mSelectFragment) {
+                case FRAGMENT_TODOLIST:
+                    if (mToDoListFragment != null) {
+                        setTitle(mSelectGroupName);
+                        getSupportFragmentManager().beginTransaction().replace(R.id.nav_host_fragment, mToDoListFragment).commit();
+                    }
+                    break;
+                case FRAGMENT_GROUPLIST:
+                    if (mGroupListFragment != null) {
+                        setTitle(R.string.group_edit_title);
+                        getSupportFragmentManager().beginTransaction().replace(R.id.nav_host_fragment, mGroupListFragment).commit();
+                    }
+                    break;
+                default:
+                    break;
+            }
+            super.onDrawerClosed(drawerView);
+        }
+
+        @Override
+        public void onDrawerStateChanged(int newState) {
+            // 何もしない
         }
     }
 
