@@ -372,7 +372,7 @@ public class ToDoMainActivity extends AppCompatActivity {
      */
     @Override
     protected void onDestroy() {
-        mAdMobLoader.getAdView().destroy();
+        if (mAdMobLoader.getAdView() != null) mAdMobLoader.getAdView().destroy();
         super.onDestroy();
     }
 

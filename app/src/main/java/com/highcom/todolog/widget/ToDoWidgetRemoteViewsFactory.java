@@ -89,6 +89,7 @@ public class ToDoWidgetRemoteViewsFactory implements RemoteViewsService.RemoteVi
      */
     @Override
     public int getCount() {
+        if (mTodoAndLogList == null) return 0;
         return mTodoAndLogList.size();
     }
 
@@ -101,7 +102,7 @@ public class ToDoWidgetRemoteViewsFactory implements RemoteViewsService.RemoteVi
      */
     @Override
     public RemoteViews getViewAt(int i) {
-        if (i == AdapterView.INVALID_POSITION) {
+        if (i == AdapterView.INVALID_POSITION || i >= mTodoAndLogList.size()) {
             return  null;
         }
 
