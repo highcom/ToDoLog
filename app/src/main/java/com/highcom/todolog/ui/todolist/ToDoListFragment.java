@@ -174,19 +174,6 @@ public class ToDoListFragment extends Fragment implements SimpleCallbackHelper.S
     }
 
     @Override
-    public void onResume() {
-        super.onResume();
-        List<ToDoAndLog> toDoAndLogList = obj.getValue();
-        if (toDoAndLogList != null) {
-            List<ToDo> toDoList = new ArrayList<>();
-            for (ToDoAndLog toDoAndLog : toDoAndLogList) {
-                toDoList.add(toDoAndLog.toDo);
-            }
-            mToDoViewModel.update(toDoList);
-        }
-    }
-
-    @Override
     public boolean onSimpleCallbackMove(RecyclerView.ViewHolder viewHolder, RecyclerView.ViewHolder target) {
         // 並べ替え対象がITEMでかつステータスが同じでなければ行わない
         if (viewHolder.getItemViewType() != ToDoListAdapter.TYPE_ITEM || target.getItemViewType() != ToDoListAdapter.TYPE_ITEM) return false;
