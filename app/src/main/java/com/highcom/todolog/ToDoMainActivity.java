@@ -112,7 +112,7 @@ public class ToDoMainActivity extends AppCompatActivity {
             public void onInitializationComplete(InitializationStatus initializationStatus) { }
         });
         MobileAds.setRequestConfiguration(
-                new RequestConfiguration.Builder().setTestDeviceIds(Arrays.asList(getString(R.string.admob_test_device))).build());
+                new RequestConfiguration.Builder().setTestDeviceIds(Arrays.asList(getString(R.string.admob_test_device), getString(R.string.admob_test_device_xaomi))).build());
         // AdMobをロードする
         mAdMobLoader = new AdMobLoader(this, findViewById(R.id.ad_view_frame), getString(R.string.admob_unit_id));
         mAdMobLoader.load();
