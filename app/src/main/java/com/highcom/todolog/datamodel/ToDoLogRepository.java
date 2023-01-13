@@ -66,6 +66,10 @@ public class ToDoLogRepository {
         return mTodoDao.getToDoListOnlyToDoByTaskGroupSync(groupId);
     }
 
+    public List<ToDoAndLog> getTodoListOnlyToDoByTaskGroupSyncDesc(long groupId) {
+        return mTodoDao.getToDoListOnlyToDoByTaskGroupSyncDesc(groupId);
+    }
+
     LiveData<List<Log>> getLogListByTodoId(long todoId) {
         return mLogDao.getLogByTodoId(todoId);
     }

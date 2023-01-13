@@ -2,12 +2,14 @@ package com.highcom.todolog.widget;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Binder;
 import android.widget.AdapterView;
 import android.widget.RemoteViews;
 import android.widget.RemoteViewsService;
 
 import com.highcom.todolog.R;
+import com.highcom.todolog.SettingActivity;
 import com.highcom.todolog.datamodel.ToDoAndLog;
 import com.highcom.todolog.datamodel.ToDoLogRepository;
 
@@ -58,7 +60,12 @@ public class ToDoWidgetRemoteViewsFactory implements RemoteViewsService.RemoteVi
         List<Future<?>> futureList = new ArrayList<>();
         // ワーカースレッドで実行する。
         Future<?> future = databaseWriteExtractor.submit(() -> {
-            mTodoAndLogList = ToDoLogRepository.getInstance(mContext).getTodoListOnlyToDoByTaskGroupSync(selectGroupId);
+            SharedPreferences sharedPreferences = mContext.getSharedPreferences(SettingActivity.PREF_FILE_NAME, Context.MODE_PRIVATE);
+            if (sharedPreferences.getInt(SettingActivity.PREF_PARAM_NEW_TODO_ORDER, ToDoLogRepository.ORDER_ASC) == ToDoLogRepository.ORDER_DESC) {
+                mTodoAndLogList = ToDoLogRepository.getInstance(mContext).getTodoListOnlyToDoByTaskGroupSyncDesc(selectGroupId);
+            } else {
+                mTodoAndLogList = ToDoLogRepository.getInstance(mContext).getTodoListOnlyToDoByTaskGroupSync(selectGroupId);
+            }
         });
         futureList .add(future);
         // ワーカースレッドその処理完了を待つ
