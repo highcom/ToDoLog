@@ -14,7 +14,8 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.ToDoLog">
         <activity android:name=".LogChartActivity"></activity>
-        <activity android:name=".widget.ToDoAppWidgetConfigure">
+        <activity android:name=".widget.ToDoAppWidgetConfigure"
+            android:exported="true">
             <intent-filter>
                 <action android:name="android.appwidget.action.APPWIDGET_CONFIGURE" />
             </intent-filter>
@@ -29,7 +30,8 @@
             android:name=".ToDoMainActivity"
             android:configChanges="orientation|screenSize"
             android:label="@string/app_name"
-            android:theme="@style/SplashTheme">
+            android:theme="@style/SplashTheme"
+            android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -42,7 +44,8 @@
         <activity android:name="com.google.android.gms.oss.licenses.OssLicensesMenuActivity" />
         <activity android:name="com.google.android.gms.oss.licenses.OssLicensesActivity" />
 
-        <receiver android:name=".widget.ToDoAppWidgetProvider">
+        <receiver android:name=".widget.ToDoAppWidgetProvider"
+            android:exported="true">
             <intent-filter>
                 <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
             </intent-filter>
