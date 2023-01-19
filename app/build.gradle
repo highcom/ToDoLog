@@ -61,6 +61,11 @@ dependencies {
     implementation 'com.google.firebase:firebase-ads:20.2.0'
     implementation 'com.google.firebase:firebase-crashlytics:18.0.1'
     implementation 'com.google.firebase:firebase-messaging:22.0.0'
+    constraints {
+        implementation('androidx.work:work-runtime:2.7.0') {
+            because 'previous versions have a bug impacting this application'
+        }
+    }
     testImplementation 'junit:junit:4.13.2'
     androidTestImplementation 'androidx.test.ext:junit:1.1.2'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.3.0'
