@@ -51,12 +51,17 @@ public class ToDoAppWidgetProvider extends AppWidgetProvider {
      */
     static void updateAppWidget(Context context, AppWidgetManager appWidgetManager, int appWidgetId) {
         String selectGroupName = ToDoAppWidgetConfigure.loadSelectWidgetGroupNamePref(context, appWidgetId);
+        long selectGroupId = ToDoAppWidgetConfigure.loadSelectWidgetGroupIdPref(context, appWidgetId);
         RemoteViews views = new RemoteViews(context.getPackageName(), R.layout.todo_appwidget);
 
         Intent titleIntent = new Intent(context, ToDoMainActivity.class);
         titleIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
         views.setTextViewText(R.id.todo_widget_title_view, selectGroupName);
-        PendingIntent titlePendingIntent = PendingIntent.getActivity(context, 0, titleIntent, 0);
+        titleIntent.putExtra(ToDoAppWidgetConfigure.SELECT_WIDGET_GROUP_ID, selectGroupId);
+        titleIntent.setData(Uri.parse(titleIntent.toUri(Intent.URI_INTENT_SCHEME)));
+        PendingIntent titlePendingIntent = TaskStackBuilder.create(context)
+                .addNextIntentWithParentStack(titleIntent)
+                .getPendingIntent(0, PendingIntent.FLAG_UPDATE_CURRENT);
         // タイトルを押下した時のアクションを定義する
         views.setOnClickPendingIntent(R.id.todo_widget_title_view, titlePendingIntent);
 
@@ -66,6 +71,8 @@ public class ToDoAppWidgetProvider extends AppWidgetProvider {
         // リストを選択した時のアクションを定義する
         Intent clickIntentTemplate = new Intent(context, ToDoMainActivity.class);
         clickIntentTemplate.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+        clickIntentTemplate.putExtra(ToDoAppWidgetConfigure.SELECT_WIDGET_GROUP_ID, selectGroupId);
+        clickIntentTemplate.setData(Uri.parse(clickIntentTemplate.toUri(Intent.URI_INTENT_SCHEME)));
         PendingIntent clickPendingIntentTemplate = TaskStackBuilder.create(context)
                 .addNextIntentWithParentStack(clickIntentTemplate)
                 .getPendingIntent(0, PendingIntent.FLAG_UPDATE_CURRENT);

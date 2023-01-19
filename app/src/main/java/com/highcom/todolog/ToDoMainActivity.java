@@ -1,6 +1,7 @@
 package com.highcom.todolog;
 
 import android.app.Activity;
+import android.appwidget.AppWidgetManager;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -32,6 +33,7 @@ import com.highcom.todolog.ui.drawerlist.DrawerListAdapter;
 import com.highcom.todolog.ui.drawerlist.DrawerListItem;
 import com.highcom.todolog.ui.grouplist.GroupListFragment;
 import com.highcom.todolog.ui.todolist.ToDoListFragment;
+import com.highcom.todolog.widget.ToDoAppWidgetConfigure;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBarDrawerToggle;
@@ -215,8 +217,15 @@ public class ToDoMainActivity extends AppCompatActivity {
             mMenuVisible = true;
             invalidateOptionsMenu();
 
-            // 前回選択されていたグループに応じた初期画面データ設定
-            mSelectGroup = mPreferences.getLong(SELECT_GROUP, 0);
+            long selectWidgetGroupId = getIntent().getLongExtra(ToDoAppWidgetConfigure.SELECT_WIDGET_GROUP_ID, -1);
+            if (selectWidgetGroupId != -1) {
+                // ウィジェットから呼び出された場合はウィジェットで選択されたグループのデータを設定
+                mSelectGroup = selectWidgetGroupId;
+                mPreferences.edit().putLong(SELECT_GROUP, mSelectGroup).apply();
+            } else {
+                // 前回選択されていたグループに応じた初期画面データ設定
+                mSelectGroup = mPreferences.getLong(SELECT_GROUP, 0);
+            }
             boolean isGroupExist = false;
             for (Group group : groupList) if (group.getGroupId() == mSelectGroup) isGroupExist = true;
             if (isGroupExist) {
