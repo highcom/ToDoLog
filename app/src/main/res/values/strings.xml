@@ -11,6 +11,12 @@
 
     <string name="widget_title">Loading...</string>
 
+    <string name="review_dialog_title">Please rate for ToDoLog!</string>
+    <string name="review_dialog_message">Thank you for using ToDoLog. It will be an encouragement to continue improving the app so that it is easy to use.</string>
+    <string name="review_dialog_rate">Rate ToDoLog</string>
+    <string name="review_dialog_rate_later">Remind me later</string>
+    <string name="review_dialog_rate_cancel">Do not rate</string>
+
     <string name="drawer_open">Open</string>
     <string name="drawer_close">Close</string>
 

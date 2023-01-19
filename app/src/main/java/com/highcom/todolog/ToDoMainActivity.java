@@ -119,9 +119,23 @@ public class ToDoMainActivity extends AppCompatActivity {
         mAdMobLoader = new AdMobLoader(this, findViewById(R.id.ad_view_frame), getString(R.string.admob_unit_id));
         mAdMobLoader.load();
 
+        // レビュー評価依頼のダイアログに表示する内容を設定
+        RmpAppirater.Options options = new RmpAppirater.Options(
+                getString(R.string.review_dialog_title),
+                getString(R.string.review_dialog_message),
+                getString(R.string.review_dialog_rate),
+                getString(R.string.review_dialog_rate_later),
+                getString(R.string.review_dialog_rate_cancel)
+        );
         // 一定基準を満たしたらアプリ評価ダイアログを表示
         RmpAppirater.appLaunched(this,
             (appLaunchCount, appThisVersionCodeLaunchCount, firstLaunchDate, appVersionCode, previousAppVersionCode, rateClickDate, reminderClickDate, doNotShowAgain) -> {
+                // レビュー依頼の文言を変えたバージョンでは、まだレビューをしておらず
+                // 長く利用していてバージョンアップしたユーザーに新バージョンで3回目に一度だけ必ず表示する
+                if (appVersionCode == 12 && rateClickDate == null && appLaunchCount > 30 && appThisVersionCodeLaunchCount == 3) {
+                    return true;
+                }
+
                 // 現在のアプリのバージョンで10回以上起動したか
                 if (appThisVersionCodeLaunchCount < 10) {
                     return false;
@@ -146,7 +160,7 @@ public class ToDoMainActivity extends AppCompatActivity {
                 }
 
                 return true;
-            }
+            }, options
         );
 
         // ユーザー設定値取得

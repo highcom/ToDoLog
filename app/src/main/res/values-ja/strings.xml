@@ -11,6 +11,12 @@
 
     <string name="widget_title">ロード中...</string>
 
+    <string name="review_dialog_title">ToDo記録を応援して下さい！</string>
+    <string name="review_dialog_message">いつもToDo記録をご利用頂きありがとうございます。使いやすいアプリとなるよう日々改善を続けていくための励みになります。</string>
+    <string name="review_dialog_rate">ToDo記録をレビューで応援</string>
+    <string name="review_dialog_rate_later">後で応援をする</string>
+    <string name="review_dialog_rate_cancel">応援しない</string>
+
     <string name="drawer_open">開く</string>
     <string name="drawer_close">閉じる</string>
 
