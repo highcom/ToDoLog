@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Binder;
+import android.os.Build;
 import android.widget.AdapterView;
 import android.widget.RemoteViews;
 import android.widget.RemoteViewsService;
@@ -113,7 +114,15 @@ public class ToDoWidgetRemoteViewsFactory implements RemoteViewsService.RemoteVi
             return  null;
         }
 
-        RemoteViews rv = new RemoteViews(mContext.getPackageName(), R.layout.todo_widget_list_item);
+        int layoutId = R.layout.todo_widget_list_item;
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+            // SDKのバージョンがR以降である場合にダークモード設定が導入されたため、それを判定する
+            if (mContext.getTheme().getResources().getConfiguration().isNightModeActive()) {
+                // ダークモードの場合はダークモード用の色設定にする
+                layoutId = R.layout.todo_widget_list_item_dark;
+            }
+        }
+        RemoteViews rv = new RemoteViews(mContext.getPackageName(), layoutId);
         rv.setTextViewText(R.id.widget_todo_contents, mTodoAndLogList.get(i).toDo.getContents());
 
         Intent fillInIntent = new Intent();

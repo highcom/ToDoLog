@@ -8,6 +8,7 @@ import android.appwidget.AppWidgetManager;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.os.Build;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
@@ -105,7 +106,15 @@ public class ToDoAppWidgetConfigure extends AppCompatActivity {
                     long selectGroupId = groupList.get(i).getGroupId();
                     String selectGroupName = groupList.get(i).getGroupName();
                     saveSelectWidgetGroupPref(getApplicationContext(), mAppWidgetId, selectGroupId, selectGroupName);
-                    RemoteViews views = new RemoteViews(getPackageName(), R.layout.todo_appwidget);
+                    int layoutId = R.layout.todo_appwidget;
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+                        // SDKのバージョンがR以降である場合にダークモード設定が導入されたため、それを判定する
+                        if (getApplicationContext().getTheme().getResources().getConfiguration().isNightModeActive()) {
+                            // ダークモードの場合はダークモード用の色設定にする
+                            layoutId = R.layout.todo_appwidget_dark;
+                        }
+                    }
+                    RemoteViews views = new RemoteViews(getPackageName(), layoutId);
                     AppWidgetManager appWidgetManager = AppWidgetManager.getInstance(getApplicationContext());
                     appWidgetManager.updateAppWidget(mAppWidgetId, views);
                     ToDoAppWidgetProvider.updateAppWidget(this.getApplicationContext(), appWidgetManager, mAppWidgetId);

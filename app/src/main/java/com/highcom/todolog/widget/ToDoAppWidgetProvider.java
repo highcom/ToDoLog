@@ -8,6 +8,7 @@ import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
+import android.os.Build;
 import android.widget.RemoteViews;
 
 import com.highcom.todolog.R;
@@ -52,7 +53,16 @@ public class ToDoAppWidgetProvider extends AppWidgetProvider {
     static void updateAppWidget(Context context, AppWidgetManager appWidgetManager, int appWidgetId) {
         String selectGroupName = ToDoAppWidgetConfigure.loadSelectWidgetGroupNamePref(context, appWidgetId);
         long selectGroupId = ToDoAppWidgetConfigure.loadSelectWidgetGroupIdPref(context, appWidgetId);
-        RemoteViews views = new RemoteViews(context.getPackageName(), R.layout.todo_appwidget);
+
+        int layoutId = R.layout.todo_appwidget;
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+            // SDKのバージョンがR以降である場合にダークモード設定が導入されたため、それを判定する
+            if (context.getTheme().getResources().getConfiguration().isNightModeActive()) {
+                // ダークモードの場合はダークモード用の色設定にする
+                layoutId = R.layout.todo_appwidget_dark;
+            }
+        }
+        RemoteViews views = new RemoteViews(context.getPackageName(), layoutId);
 
         Intent titleIntent = new Intent(context, ToDoMainActivity.class);
         titleIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
