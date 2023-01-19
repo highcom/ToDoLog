@@ -71,7 +71,7 @@ public class ToDoAppWidgetProvider extends AppWidgetProvider {
         titleIntent.setData(Uri.parse(titleIntent.toUri(Intent.URI_INTENT_SCHEME)));
         PendingIntent titlePendingIntent = TaskStackBuilder.create(context)
                 .addNextIntentWithParentStack(titleIntent)
-                .getPendingIntent(0, PendingIntent.FLAG_UPDATE_CURRENT);
+                .getPendingIntent(0, PendingIntent.FLAG_UPDATE_CURRENT | PendingIntent.FLAG_MUTABLE);
         // タイトルを押下した時のアクションを定義する
         views.setOnClickPendingIntent(R.id.todo_widget_title_view, titlePendingIntent);
 
@@ -85,7 +85,7 @@ public class ToDoAppWidgetProvider extends AppWidgetProvider {
         clickIntentTemplate.setData(Uri.parse(clickIntentTemplate.toUri(Intent.URI_INTENT_SCHEME)));
         PendingIntent clickPendingIntentTemplate = TaskStackBuilder.create(context)
                 .addNextIntentWithParentStack(clickIntentTemplate)
-                .getPendingIntent(0, PendingIntent.FLAG_UPDATE_CURRENT);
+                .getPendingIntent(0, PendingIntent.FLAG_UPDATE_CURRENT | PendingIntent.FLAG_MUTABLE);
         views.setPendingIntentTemplate(R.id.todo_widget_list_view, clickPendingIntentTemplate);
 
         appWidgetManager.updateAppWidget(appWidgetId, views);
