@@ -39,6 +39,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
+import java.util.Objects;
 
 public class ToDoListFragment extends Fragment implements SimpleCallbackHelper.SimpleCallbackListener, ToDoListAdapter.ToDoListAdapterListener {
 
@@ -243,7 +244,8 @@ public class ToDoListFragment extends Fragment implements SimpleCallbackHelper.S
     @Override
     public void onToDoContentsClicked(View view) {
         view.post(() -> {
-            ((ToDoMainActivity)getContext()).changeDoneFloatingButton();
+            if (getContext() == null) return;
+            ((ToDoMainActivity) requireContext()).changeDoneFloatingButton();
             view.setFocusable(true);
             view.setFocusableInTouchMode(true);
             view.requestFocus();
