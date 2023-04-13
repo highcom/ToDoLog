@@ -37,6 +37,7 @@ import com.highcom.todolog.widget.ToDoAppWidgetConfigure;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBarDrawerToggle;
+import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
@@ -51,6 +52,7 @@ import java.util.List;
 import jp.co.recruit_mp.android.rmp_appirater.RmpAppirater;
 
 import static com.highcom.todolog.SettingActivity.PREF_FILE_NAME;
+import static com.highcom.todolog.SettingActivity.PREF_PARAM_START_GROUP;
 import static com.highcom.todolog.SettingActivity.PREF_PARAM_THEME_COLOR;
 import static com.highcom.todolog.SettingActivity.PREF_PARAM_TODO_COUNT;
 import static com.highcom.todolog.ui.todolist.ToDoListFragment.SELECT_GROUP;
@@ -257,6 +259,10 @@ public class ToDoMainActivity extends AppCompatActivity {
                 mToDoListFragment.setArguments(args);
                 getSupportFragmentManager().beginTransaction().replace(R.id.nav_host_fragment, mToDoListFragment).commit();
             }
+            // 起動時のグループ選択表示がONの場合はグループ一覧を表示する
+            SharedPreferences data = getSharedPreferences(PREF_FILE_NAME, Context.MODE_PRIVATE);
+            boolean startGroup = data.getBoolean(PREF_PARAM_START_GROUP, false);
+            if (startGroup) drawer.openDrawer(GravityCompat.START);
         });
         // Drawerに表示するListを設定する
         mGroupViewModel.getGroupList().observe(this, groupList -> {

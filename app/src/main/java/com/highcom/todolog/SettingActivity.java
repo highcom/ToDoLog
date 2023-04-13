@@ -42,6 +42,8 @@ public class SettingActivity extends AppCompatActivity implements ThemeColorUtil
 
     // SharedPreferenceの保存ファイル名
     public static final String PREF_FILE_NAME ="com.highcom.ToDoLog.UserData";
+    // 起動時のグループ選択表示設定名称
+    public static final String PREF_PARAM_START_GROUP ="StartGroup";
     // ToDoの残数表示設定名称
     public static final String PREF_PARAM_TODO_COUNT ="ToDoCount";
     // 新規ToDo追加位置設定名称
@@ -65,6 +67,20 @@ public class SettingActivity extends AppCompatActivity implements ThemeColorUtil
 
         setTitle(getString(R.string.setting_title));
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+
+        // 起動時のグループ選択表示のユーザー設定値の取得とイベントリスナーの設定
+        @SuppressLint("UseSwitchCompatOrMaterialCode")
+        Switch startGroupSwitch = (Switch)findViewById(R.id.start_group_switch);
+        boolean startGroup = sharedPreferences.getBoolean(PREF_PARAM_START_GROUP, false);
+        startGroupSwitch.setChecked(startGroup);
+        startGroupSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                SharedPreferences.Editor editor = sharedPreferences.edit();
+                editor.putBoolean(PREF_PARAM_START_GROUP, isChecked);
+                editor.apply();
+            }
+        });
 
         // ToDoの残数表示状態のユーザー設定値の取得とイベントリスナーの設定
         @SuppressLint("UseSwitchCompatOrMaterialCode")

@@ -44,6 +44,7 @@
     <string name="log_change_contents">内容変更</string>
 
     <string name="setting_title">設定</string>
+    <string name="setting_start_group">起動時にグループ選択を表示</string>
     <string name="setting_todo_count">残ToDo数の表示</string>
     <string name="setting_new_todo_order">新規ToDo追加位置</string>
     <string name="setting_theme_color">テーマカラーの変更</string>

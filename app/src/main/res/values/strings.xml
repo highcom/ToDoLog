@@ -44,6 +44,7 @@
     <string name="log_change_contents">Change contents</string>
 
     <string name="setting_title">Setting</string>
+    <string name="setting_start_group">Show group selection on startup</string>
     <string name="setting_todo_count">Display of ToDo count</string>
     <string name="setting_new_todo_order">Position to add new ToDo</string>
     <string name="setting_theme_color">Setting theme color</string>

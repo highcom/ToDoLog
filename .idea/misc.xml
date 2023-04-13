@@ -3,8 +3,10 @@
   <component name="DesignSurface">
     <option name="filePathToZoomLevelMap">
       <map>
+        <entry key="app/src/main/res/drawable/ic_baseline_data_usage_24.xml" value="0.19" />
         <entry key="app/src/main/res/layout/activity_log_chart.xml" value="0.15217391304347827" />
         <entry key="app/src/main/res/layout/activity_main.xml" value="0.16259057971014493" />
+        <entry key="app/src/main/res/layout/activity_setting.xml" value="0.25" />
         <entry key="app/src/main/res/layout/activity_to_do_app_widget_configure.xml" value="0.2006340579710145" />
         <entry key="app/src/main/res/layout/activity_tododetail.xml" value="0.16259057971014493" />
         <entry key="app/src/main/res/layout/app_bar_main.xml" value="0.16259057971014493" />
