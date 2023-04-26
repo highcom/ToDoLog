@@ -12,6 +12,7 @@ import android.os.Bundle;
 import android.view.MenuItem;
 import android.view.Menu;
 import android.view.View;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -327,6 +328,11 @@ public class ToDoMainActivity extends AppCompatActivity {
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.main, menu);
+        // グループ変更により再作成される場合があるのでfabを初期化する
+        fab.setVisibility(View.VISIBLE);
+        // グループ変更によりフォーカスが外れた場合は、キーボードを閉じる
+        InputMethodManager inputMethodManager = (InputMethodManager)getApplicationContext().getSystemService(Context.INPUT_METHOD_SERVICE);
+        inputMethodManager.hideSoftInputFromWindow(getWindow().getDecorView().getRootView().getWindowToken(), InputMethodManager.HIDE_NOT_ALWAYS);
         // 検索文字列入力時の処理
         MenuItem searchMenuItem = menu.findItem(R.id.menu_search_view);
         SearchView searchView = (SearchView)searchMenuItem.getActionView();
