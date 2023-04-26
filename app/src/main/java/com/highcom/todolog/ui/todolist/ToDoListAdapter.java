@@ -2,8 +2,6 @@ package com.highcom.todolog.ui.todolist;
 
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.animation.Animation;
-import android.view.animation.AnimationUtils;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.DiffUtil;
@@ -16,6 +14,7 @@ public class ToDoListAdapter extends ListAdapter<ToDoAndLog, ToDoViewHolder> imp
     public static final int TYPE_FOOTER = 2;
 
     private ToDoListAdapterListener mToDoListAdapterListener;
+
     public interface ToDoListAdapterListener {
         void onToDoCheckButtonClicked(View view, ToDoAndLog toDoAndLog, String contents);
         void onToDoContentsClicked(View view);

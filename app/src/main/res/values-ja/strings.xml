@@ -5,6 +5,7 @@
     <string name="nav_header_title">ToDo記録</string>
     <string name="nav_header_subtitle">android.studio@android.com</string>
     <string name="nav_header_desc">Navigation header</string>
+    <string name="search_text_message">検索文字を入力</string>
     <string name="action_settings">設定</string>
     <string name="group_edit">グループ編集</string>
     <string name="group_select">グループ選択</string>

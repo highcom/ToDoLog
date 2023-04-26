@@ -7,6 +7,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.view.MenuItem;
 import android.view.Menu;
@@ -37,6 +38,7 @@ import com.highcom.todolog.widget.ToDoAppWidgetConfigure;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBarDrawerToggle;
+import androidx.appcompat.widget.SearchView;
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
@@ -317,20 +319,43 @@ public class ToDoMainActivity extends AppCompatActivity {
     }
 
     /**
-     * メニューのドロップダウンリストのinflateを行う。
+     * メニューのドロップダウンリストのinflateと文字列検索処理
      *
      * @param menu
      * @return
      */
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.main, menu);
+        // 検索文字列入力時の処理
+        MenuItem searchMenuItem = menu.findItem(R.id.menu_search_view);
+        SearchView searchView = (SearchView)searchMenuItem.getActionView();
+        SearchView.SearchAutoComplete searchAutoComplete = searchView.findViewById(androidx.appcompat.R.id.search_src_text);
+        searchAutoComplete.setHintTextColor(Color.rgb(0xff, 0xff, 0xff));
+        searchAutoComplete.setHint(getString(R.string.search_text_message));
+        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String query) {
+                return false;
+            }
+
+            @Override
+            public boolean onQueryTextChange(String newText) {
+                mToDoListFragment.setSearchWordFilter(newText);
+                // 文字列でフィルタされている場合は新規作成出来ないように制御
+                if (newText.isEmpty()) {
+                    fab.setVisibility(View.VISIBLE);
+                } else {
+                    fab.setVisibility(View.INVISIBLE);
+                }
+                return false;
+            }
+        });
         return true;
     }
 
     /**
-     * メニューのドロップダウンリストの表示設定。
+     * メニューのドロップダウンリストの表示設定
      *
      * @param menu
      * @return

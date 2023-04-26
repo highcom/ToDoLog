@@ -7,12 +7,15 @@ import android.content.SharedPreferences;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.view.inputmethod.InputMethodManager;
+import android.widget.Filter;
+import android.widget.Filterable;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -39,21 +42,41 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
-import java.util.Objects;
 
-public class ToDoListFragment extends Fragment implements SimpleCallbackHelper.SimpleCallbackListener, ToDoListAdapter.ToDoListAdapterListener {
+/**
+ * ToDoリストを一覧で表示する部分のFragment
+ */
+public class ToDoListFragment extends Fragment implements SimpleCallbackHelper.SimpleCallbackListener, ToDoListAdapter.ToDoListAdapterListener, Filterable {
 
+    // 選択グループ用定数
     public static final String SELECT_GROUP = "selectGroup";
+    // ToDo一覧用リサイクラービュー
+    private RecyclerView mRecyclerView;
+    // 初期表示かどうか
     private boolean isInitPositionSet;
+    // 選択しているグループID
     private long mSelectGroupId;
+    // 状態がToDoの最後番号
     private int mLatestToDoOrder;
+    // 状態が完了の最後の番号
     private int mLatestDoneOrder;
+    // 並べ替え用のToDoリスト
     private List<ToDo> mRearrangeToDoList;
+    // ToDoリスト用アダプター
     private ToDoListAdapter mToDoListAdapter;
+    // ToDoリスト用ViewModel
     private ToDoViewModel mToDoViewModel;
+    // ToDo項目スワイプ時のボタン定義用イベント
     private SimpleCallbackHelper mSimpleCallbackHelper;
+    // チェックボタン押下時のアニメーション
     private Animation mScaleAnimation;
+    // ToDoデータ変更通知用ライブデータ
     private LiveData<List<ToDoAndLog>> obj;
+    // 並び順に合わせたソート後のToDoリスト
+    private List<ToDoAndLog> mToDoAndLogSortedList;
+    // 検索文字列
+    private  String searchViewWord;
+    // 保存データ
     private SharedPreferences sharedPreferences;
 
     @Override
@@ -86,11 +109,11 @@ public class ToDoListFragment extends Fragment implements SimpleCallbackHelper.S
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         mScaleAnimation = AnimationUtils.loadAnimation(getContext(), R.anim.scale_animation);
 
-        RecyclerView recyclerView = (RecyclerView) view.findViewById(R.id.todo_list_view);
+        mRecyclerView = (RecyclerView) view.findViewById(R.id.todo_list_view);
         mToDoListAdapter = new ToDoListAdapter(new ToDoListAdapter.ToDoDiff(), this);
-        recyclerView.setAdapter(mToDoListAdapter);
-        recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
-        recyclerView.smoothScrollToPosition(0);
+        mRecyclerView.setAdapter(mToDoListAdapter);
+        mRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
+        mRecyclerView.smoothScrollToPosition(0);
 
         mToDoViewModel = new ViewModelProvider(this).get(ToDoViewModel.class);
         obj = mToDoViewModel.getToDoListByTaskGroup(mSelectGroupId);
@@ -100,7 +123,7 @@ public class ToDoListFragment extends Fragment implements SimpleCallbackHelper.S
             // 新規ToDo追加位置の設定に合わせてソートするためのリストを作成する
             List<ToDoAndLog> todoList = new ArrayList<>();
             List<ToDoAndLog> doneList = new ArrayList<>();
-            List<ToDoAndLog> toDoAndLogSortedList = new ArrayList<>();
+            mToDoAndLogSortedList = new ArrayList<>();
             for (ToDoAndLog toDoAndLog : toDoAndLogList) {
                 if (toDoAndLog.toDo.getState() == ToDo.STATUS_TODO) {
                     // 昇順でデータが来るので一番最後を新規作成時の最新の順番として設定
@@ -117,34 +140,19 @@ public class ToDoListFragment extends Fragment implements SimpleCallbackHelper.S
             // ToDo追加位置の設定に合わせて昇順・降順ソートをする
             Collections.sort(todoList, new OrderComparator());
             Collections.sort(doneList, new OrderComparator());
-            toDoAndLogSortedList.addAll(todoList);
-            toDoAndLogSortedList.addAll(doneList);
+            mToDoAndLogSortedList.addAll(todoList);
+            mToDoAndLogSortedList.addAll(doneList);
 
             // 並べ替え用のToDoリストを作成する
             mRearrangeToDoList = new ArrayList<>();
-            for (ToDoAndLog toDoAndLog : toDoAndLogSortedList) mRearrangeToDoList.add(toDoAndLog.toDo.clone());
-            // Todoの一覧が読み込まれたらバインドする
-            mToDoListAdapter.submitList(toDoAndLogSortedList);
-            // 初期表示の時は先頭位置にする
-            if (!isInitPositionSet) {
-                recyclerView.scrollToPosition(0);
-                isInitPositionSet = true;
-            }
-            // 新規作成時は対象のセルにフォーカスされるようにスクロールする
-            for (int position = 0; position < toDoAndLogSortedList.size(); position++) {
-                if (toDoAndLogSortedList.get(position).toDo.getContents().equals("")) {
-                    recyclerView.smoothScrollToPosition(position);
-                    break;
-                }
-            }
-
-            // ウィジェットに更新を通知する
-            ToDoAppWidgetProvider.sendRefreshBroadcast(getContext());
+            for (ToDoAndLog toDoAndLog : mToDoAndLogSortedList) mRearrangeToDoList.add(toDoAndLog.toDo.clone());
+            // 検索文字列でフィルタ
+            setSearchWordFilter(searchViewWord);
         });
 
         final float scale = getResources().getDisplayMetrics().density;
-        // スワイプしたチキのボタンの定義
-        mSimpleCallbackHelper = new SimpleCallbackHelper(getContext(), recyclerView, scale, this) {
+        // スワイプした時のボタンの定義
+        mSimpleCallbackHelper = new SimpleCallbackHelper(getContext(), mRecyclerView, scale, this) {
             @SuppressLint("ResourceType")
             @Override
             public void instantiateUnderlayButton(RecyclerView.ViewHolder viewHolder, List<UnderlayButton> underlayButtons) {
@@ -174,6 +182,12 @@ public class ToDoListFragment extends Fragment implements SimpleCallbackHelper.S
         };
     }
 
+    /**
+     * ToDo一覧の並べ替え処理
+     * @param viewHolder 並べ替え元ビューホルダー
+     * @param target 並べ替え操作対象のビューホルダー
+     * @return 並べ替え成功かどうか
+     */
     @Override
     public boolean onSimpleCallbackMove(RecyclerView.ViewHolder viewHolder, RecyclerView.ViewHolder target) {
         // 並べ替え対象がITEMでかつステータスが同じでなければ行わない
@@ -201,17 +215,31 @@ public class ToDoListFragment extends Fragment implements SimpleCallbackHelper.S
         return true;
     }
 
+    /**
+     * ToDo一覧を操作後の更新処理
+     * @param recyclerView
+     * @param viewHolder 対象のビューホルダー
+     */
     @Override
     public void clearSimpleCallbackView(@NonNull RecyclerView recyclerView, @NonNull RecyclerView.ViewHolder viewHolder) {
         mToDoViewModel.update(mRearrangeToDoList);
     }
 
+    /**
+     * 新規ToDo追加処理
+     */
     public void addNewToDoAndLog() {
         ToDo todo = new ToDo(0, mLatestToDoOrder + 1, ToDo.STATUS_TODO, mSelectGroupId, "", 0);
         Log log = new Log(0, 0, new Date(System.currentTimeMillis()), Log.LOG_CREATE_NEW);
         mToDoViewModel.insertToDoAndLog(todo, log);
     }
 
+    /**
+     * ToDoチェックボタンを押下された時のステータス変更処理
+     * @param view 対象のビュー
+     * @param toDoAndLog ToDoデータ
+     * @param contents 記入内容文字列
+     */
     @Override
     public void onToDoCheckButtonClicked(View view, ToDoAndLog toDoAndLog, String contents) {
         ToDo targetToDo = null;
@@ -241,6 +269,10 @@ public class ToDoListFragment extends Fragment implements SimpleCallbackHelper.S
         mToDoViewModel.updateToDoAndLog(mRearrangeToDoList, targetToDo.getTodoId(), log);
     }
 
+    /**
+     * ToDoの内容にフォーカスされた時に入力状態にする処理
+     * @param view
+     */
     @Override
     public void onToDoContentsClicked(View view) {
         view.post(() -> {
@@ -256,6 +288,12 @@ public class ToDoListFragment extends Fragment implements SimpleCallbackHelper.S
         });
     }
 
+    /**
+     * ToDo入力中にフォーカスが外れた時の入力状態解除処理
+     * @param view 対象のビュー
+     * @param toDoAndLog 対象のToDoデータ
+     * @param contents 記入内容文字列
+     */
     @Override
     public void onToDoContentsOutOfFocused(View view, ToDoAndLog toDoAndLog, String contents) {
         // 内容編集中にフォーカスが外れた場合は、キーボードを閉じる
@@ -286,8 +324,82 @@ public class ToDoListFragment extends Fragment implements SimpleCallbackHelper.S
         }
     }
 
+    /**
+     * 検索文字設定処理
+     *
+     * @param wordFilter 検索文字列
+     */
+    public void setSearchWordFilter(String wordFilter) {
+        searchViewWord = wordFilter;
+        if (TextUtils.isEmpty(searchViewWord)) {
+            getFilter().filter(null);
+        } else {
+            getFilter().filter(searchViewWord.toLowerCase());
+        }
+    }
+
+    /**
+     * 検索文字列での一覧のフィルタ処理
+     * @return フィルタ
+     */
+    @Override
+    public Filter getFilter() {
+        return new Filter() {
+
+            @Override
+            protected FilterResults performFiltering(CharSequence constraint) {
+                final FilterResults filterResults = new FilterResults();
+                final ArrayList<ToDoAndLog> results = new ArrayList<>();
+                if (constraint != null) {
+                    if (mToDoAndLogSortedList != null && mToDoAndLogSortedList.size() > 0) {
+                        for (final ToDoAndLog toDoAndLog : mToDoAndLogSortedList) {
+                            if (toDoAndLog.toDo.getContents().toLowerCase().contains(constraint.toString()))
+                                results.add(toDoAndLog);
+                        }
+                    }
+                    filterResults.values = results;
+                } else {
+                    filterResults.values = mToDoAndLogSortedList;
+                }
+                return filterResults;
+            }
+
+            @SuppressWarnings("unchecked")
+            @Override
+            protected void publishResults(CharSequence constraint,
+                                          FilterResults results) {
+                // フィルタ結果で更新する
+                mToDoListAdapter.submitList((ArrayList<ToDoAndLog>)results.values);
+                // 初期表示の時は先頭位置にする
+                if (!isInitPositionSet) {
+                    mRecyclerView.scrollToPosition(0);
+                    isInitPositionSet = true;
+                }
+                // 新規作成時は対象のセルにフォーカスされるようにスクロールする
+                for (int position = 0; position < mToDoAndLogSortedList.size(); position++) {
+                    if (mToDoAndLogSortedList.get(position).toDo.getContents().equals("")) {
+                        mRecyclerView.smoothScrollToPosition(position);
+                        break;
+                    }
+                }
+
+                // ウィジェットに更新を通知する
+                ToDoAppWidgetProvider.sendRefreshBroadcast(getContext());
+            }
+        };
+    }
+
+    /**
+     * ToDoリストの並び順比較用クラス
+     */
     public class OrderComparator implements Comparator<ToDoAndLog> {
 
+        /**
+         * ソート順に合わせた並び順比較処理
+         * @param o1 比較対象ToDoデータ
+         * @param o2 比較対象ToDoデータ
+         * @return 比較結果
+         */
         @Override
         public int compare(ToDoAndLog o1, ToDoAndLog o2) {
             int order = sharedPreferences.getInt(SettingActivity.PREF_PARAM_NEW_TODO_ORDER, ToDoLogRepository.ORDER_ASC);
