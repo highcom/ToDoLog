@@ -43,18 +43,32 @@ import java.util.List;
 import static com.highcom.todolog.SettingActivity.PREF_FILE_NAME;
 import static com.highcom.todolog.SettingActivity.PREF_PARAM_TODO_COUNT;
 
+/**
+ * グループリストを一覧で表示する部分のFragment
+ */
 public class GroupListFragment extends Fragment implements SimpleCallbackHelper.SimpleCallbackListener, GroupListAdapter.GroupListAdapterListener, Filterable {
 
+    // グループ一覧用のリサイクラービュー
     private RecyclerView mRecyclerView;
+    // 初期表示位置で設定するかどうか
     private boolean isInitPositionSet;
+    // グループ一覧の最新の順番
     private int mLatestGroupOrder;
+    // フィルタ前のグループ一覧
     private List<Group> mOrigGroupList;
+    // グループ事の残ToDo数
     private List<GroupCount> mGroupCounts;
+    // 並べ替え用のグループ一覧
     private List<Group> mRearrangeGroupList;
+    // グループ一覧表示用アダプタ
     private GroupListAdapter mGroupListAdapter;
+    // グループ一覧用ViewModel
     private GroupViewModel mGroupViewModel;
+    // グループ項目スワイプ時のボタン定義用イベント
     private SimpleCallbackHelper mSimpleCallbackHelper;
+    // 残ToDo数を表示するかどうか
     private boolean mTodoCount;
+    // 検索文字列
     private String searchViewWord;
 
     @Override
@@ -137,6 +151,12 @@ public class GroupListFragment extends Fragment implements SimpleCallbackHelper.
         }
     }
 
+    /**
+     * グループ一覧の並べ替え処理
+     * @param viewHolder 並べ替え元ビューホルダー
+     * @param target 並べ替え操作対象のビューホルダー
+     * @return 並べ替え成功かどうか
+     */
     @Override
     public boolean onSimpleCallbackMove(RecyclerView.ViewHolder viewHolder, RecyclerView.ViewHolder target) {
         // 並べ替え対象がITEMでなければ行わない
@@ -163,16 +183,28 @@ public class GroupListFragment extends Fragment implements SimpleCallbackHelper.
         return true;
     }
 
+    /**
+     * グループ一覧を操作後の更新処理
+     * @param recyclerView
+     * @param viewHolder 対象のビューホルダー
+     */
     @Override
     public void clearSimpleCallbackView(@NonNull RecyclerView recyclerView, @NonNull RecyclerView.ViewHolder viewHolder) {
         mGroupViewModel.update(mRearrangeGroupList);
     }
 
+    /**
+     * 新規グループ追加処理
+     */
     public void addNewGroup() {
         Group group = new Group(0, mLatestGroupOrder + 1, "");
         mGroupViewModel.insert(group);
     }
 
+    /**
+     * グループの内容にフォーカスされた時に入力状態にする処理
+     * @param view フォーカス対象のビュー
+     */
     @Override
     public void onGroupNameClicked(View view) {
         view.post(() -> {
@@ -187,6 +219,12 @@ public class GroupListFragment extends Fragment implements SimpleCallbackHelper.
         });
     }
 
+    /**
+     * グループ入力中にフォーカスが外れた時の入力状態解除処理
+     * @param view 対象のビュー
+     * @param group 対象のToDoデータ
+     * @param editGroupName 記入内容文字列
+     */
     @Override
     public void onGroupNameOutOfFocused(View view, Group group, String editGroupName) {
         // 内容編集中にフォーカスが外れた場合は、キーボードを閉じる

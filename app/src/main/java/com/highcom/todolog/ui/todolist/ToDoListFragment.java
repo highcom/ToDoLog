@@ -271,7 +271,7 @@ public class ToDoListFragment extends Fragment implements SimpleCallbackHelper.S
 
     /**
      * ToDoの内容にフォーカスされた時に入力状態にする処理
-     * @param view
+     * @param view 対象のビュー
      */
     @Override
     public void onToDoContentsClicked(View view) {
