@@ -347,7 +347,16 @@ public class ToDoMainActivity extends AppCompatActivity {
 
             @Override
             public boolean onQueryTextChange(String newText) {
-                mToDoListFragment.setSearchWordFilter(newText);
+                switch (mSelectFragment) {
+                    case FRAGMENT_TODOLIST:
+                        if (mToDoListFragment != null) mToDoListFragment.setSearchWordFilter(newText);
+                        break;
+                    case FRAGMENT_GROUPLIST:
+                        if (mGroupListFragment != null) mGroupListFragment.setSearchWordFilter(newText);
+                        break;
+                    default:
+                        break;
+                }
                 // 文字列でフィルタされている場合は新規作成出来ないように制御
                 if (newText.isEmpty()) {
                     fab.setVisibility(View.VISIBLE);
@@ -369,6 +378,7 @@ public class ToDoMainActivity extends AppCompatActivity {
     @Override
     public boolean onPrepareOptionsMenu(Menu menu) {
         super.onPrepareOptionsMenu(menu);
+        menu.findItem(R.id.action_setting_always).setVisible(!mMenuVisible);
         menu.setGroupVisible(R.id.change_all_group, mMenuVisible);
         return true;
     }
@@ -383,6 +393,7 @@ public class ToDoMainActivity extends AppCompatActivity {
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         switch (item.getItemId()) {
+            case R.id.action_setting_always:
             case R.id.action_setting:
                 Intent settingIntent = new Intent(this, SettingActivity.class);
                 startActivity(settingIntent);

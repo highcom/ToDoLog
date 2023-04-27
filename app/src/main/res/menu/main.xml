@@ -7,6 +7,11 @@
         app:showAsAction="always"
         android:visible="true"
         android:title="Search Bar" />
+    <item android:id="@+id/action_setting_always"
+        android:icon="@drawable/ic_setting"
+        android:title="@string/setting_title"
+        app:showAsAction="always">
+    </item>
     <group android:id="@+id/change_all_group" >
         <item android:id="@+id/action_check_operation"
             android:title="@string/setting_check_operation"

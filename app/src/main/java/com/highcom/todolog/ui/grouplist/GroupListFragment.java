@@ -16,10 +16,13 @@ import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
+import android.widget.Filter;
+import android.widget.Filterable;
 
 import com.highcom.todolog.LogChartActivity;
 import com.highcom.todolog.R;
@@ -29,8 +32,10 @@ import com.highcom.todolog.datamodel.Group;
 import com.highcom.todolog.datamodel.GroupCount;
 import com.highcom.todolog.datamodel.GroupViewModel;
 import com.highcom.todolog.datamodel.ToDo;
+import com.highcom.todolog.datamodel.ToDoAndLog;
 import com.highcom.todolog.ui.SimpleCallbackHelper;
 import com.highcom.todolog.ui.todolist.ToDoViewHolder;
+import com.highcom.todolog.widget.ToDoAppWidgetProvider;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -38,15 +43,19 @@ import java.util.List;
 import static com.highcom.todolog.SettingActivity.PREF_FILE_NAME;
 import static com.highcom.todolog.SettingActivity.PREF_PARAM_TODO_COUNT;
 
-public class GroupListFragment extends Fragment implements SimpleCallbackHelper.SimpleCallbackListener, GroupListAdapter.GroupListAdapterListener {
+public class GroupListFragment extends Fragment implements SimpleCallbackHelper.SimpleCallbackListener, GroupListAdapter.GroupListAdapterListener, Filterable {
 
+    private RecyclerView mRecyclerView;
     private boolean isInitPositionSet;
     private int mLatestGroupOrder;
+    private List<Group> mOrigGroupList;
+    private List<GroupCount> mGroupCounts;
     private List<Group> mRearrangeGroupList;
     private GroupListAdapter mGroupListAdapter;
     private GroupViewModel mGroupViewModel;
     private SimpleCallbackHelper mSimpleCallbackHelper;
     private boolean mTodoCount;
+    private String searchViewWord;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -58,50 +67,29 @@ public class GroupListFragment extends Fragment implements SimpleCallbackHelper.
 
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
-        RecyclerView recyclerView = (RecyclerView) view.findViewById(R.id.group_list_view);
+        mRecyclerView = (RecyclerView) view.findViewById(R.id.group_list_view);
         mGroupListAdapter = new GroupListAdapter(new GroupListAdapter.GroupDiff(), this);
-        recyclerView.setAdapter(mGroupListAdapter);
-        recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
+        mRecyclerView.setAdapter(mGroupListAdapter);
+        mRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
 
         mGroupViewModel = new ViewModelProvider(this).get(GroupViewModel.class);
         mGroupViewModel.getGroupList().observe(getViewLifecycleOwner(), groupList -> {
+            mOrigGroupList = groupList;
             mGroupViewModel.getCountByGroupId(ToDo.STATUS_TODO).observe(getViewLifecycleOwner(), groupCounts -> {
-                List<GroupListItem> groupListItems = new ArrayList<>();
-                for (Group group : groupList) {
-                    GroupListItem groupListItem = new GroupListItem(group);
-                    if (mTodoCount) {
-                        for (GroupCount groupCount : groupCounts) {
-                            if (group.getGroupId() == groupCount.mGroupId)
-                                groupListItem.setCount(groupCount.mGroupCount);
-                        }
-                    }
-                    groupListItems.add(groupListItem);
-                }
+                mGroupCounts = groupCounts;
                 // 新規作成時の最新の順番を設定
                 mLatestGroupOrder = groupList.size();
                 // 並べ替え用のリストを作成する
                 mRearrangeGroupList = new ArrayList<>();
                 for (Group group : groupList) mRearrangeGroupList.add(group.clone());
-                // グループの一覧をバインドする
-                mGroupListAdapter.submitList(groupListItems);
-                // 初期表示の時は先頭位置にする
-                if (!isInitPositionSet) {
-                    recyclerView.scrollToPosition(0);
-                    isInitPositionSet = true;
-                }
-                // 新規作成時は対象のセルにフォーカスされるようにスクロールする
-                for (int position = 0; position < groupList.size(); position++) {
-                    if (groupList.get(position).getGroupName().equals("")) {
-                        recyclerView.smoothScrollToPosition(position);
-                        break;
-                    }
-                }
+                // 検索文字列でフィルタ
+                setSearchWordFilter(searchViewWord);
             });
         });
 
         final float scale = getResources().getDisplayMetrics().density;
         // スワイプしたチキのボタンの定義
-        mSimpleCallbackHelper = new SimpleCallbackHelper(getContext(), recyclerView, scale, this) {
+        mSimpleCallbackHelper = new SimpleCallbackHelper(getContext(), mRecyclerView, scale, this) {
             @SuppressLint("ResourceType")
             @Override
             public void instantiateUnderlayButton(RecyclerView.ViewHolder viewHolder, List<UnderlayButton> underlayButtons) {
@@ -220,5 +208,78 @@ public class GroupListFragment extends Fragment implements SimpleCallbackHelper.
         Group editGroup = new Group(group.getGroupId(), group.getGroupOrder(), group.getGroupName());
         editGroup.setGroupName(editGroupName);
         mGroupViewModel.update(editGroup);
+    }
+
+    /**
+     * 検索文字設定処理
+     *
+     * @param wordFilter 検索文字列
+     */
+    public void setSearchWordFilter(String wordFilter) {
+        searchViewWord = wordFilter;
+        if (TextUtils.isEmpty(searchViewWord)) {
+            getFilter().filter(null);
+        } else {
+            getFilter().filter(searchViewWord.toLowerCase());
+        }
+    }
+
+    /**
+     * 検索文字列での一覧のフィルタ処理
+     * @return フィルタ
+     */
+    @Override
+    public Filter getFilter() {
+        return new Filter() {
+
+            @Override
+            protected FilterResults performFiltering(CharSequence constraint) {
+                final FilterResults filterResults = new FilterResults();
+                final ArrayList<Group> results = new ArrayList<>();
+                if (constraint != null) {
+                    if (mOrigGroupList != null && mOrigGroupList.size() > 0) {
+                        for (final Group group : mOrigGroupList) {
+                            if (group.getGroupName().toLowerCase().contains(constraint.toString()))
+                                results.add(group);
+                        }
+                    }
+                    filterResults.values = results;
+                } else {
+                    filterResults.values = mOrigGroupList;
+                }
+                return filterResults;
+            }
+
+            @SuppressWarnings("unchecked")
+            @Override
+            protected void publishResults(CharSequence constraint,
+                                          FilterResults results) {
+                List<GroupListItem> groupListItems = new ArrayList<>();
+                for (Group group : (ArrayList<Group>)results.values) {
+                    GroupListItem groupListItem = new GroupListItem(group);
+                    if (mTodoCount) {
+                        for (GroupCount groupCount : mGroupCounts) {
+                            if (group.getGroupId() == groupCount.mGroupId)
+                                groupListItem.setCount(groupCount.mGroupCount);
+                        }
+                    }
+                    groupListItems.add(groupListItem);
+                }
+                // フィルタ結果でグループの一覧をバインドする
+                mGroupListAdapter.submitList(groupListItems);
+                // 初期表示の時は先頭位置にする
+                if (!isInitPositionSet) {
+                    mRecyclerView.scrollToPosition(0);
+                    isInitPositionSet = true;
+                }
+                // 新規作成時は対象のセルにフォーカスされるようにスクロールする
+                for (int position = 0; position < ((ArrayList<Group>)results.values).size(); position++) {
+                    if (mOrigGroupList.get(position).getGroupName().equals("")) {
+                        mRecyclerView.smoothScrollToPosition(position);
+                        break;
+                    }
+                }
+            }
+        };
     }
 }

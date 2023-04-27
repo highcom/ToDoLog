@@ -75,7 +75,7 @@ public class ToDoListFragment extends Fragment implements SimpleCallbackHelper.S
     // 並び順に合わせたソート後のToDoリスト
     private List<ToDoAndLog> mToDoAndLogSortedList;
     // 検索文字列
-    private  String searchViewWord;
+    private String searchViewWord;
     // 保存データ
     private SharedPreferences sharedPreferences;
 
@@ -376,7 +376,7 @@ public class ToDoListFragment extends Fragment implements SimpleCallbackHelper.S
                     isInitPositionSet = true;
                 }
                 // 新規作成時は対象のセルにフォーカスされるようにスクロールする
-                for (int position = 0; position < mToDoAndLogSortedList.size(); position++) {
+                for (int position = 0; position < ((ArrayList<ToDoAndLog>)results.values).size(); position++) {
                     if (mToDoAndLogSortedList.get(position).toDo.getContents().equals("")) {
                         mRecyclerView.smoothScrollToPosition(position);
                         break;
