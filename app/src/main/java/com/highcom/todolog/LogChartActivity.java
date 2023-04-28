@@ -132,6 +132,7 @@ public class LogChartActivity extends AppCompatActivity {
     @Override
     public boolean onPrepareOptionsMenu(Menu menu) {
         super.onPrepareOptionsMenu(menu);
+        menu.findItem(R.id.menu_search_view).setVisible(false);
         menu.setGroupVisible(R.id.change_all_group, false);
         return true;
     }
@@ -149,7 +150,7 @@ public class LogChartActivity extends AppCompatActivity {
             case android.R.id.home:
                 finish();
                 break;
-            case R.id.action_setting:
+            case R.id.action_setting_always:
                 Intent settingIntent = new Intent(this, SettingActivity.class);
                 startActivity(settingIntent);
                 break;
