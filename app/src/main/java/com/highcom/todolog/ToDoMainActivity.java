@@ -339,6 +339,10 @@ public class ToDoMainActivity extends AppCompatActivity {
         SearchView.SearchAutoComplete searchAutoComplete = searchView.findViewById(androidx.appcompat.R.id.search_src_text);
         searchAutoComplete.setHintTextColor(Color.rgb(0xff, 0xff, 0xff));
         searchAutoComplete.setHint(getString(R.string.search_text_message));
+        searchView.setOnSearchClickListener(view -> {
+            // 文字列検索する場合は新規作成出来ないように制御
+            fab.setVisibility(View.INVISIBLE);
+        });
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String query) {
@@ -357,14 +361,17 @@ public class ToDoMainActivity extends AppCompatActivity {
                     default:
                         break;
                 }
-                // 文字列でフィルタされている場合は新規作成出来ないように制御
-                if (newText.isEmpty()) {
-                    fab.setVisibility(View.VISIBLE);
-                } else {
-                    fab.setVisibility(View.INVISIBLE);
-                }
                 return false;
             }
+        });
+        searchView.setOnCloseListener(() -> {
+            // 文字列検索を終了する場合は新規作成ボタンを有効化する
+            fab.setVisibility(View.VISIBLE);
+            fab.setOnClickListener(new FloatingButtonEditClickListener());
+            fab.setFocusable(true);
+            fab.setFocusableInTouchMode(true);
+            fab.requestFocus();
+            return false;
         });
         return true;
     }
