@@ -1,7 +1,6 @@
 package com.highcom.todolog;
 
 import android.app.Activity;
-import android.appwidget.AppWidgetManager;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -88,6 +87,10 @@ public class ToDoMainActivity extends AppCompatActivity {
     private String mSelectGroupName;
     // メニューアイコン表示設定
     private boolean mMenuVisible;
+    // グループ一覧
+    private List<Group> mGroupList;
+    // ドロワーに表示するグループ一覧
+    private ArrayList<DrawerListItem> mDrawerListItems;
     // 残ToDo数の表示設定
     private boolean mTodoCount;
 
@@ -262,10 +265,12 @@ public class ToDoMainActivity extends AppCompatActivity {
             }
         });
         // Drawerに表示するListを設定する
+        mDrawerListItems = new ArrayList<>();
         mGroupViewModel.getGroupList().observe(this, groupList -> {
-            ArrayList<DrawerListItem> drawerListItems = new ArrayList<>();
-            for (Group group : groupList) {
-                drawerListItems.add(new DrawerListItem(group.getGroupId(), group.getGroupName()));
+            mGroupList = groupList;
+            mDrawerListItems.clear();
+            for (Group group : mGroupList) {
+                mDrawerListItems.add(new DrawerListItem(group.getGroupId(), group.getGroupName()));
                 // グループ編集以外を選択している場合には、タイトルも更新する
                 if (mSelectFragment == SELECT_FRAGMENT.FRAGMENT_TODOLIST && group.getGroupId() == mSelectGroup) {
                     mSelectGroupName = group.getGroupName();
@@ -274,7 +279,7 @@ public class ToDoMainActivity extends AppCompatActivity {
             }
             // 各グループのToDoの数を設定する
             mGroupViewModel.getCountByGroupId(ToDo.STATUS_TODO).observe(this, groupCounts -> {
-                for (DrawerListItem item : drawerListItems) {
+                for (DrawerListItem item : mDrawerListItems) {
                     // 一度0に設定してからToDo残数があるグループだけ更新
                     item.setGroupCount(0);
                     if (mTodoCount) {
@@ -285,11 +290,11 @@ public class ToDoMainActivity extends AppCompatActivity {
                     }
                 }
                 // ドロワーリストを設定する
-                DrawerListAdapter adapter = new DrawerListAdapter(this, R.layout.row_drawerlist, drawerListItems);
+                DrawerListAdapter adapter = new DrawerListAdapter(this, R.layout.row_drawerlist, mDrawerListItems);
                 listView.setAdapter(adapter);
                 listView.setOnItemClickListener((adapterView, view, i, l) -> {
-                    mSelectGroup = groupList.get(i).getGroupId();
-                    mSelectGroupName = groupList.get(i).getGroupName();
+                    mSelectGroup = mGroupList.get(i).getGroupId();
+                    mSelectGroupName = mGroupList.get(i).getGroupName();
                     mPreferences.edit().putLong(SELECT_GROUP, mSelectGroup).apply();
                     mToDoListFragment = new ToDoListFragment();
                     mSelectFragment = SELECT_FRAGMENT.FRAGMENT_TODOLIST;
