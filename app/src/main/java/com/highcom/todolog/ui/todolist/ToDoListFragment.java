@@ -25,6 +25,7 @@ import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.google.firebase.crashlytics.FirebaseCrashlytics;
 import com.highcom.todolog.R;
 import com.highcom.todolog.SettingActivity;
 import com.highcom.todolog.ToDoDetailActivity;
@@ -146,6 +147,8 @@ public class ToDoListFragment extends Fragment implements SimpleCallbackHelper.S
             // 並べ替え用のToDoリストを作成する
             mRearrangeToDoList = new ArrayList<>();
             for (ToDoAndLog toDoAndLog : mToDoAndLogSortedList) mRearrangeToDoList.add(toDoAndLog.toDo.clone());
+            // ウィジェットに更新を通知する
+            ToDoAppWidgetProvider.sendRefreshBroadcast(getContext());
             // 検索文字列でフィルタ
             setSearchWordFilter(searchViewWord);
         });
@@ -382,9 +385,6 @@ public class ToDoListFragment extends Fragment implements SimpleCallbackHelper.S
                         break;
                     }
                 }
-
-                // ウィジェットに更新を通知する
-                ToDoAppWidgetProvider.sendRefreshBroadcast(getContext());
             }
         };
     }
