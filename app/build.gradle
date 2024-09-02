@@ -6,12 +6,12 @@ plugins {
 }
 
 android {
-    compileSdkVersion 31
+    compileSdkVersion 34
 
     defaultConfig {
         applicationId "com.highcom.todolog"
         minSdkVersion 19
-        targetSdkVersion 31
+        targetSdkVersion 34
         versionCode 14
         versionName "2.8.1"
 
@@ -27,6 +27,7 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
     }
+    namespace 'com.highcom.todolog'
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_1_8
         targetCompatibility JavaVersion.VERSION_1_8
