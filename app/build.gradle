@@ -6,12 +6,12 @@ plugins {
 }
 
 android {
-    compileSdkVersion 34
+    compileSdkVersion 35
 
     defaultConfig {
         applicationId "com.highcom.todolog"
         minSdkVersion 19
-        targetSdkVersion 34
+        targetSdkVersion 35
         versionCode 16
         versionName "2.8.3"
 
