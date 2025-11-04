@@ -1,6 +1,7 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
     <!-- Base application theme. -->
     <style name="Theme.ToDoLog" parent="Theme.AppCompat.Light.DarkActionBar">
+        <item name="android:windowOptOutEdgeToEdgeEnforcement" tools:targetApi="35">true</item>
         <!-- Primary brand color. -->
         <item name="colorPrimary">@color/french_gray</item>
         <item name="colorPrimaryDark">@color/french_gray</item>
@@ -22,6 +23,7 @@
     </style>
 
     <style name="Theme.ToDoLog_topaz" parent="Theme.AppCompat.Light.DarkActionBar">
+        <item name="android:windowOptOutEdgeToEdgeEnforcement" tools:targetApi="35">true</item>
         <!-- Primary brand color. -->
         <item name="colorPrimary">@color/topaz</item>
         <item name="colorPrimaryDark">@color/topaz</item>
@@ -43,6 +45,7 @@
     </style>
 
     <style name="Theme.ToDoLog_water_green" parent="Theme.AppCompat.Light.DarkActionBar">
+        <item name="android:windowOptOutEdgeToEdgeEnforcement" tools:targetApi="35">true</item>
         <!-- Primary brand color. -->
         <item name="colorPrimary">@color/water_green</item>
         <item name="colorPrimaryDark">@color/water_green</item>
@@ -64,6 +67,7 @@
     </style>
 
     <style name="Theme.ToDoLog_day_dream" parent="Theme.AppCompat.Light.DarkActionBar">
+        <item name="android:windowOptOutEdgeToEdgeEnforcement" tools:targetApi="35">true</item>
         <!-- Primary brand color. -->
         <item name="colorPrimary">@color/day_dream</item>
         <item name="colorPrimaryDark">@color/day_dream</item>
@@ -85,6 +89,7 @@
     </style>
 
     <style name="Theme.ToDoLog_old_rose" parent="Theme.AppCompat.Light.DarkActionBar">
+        <item name="android:windowOptOutEdgeToEdgeEnforcement" tools:targetApi="35">true</item>
         <!-- Primary brand color. -->
         <item name="colorPrimary">@color/old_rose</item>
         <item name="colorPrimaryDark">@color/old_rose</item>
@@ -106,6 +111,7 @@
     </style>
 
     <style name="Theme.ToDoLog_mauve" parent="Theme.AppCompat.Light.DarkActionBar">
+        <item name="android:windowOptOutEdgeToEdgeEnforcement" tools:targetApi="35">true</item>
         <!-- Primary brand color. -->
         <item name="colorPrimary">@color/mauve</item>
         <item name="colorPrimaryDark">@color/mauve</item>
@@ -127,6 +133,7 @@
     </style>
 
     <style name="Theme.ToDoLog_french_gray" parent="Theme.AppCompat.Light.DarkActionBar">
+        <item name="android:windowOptOutEdgeToEdgeEnforcement" tools:targetApi="35">true</item>
         <!-- Primary brand color. -->
         <item name="colorPrimary">@color/french_gray</item>
         <item name="colorPrimaryDark">@color/french_gray</item>
