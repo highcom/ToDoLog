@@ -32,6 +32,7 @@ import com.highcom.todolog.datamodel.ToDo;
 import com.highcom.todolog.ui.AdMobLoader;
 import com.highcom.todolog.ui.DividerItemDecoration;
 import com.highcom.todolog.ui.loglist.LogListAdapter;
+import com.highcom.todolog.util.BillingManager;
 
 import java.sql.Date;
 import java.util.ArrayList;
@@ -73,7 +74,6 @@ public class ToDoDetailActivity extends AppCompatActivity implements TextWatcher
 
         // AdMobのロード
         mAdMobLoader = new AdMobLoader(this, findViewById(R.id.ad_view_frame_tododetail), getString(R.string.admob_unit_id_2));
-        mAdMobLoader.load();
 
         // タイトルの設定
         setTitle(getString(R.string.detail_title));
@@ -97,14 +97,16 @@ public class ToDoDetailActivity extends AppCompatActivity implements TextWatcher
                 InputMethodManager inputMethodManager = (InputMethodManager)getApplicationContext().getSystemService(Context.INPUT_METHOD_SERVICE);
                 if (inputMethodManager != null) {
                     inputMethodManager.showSoftInput(view, 0);
-                    // キーボードを表示する時は広告を非表示「にする
-                    mAdMobLoader.getAdView().setVisibility(AdView.GONE);
+                    // キーボードを表示する時は広告を非表示にする
+                    if (mAdMobLoader.getAdView() != null) {
+                        mAdMobLoader.getAdView().setVisibility(AdView.GONE);
+                    }
                 }
             });
         });
         mDetailContents.setOnFocusChangeListener((view, b) -> {
             // フォーカスが外れるとキーボードが閉じるので広告を表示する
-            if (!b) {
+            if (!b && mAdMobLoader.getAdView() != null) {
                 mAdMobLoader.getAdView().setVisibility(AdView.VISIBLE);
             }
         });
@@ -277,11 +279,29 @@ public class ToDoDetailActivity extends AppCompatActivity implements TextWatcher
     }
 
     /**
+     * 広告の表示状態を更新（課金状態が変わっている可能性がある）
+     */
+    @Override
+    protected void onResume() {
+        super.onResume();
+        updateAdDisplay();
+    }
+
+    /**
+     * 広告の表示状態を更新
+     */
+    private void updateAdDisplay() {
+        if (mAdMobLoader != null) {
+            mAdMobLoader.load();
+        }
+    }
+
+    /**
      * admobを終了させる。
      */
     @Override
     protected void onDestroy() {
-        mAdMobLoader.getAdView().destroy();
+        if (mAdMobLoader.getAdView() != null) mAdMobLoader.getAdView().destroy();
         super.onDestroy();
     }
 

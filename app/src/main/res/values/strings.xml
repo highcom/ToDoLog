@@ -49,6 +49,7 @@
     <string name="setting_new_todo_order">Position to add new ToDo</string>
     <string name="setting_theme_color">Setting theme color</string>
     <string name="setting_backup_restore">Backup and restore</string>
+    <string name="setting_remove_ads">Remove ads (one-time purchase)</string>
     <string name="setting_license">Lisence</string>
     <string name="setting_privacy_policy">Privacy policy</string>
     <string name="setting_star">Rate this app</string>
@@ -103,4 +104,10 @@
     <string name="restore_complete_message">Restore completed.\nRestart the app.</string>
     <string name="restore_failed_message">Restore failed</string>
     <string name="restore_failed_error_data_message">The specified file could not be recognized as backup data.</string>
+
+    <!-- Billing related messages -->
+    <string name="billing_error_query_product_details">Failed to query product details</string>
+    <string name="billing_error_purchase_failed">Purchase failed</string>
+    <string name="billing_error_service_disconnected">Billing service disconnected</string>
+    <string name="billing_ads_already_removed">Ads are already removed</string>
 </resources>

@@ -76,7 +76,6 @@ public class LogChartActivity extends AppCompatActivity {
 
         // AdMobのロード
         mAdMobLoader = new AdMobLoader(this, findViewById(R.id.ad_view_frame_logchart), getString(R.string.admob_unit_id_3));
-        mAdMobLoader.load();
 
         ListView lv = findViewById(R.id.logChartListView);
 
@@ -159,11 +158,29 @@ public class LogChartActivity extends AppCompatActivity {
     }
 
     /**
+     * 広告の表示状態を更新（課金状態が変わっている可能性がある）
+     */
+    @Override
+    protected void onResume() {
+        super.onResume();
+        updateAdDisplay();
+    }
+
+    /**
+     * 広告の表示状態を更新
+     */
+    private void updateAdDisplay() {
+        if (mAdMobLoader != null) {
+            mAdMobLoader.load();
+        }
+    }
+
+    /**
      * admobを終了させる。
      */
     @Override
     protected void onDestroy() {
-        mAdMobLoader.getAdView().destroy();
+        if (mAdMobLoader.getAdView() != null) mAdMobLoader.getAdView().destroy();
         super.onDestroy();
     }
 

@@ -123,7 +123,6 @@ public class ToDoMainActivity extends AppCompatActivity {
                 new RequestConfiguration.Builder().setTestDeviceIds(Arrays.asList(getString(R.string.admob_test_device), getString(R.string.admob_test_device_xaomi))).build());
         // AdMobをロードする
         mAdMobLoader = new AdMobLoader(this, findViewById(R.id.ad_view_frame), getString(R.string.admob_unit_id));
-        mAdMobLoader.load();
 
         // レビュー評価依頼のダイアログに表示する内容を設定
         RmpAppirater.Options options = new RmpAppirater.Options(
@@ -322,6 +321,18 @@ public class ToDoMainActivity extends AppCompatActivity {
         if (groupList != null) {
             mGroupViewModel.update(groupList);
         }
+
+        // 広告状態を更新（課金状態が変わっている可能性がある）
+        updateAdDisplay();
+    }
+
+    /**
+     * 広告の表示状態を更新（課金状態に応じて）
+     */
+    private void updateAdDisplay() {
+        if (mAdMobLoader != null) {
+            mAdMobLoader.load();
+        }
     }
 
     /**
@@ -430,7 +441,9 @@ public class ToDoMainActivity extends AppCompatActivity {
      * フローティングボタンをToDo記入完了ボタンに設定する。
      */
     public void changeDoneFloatingButton() {
-        mAdMobLoader.getAdView().setVisibility(AdView.GONE);
+        if (mAdMobLoader.getAdView() != null) {
+            mAdMobLoader.getAdView().setVisibility(AdView.GONE);
+        }
         fab.setImageResource(R.drawable.ic_baseline_check_24);
         fab.setOnClickListener(new FloatingButtonDoneClickListener());
     }
@@ -439,7 +452,9 @@ public class ToDoMainActivity extends AppCompatActivity {
      * フローティングボタンをToDo記入開始ボタンに設定する。
      */
     public void changeEditFloatingButton() {
-        mAdMobLoader.getAdView().setVisibility(AdView.VISIBLE);
+        if (mAdMobLoader.getAdView() != null) {
+            mAdMobLoader.getAdView().setVisibility(AdView.VISIBLE);
+        }
         fab.setImageResource(R.drawable.ic_new_edit);
         fab.setOnClickListener(new FloatingButtonEditClickListener());
     }

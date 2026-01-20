@@ -10,6 +10,7 @@ import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.AdSize;
 import com.google.android.gms.ads.AdView;
 import com.highcom.todolog.R;
+import com.highcom.todolog.util.BillingManager;
 
 public class AdMobLoader {
     private Activity mActivity;
@@ -24,6 +25,11 @@ public class AdMobLoader {
     }
 
     public void load() {
+        // 広告削除が購入済みの場合は広告を表示しない
+        if (BillingManager.isAdsRemoved(mActivity)) {
+            mAdContainerView.removeAllViews();
+            return;
+        }
         mAdContainerView.post(() -> loadBanner());
     }
 
