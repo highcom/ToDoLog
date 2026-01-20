@@ -159,6 +159,26 @@ public class LogChartActivity extends AppCompatActivity {
     }
 
     /**
+     * 広告の表示状態を更新（課金状態が変わっている可能性がある）
+     */
+    @Override
+    protected void onResume() {
+        super.onResume();
+        updateAdDisplay();
+    }
+
+    /**
+     * 広告の表示状態を更新
+     */
+    private void updateAdDisplay() {
+        if (mAdMobLoader != null) {
+            // AdMobLoaderを再作成して広告状態を更新
+            mAdMobLoader = new AdMobLoader(this, findViewById(R.id.ad_view_frame_logchart), getString(R.string.admob_unit_id_3));
+            mAdMobLoader.load();
+        }
+    }
+
+    /**
      * admobを終了させる。
      */
     @Override

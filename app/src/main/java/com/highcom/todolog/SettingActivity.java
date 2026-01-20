@@ -20,6 +20,7 @@ import android.widget.TextView;
 import com.google.android.gms.oss.licenses.OssLicensesMenuActivity;
 import com.highcom.todolog.datamodel.ToDoLogRepository;
 import com.highcom.todolog.ui.themelist.ThemeColorUtil;
+import com.highcom.todolog.util.BillingManager;
 import com.highcom.todolog.util.InputExternalFile;
 import com.highcom.todolog.util.OutputExternalFile;
 import com.highcom.todolog.util.SelectInputOutputFileDialog;
@@ -50,6 +51,8 @@ public class SettingActivity extends AppCompatActivity implements ThemeColorUtil
     public static final String PREF_PARAM_THEME_COLOR ="ThemeColor";
     // ユーザー設定データ
     private SharedPreferences sharedPreferences;
+    // 課金管理
+    private BillingManager billingManager;
 
     /**
      * 各設定項目のイベントリスナーを登録する
@@ -98,6 +101,46 @@ public class SettingActivity extends AppCompatActivity implements ThemeColorUtil
         // バックアップと復元
         TextView backupRestoreTextView = findViewById(R.id.backup_restore_text);
         backupRestoreTextView.setOnClickListener(v -> backupRestoreDialog());
+
+        // 広告削除（買い切り）
+        billingManager = new BillingManager(this, new BillingManager.BillingListener() {
+            @Override
+            public void onPurchaseSuccess() {
+                runOnUiThread(() -> {
+                    // 購入成功の通知を表示
+                    android.widget.Toast.makeText(SettingActivity.this,
+                        getString(R.string.ok), android.widget.Toast.LENGTH_SHORT).show();
+                });
+            }
+
+            @Override
+            public void onPurchaseFailed(String error) {
+                runOnUiThread(() -> {
+                    android.widget.Toast.makeText(SettingActivity.this,
+                        getString(R.string.billing_error_purchase_failed) + ": " + error, android.widget.Toast.LENGTH_SHORT).show();
+                });
+            }
+
+            @Override
+            public void onBillingServiceDisconnected() {
+                runOnUiThread(() -> {
+                    android.widget.Toast.makeText(SettingActivity.this,
+                        getString(R.string.billing_error_service_disconnected), android.widget.Toast.LENGTH_SHORT).show();
+                });
+            }
+        });
+
+        TextView removeAdsTextView = findViewById(R.id.remove_ads_text);
+        removeAdsTextView.setOnClickListener(v -> {
+            if (BillingManager.isAdsRemoved(this)) {
+                // 既に購入済みの場合はメッセージを表示
+                android.widget.Toast.makeText(this, getString(R.string.billing_ads_already_removed),
+                    android.widget.Toast.LENGTH_SHORT).show();
+            } else {
+                // 課金フローを開始
+                billingManager.purchaseRemoveAds(this);
+            }
+        });
 
         // ライセンス一覧の設定
         TextView licenseTextView = findViewById(R.id.license_text);
@@ -276,5 +319,13 @@ public class SettingActivity extends AppCompatActivity implements ThemeColorUtil
         Intent intent = new Intent(this, ToDoMainActivity.class);
         intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK); // 起動しているActivityをすべて削除し、新しいタスクでMainActivityを起動する
         startActivity(intent);
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        if (billingManager != null) {
+            billingManager.destroy();
+        }
     }
 }

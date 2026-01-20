@@ -49,6 +49,7 @@
     <string name="setting_new_todo_order">新規ToDo追加位置</string>
     <string name="setting_theme_color">テーマカラーの変更</string>
     <string name="setting_backup_restore">バックアップと復元</string>
+    <string name="setting_remove_ads">広告の削除(買い切り)</string>
     <string name="setting_license">ライセンス</string>
     <string name="setting_privacy_policy">プライバシーポリシー</string>
     <string name="setting_star">このアプリを評価する</string>
@@ -104,4 +105,9 @@
     <string name="restore_failed_message">復元に失敗しました</string>
     <string name="restore_failed_error_data_message">指定されたファイルがバックアップデータと認識できませんでした。</string>
 
+    <!-- Billing related messages -->
+    <string name="billing_error_query_product_details">商品情報の取得に失敗しました</string>
+    <string name="billing_error_purchase_failed">購入に失敗しました</string>
+    <string name="billing_error_service_disconnected">課金サービスに接続できませんでした</string>
+    <string name="billing_ads_already_removed">広告は既に削除されています</string>
 </resources>

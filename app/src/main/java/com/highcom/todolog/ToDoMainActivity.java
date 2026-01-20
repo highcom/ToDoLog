@@ -322,6 +322,20 @@ public class ToDoMainActivity extends AppCompatActivity {
         if (groupList != null) {
             mGroupViewModel.update(groupList);
         }
+
+        // 広告状態を更新（課金状態が変わっている可能性がある）
+        updateAdDisplay();
+    }
+
+    /**
+     * 広告の表示状態を更新（課金状態に応じて）
+     */
+    private void updateAdDisplay() {
+        if (mAdMobLoader != null) {
+            // AdMobLoaderを再作成して広告状態を更新
+            mAdMobLoader = new AdMobLoader(this, findViewById(R.id.ad_view_frame), getString(R.string.admob_unit_id));
+            mAdMobLoader.load();
+        }
     }
 
     /**
