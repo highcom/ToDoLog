@@ -352,7 +352,7 @@ public class ToDoMainActivity extends AppCompatActivity {
         // 検索文字列入力時の処理
         MenuItem searchMenuItem = menu.findItem(R.id.menu_search_view);
         SearchView searchView = (SearchView)searchMenuItem.getActionView();
-        SearchView.SearchAutoComplete searchAutoComplete = searchView.findViewById(androidx.appcompat.R.id.search_src_text);
+        TextView searchAutoComplete = searchView.findViewById(androidx.appcompat.R.id.search_src_text);
         searchAutoComplete.setHintTextColor(Color.rgb(0xff, 0xff, 0xff));
         searchAutoComplete.setHint(getString(R.string.search_text_message));
         searchView.setOnSearchClickListener(view -> {
