@@ -13,12 +13,14 @@ import com.android.billingclient.api.BillingClient;
 import com.android.billingclient.api.BillingClientStateListener;
 import com.android.billingclient.api.BillingFlowParams;
 import com.android.billingclient.api.BillingResult;
+import com.android.billingclient.api.PendingPurchasesParams;
 import com.android.billingclient.api.ProductDetails;
 import com.android.billingclient.api.ProductDetailsResponseListener;
 import com.android.billingclient.api.Purchase;
 import com.android.billingclient.api.PurchasesResponseListener;
 import com.android.billingclient.api.PurchasesUpdatedListener;
 import com.android.billingclient.api.QueryProductDetailsParams;
+import com.android.billingclient.api.QueryProductDetailsResult;
 import com.android.billingclient.api.QueryPurchasesParams;
 import com.highcom.todolog.R;
 
@@ -54,7 +56,8 @@ public class BillingManager implements PurchasesUpdatedListener {
     private void initializeBillingClient() {
         billingClient = BillingClient.newBuilder(context)
                 .setListener(this)
-                .enablePendingPurchases()
+                .enablePendingPurchases(PendingPurchasesParams.newBuilder().enableOneTimeProducts().build())
+                .enableAutoServiceReconnection()
                 .build();
 
         connectToBillingService();
@@ -140,7 +143,8 @@ public class BillingManager implements PurchasesUpdatedListener {
             new ProductDetailsResponseListener() {
                 @Override
                 public void onProductDetailsResponse(@NonNull BillingResult billingResult,
-                                                   @NonNull List<ProductDetails> productDetailsList) {
+                                                   @NonNull QueryProductDetailsResult queryProductDetailsResult) {
+                    List<ProductDetails> productDetailsList = queryProductDetailsResult.getProductDetailsList();
                     if (billingResult.getResponseCode() == BillingClient.BillingResponseCode.OK
                         && !productDetailsList.isEmpty()) {
 

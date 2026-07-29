@@ -62,7 +62,7 @@ dependencies {
     implementation 'com.google.android.gms:play-services-ads:23.6.0'
     implementation 'com.google.firebase:firebase-crashlytics'
     implementation 'com.google.firebase:firebase-messaging'
-    implementation 'com.android.billingclient:billing:6.2.1'
+    implementation 'com.android.billingclient:billing:9.1.0'
     constraints {
         implementation('androidx.work:work-runtime:2.10.0') {
             because 'previous versions have a bug impacting this application'
