@@ -8,6 +8,7 @@
     android:weightSum="1">
 
     <LinearLayout
+        android:id="@+id/todo_count_layout"
         android:orientation="horizontal"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -16,14 +17,15 @@
         android:layout_marginTop="4dp"
         android:layout_marginLeft="10dp"
         android:layout_marginRight="10dp"
-        android:layout_gravity="center_horizontal" >
+        android:layout_gravity="center_horizontal"
+        android:clickable="true"
+        android:focusable="true"
+        android:foreground="?attr/selectableItemBackground" >
 
-        <ImageButton
+        <ImageView
             android:layout_width="30dp"
             android:layout_height="match_parent"
-            android:focusableInTouchMode="false"
             android:adjustViewBounds="true"
-            android:background="@null"
             android:scaleType="centerInside"
             android:src="@drawable/ic_baseline_data_usage_24"
             android:id="@+id/todo_count_icon" />
@@ -40,10 +42,13 @@
             android:textColor="@android:color/black"
             android:textSize="14dp"
             tools:ignore="UseSwitchCompatOrMaterialXml"
+            android:clickable="false"
+            android:focusable="false"
             android:id="@+id/todo_count_switch" />
     </LinearLayout>
 
     <LinearLayout
+        android:id="@+id/new_todo_order_layout"
         android:orientation="horizontal"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -52,14 +57,15 @@
         android:layout_marginTop="4dp"
         android:layout_marginLeft="10dp"
         android:layout_marginRight="10dp"
-        android:layout_gravity="center_horizontal" >
+        android:layout_gravity="center_horizontal"
+        android:clickable="true"
+        android:focusable="true"
+        android:foreground="?attr/selectableItemBackground" >
 
-        <ImageButton
+        <ImageView
             android:layout_width="30dp"
             android:layout_height="match_parent"
-            android:focusableInTouchMode="false"
             android:adjustViewBounds="true"
-            android:background="@null"
             android:scaleType="centerInside"
             android:src="@drawable/ic_baseline_vertical_align_center_24"
             android:id="@+id/new_todo_order_icon" />
@@ -89,6 +95,7 @@
     </LinearLayout>
 
     <LinearLayout
+        android:id="@+id/theme_color_layout"
         android:orientation="horizontal"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -97,14 +104,15 @@
         android:layout_marginTop="4dp"
         android:layout_marginLeft="10dp"
         android:layout_marginRight="10dp"
-        android:layout_gravity="center_horizontal" >
+        android:layout_gravity="center_horizontal"
+        android:clickable="true"
+        android:focusable="true"
+        android:foreground="?attr/selectableItemBackground" >
 
-        <ImageButton
+        <ImageView
             android:layout_width="30dp"
             android:layout_height="match_parent"
-            android:focusableInTouchMode="false"
             android:adjustViewBounds="true"
-            android:background="@null"
             android:scaleType="centerInside"
             android:src="@drawable/ic_theme_color"
             android:id="@+id/theme_color_icon" />
@@ -123,6 +131,7 @@
     </LinearLayout>
 
     <LinearLayout
+        android:id="@+id/backup_restore_layout"
         android:orientation="horizontal"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -131,14 +140,15 @@
         android:layout_marginTop="4dp"
         android:layout_marginLeft="10dp"
         android:layout_marginRight="10dp"
-        android:layout_gravity="center_horizontal" >
+        android:layout_gravity="center_horizontal"
+        android:clickable="true"
+        android:focusable="true"
+        android:foreground="?attr/selectableItemBackground" >
 
-        <ImageButton
+        <ImageView
             android:layout_width="30dp"
             android:layout_height="match_parent"
-            android:focusableInTouchMode="false"
             android:adjustViewBounds="true"
-            android:background="@null"
             android:scaleType="centerInside"
             android:src="@drawable/ic_baseline_settings_backup_restore_24"
             android:id="@+id/backup_restore_icon" />
@@ -157,6 +167,7 @@
     </LinearLayout>
 
     <LinearLayout
+        android:id="@+id/remove_ads_layout"
         android:orientation="horizontal"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -165,14 +176,15 @@
         android:layout_marginTop="4dp"
         android:layout_marginLeft="10dp"
         android:layout_marginRight="10dp"
-        android:layout_gravity="center_horizontal" >
+        android:layout_gravity="center_horizontal"
+        android:clickable="true"
+        android:focusable="true"
+        android:foreground="?attr/selectableItemBackground" >
 
-        <ImageButton
+        <ImageView
             android:layout_width="30dp"
             android:layout_height="match_parent"
-            android:focusableInTouchMode="false"
             android:adjustViewBounds="true"
-            android:background="@null"
             android:scaleType="centerInside"
             android:src="@drawable/ic_baseline_workspace_premium_24"
             android:id="@+id/remove_ads_icon" />
@@ -191,6 +203,7 @@
     </LinearLayout>
 
     <LinearLayout
+        android:id="@+id/license_layout"
         android:orientation="horizontal"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -199,14 +212,15 @@
         android:layout_marginTop="4dp"
         android:layout_marginLeft="10dp"
         android:layout_marginRight="10dp"
-        android:layout_gravity="center_horizontal" >
+        android:layout_gravity="center_horizontal"
+        android:clickable="true"
+        android:focusable="true"
+        android:foreground="?attr/selectableItemBackground" >
 
-        <ImageButton
+        <ImageView
             android:layout_width="30dp"
             android:layout_height="match_parent"
-            android:focusableInTouchMode="false"
             android:adjustViewBounds="true"
-            android:background="@null"
             android:scaleType="centerInside"
             android:src="@drawable/ic_license"
             android:id="@+id/license_icon" />
@@ -225,6 +239,7 @@
     </LinearLayout>
 
     <LinearLayout
+        android:id="@+id/privacy_policy_layout"
         android:orientation="horizontal"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -233,14 +248,15 @@
         android:layout_marginTop="4dp"
         android:layout_marginLeft="10dp"
         android:layout_marginRight="10dp"
-        android:layout_gravity="center_horizontal" >
+        android:layout_gravity="center_horizontal"
+        android:clickable="true"
+        android:focusable="true"
+        android:foreground="?attr/selectableItemBackground" >
 
-        <ImageButton
+        <ImageView
             android:layout_width="30dp"
             android:layout_height="match_parent"
-            android:focusableInTouchMode="false"
             android:adjustViewBounds="true"
-            android:background="@null"
             android:scaleType="centerInside"
             android:src="@drawable/ic_privacy_policy"
             android:id="@+id/privacy_policy_icon" />
@@ -260,6 +276,7 @@
     </LinearLayout>
 
     <LinearLayout
+        android:id="@+id/star_layout"
         android:orientation="horizontal"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -268,14 +285,15 @@
         android:layout_marginTop="4dp"
         android:layout_marginLeft="10dp"
         android:layout_marginRight="10dp"
-        android:layout_gravity="center_horizontal" >
+        android:layout_gravity="center_horizontal"
+        android:clickable="true"
+        android:focusable="true"
+        android:foreground="?attr/selectableItemBackground" >
 
-        <ImageButton
+        <ImageView
             android:layout_width="30dp"
             android:layout_height="match_parent"
-            android:focusableInTouchMode="false"
             android:adjustViewBounds="true"
-            android:background="@null"
             android:scaleType="centerInside"
             android:src="@drawable/ic_star"
             android:id="@+id/star_icon" />

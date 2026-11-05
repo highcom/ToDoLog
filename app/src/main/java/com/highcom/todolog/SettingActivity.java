@@ -82,10 +82,12 @@ public class SettingActivity extends AppCompatActivity implements ThemeColorUtil
                 editor.apply();
             }
         });
+        View todoCountLayout = findViewById(R.id.todo_count_layout);
+        todoCountLayout.setOnClickListener(v -> todoCountSwitch.toggle());
 
         // 新規ToDo追加位置の設定
-        TextView newToDoOrderView = findViewById(R.id.new_todo_order_text);
-        newToDoOrderView.setOnClickListener(v -> newToDoOrderDialog());
+        View newToDoOrderLayout = findViewById(R.id.new_todo_order_layout);
+        newToDoOrderLayout.setOnClickListener(v -> newToDoOrderDialog());
         int order = sharedPreferences.getInt(PREF_PARAM_NEW_TODO_ORDER, ToDoLogRepository.ORDER_ASC);
         TextView newToDoOrderSelect = findViewById(R.id.new_todo_order_select);
         if (order == ToDoLogRepository.ORDER_DESC) {
@@ -95,12 +97,12 @@ public class SettingActivity extends AppCompatActivity implements ThemeColorUtil
         }
 
         // カラーテーマ設定
-        TextView themeColorTextView = findViewById(R.id.theme_color_text);
-        themeColorTextView.setOnClickListener(v -> colorSelectDialog());
+        View themeColorLayout = findViewById(R.id.theme_color_layout);
+        themeColorLayout.setOnClickListener(v -> colorSelectDialog());
 
         // バックアップと復元
-        TextView backupRestoreTextView = findViewById(R.id.backup_restore_text);
-        backupRestoreTextView.setOnClickListener(v -> backupRestoreDialog());
+        View backupRestoreLayout = findViewById(R.id.backup_restore_layout);
+        backupRestoreLayout.setOnClickListener(v -> backupRestoreDialog());
 
         // 広告削除（買い切り）
         billingManager = new BillingManager(this, new BillingManager.BillingListener() {
@@ -130,8 +132,8 @@ public class SettingActivity extends AppCompatActivity implements ThemeColorUtil
             }
         });
 
-        TextView removeAdsTextView = findViewById(R.id.remove_ads_text);
-        removeAdsTextView.setOnClickListener(v -> {
+        View removeAdsLayout = findViewById(R.id.remove_ads_layout);
+        removeAdsLayout.setOnClickListener(v -> {
             if (BillingManager.isAdsRemoved(this)) {
                 // 既に購入済みの場合はメッセージを表示
                 android.widget.Toast.makeText(this, getString(R.string.billing_ads_already_removed),
@@ -143,23 +145,23 @@ public class SettingActivity extends AppCompatActivity implements ThemeColorUtil
         });
 
         // ライセンス一覧の設定
-        TextView licenseTextView = findViewById(R.id.license_text);
-        licenseTextView.setOnClickListener(view -> {
+        View licenseLayout = findViewById(R.id.license_layout);
+        licenseLayout.setOnClickListener(view -> {
             OssLicensesMenuActivity.setActivityTitle(getString(R.string.setting_license));
             startActivity(new Intent(getApplicationContext(), OssLicensesMenuActivity.class));
         });
 
         // プライバシーポリシーの設定
-        TextView privacyPolicyTextView = findViewById(R.id.privacy_policy_text);
-        privacyPolicyTextView.setOnClickListener(view -> {
+        View privacyPolicyLayout = findViewById(R.id.privacy_policy_layout);
+        privacyPolicyLayout.setOnClickListener(view -> {
             Uri uri = Uri.parse(getString(R.string.privacy_policy_url));
             Intent intent = new Intent(Intent.ACTION_VIEW,uri);
             startActivity(intent);
         });
 
         // このアプリの評価をする設定
-        TextView starTextView = findViewById(R.id.star_text);
-        starTextView.setOnClickListener(view -> {
+        View starLayout = findViewById(R.id.star_layout);
+        starLayout.setOnClickListener(view -> {
             Uri uri = Uri.parse(getString(R.string.star_url));
             Intent intent = new Intent(Intent.ACTION_VIEW,uri);
             startActivity(intent);
