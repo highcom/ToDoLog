@@ -371,22 +371,84 @@ public class ToDoListFragment extends Fragment implements SimpleCallbackHelper.S
             @Override
             protected void publishResults(CharSequence constraint,
                                           FilterResults results) {
+                final ArrayList<ToDoAndLog> list = (ArrayList<ToDoAndLog>) results.values;
                 // フィルタ結果で更新する
-                mToDoListAdapter.submitList((ArrayList<ToDoAndLog>)results.values);
-                // 初期表示の時は先頭位置にする
-                if (!isInitPositionSet) {
-                    mRecyclerView.scrollToPosition(0);
-                    isInitPositionSet = true;
-                }
-                // 新規作成時は対象のセルにフォーカスされるようにスクロールする
-                for (int position = 0; position < ((ArrayList<ToDoAndLog>)results.values).size(); position++) {
-                    if (mToDoAndLogSortedList.get(position).toDo.getContents().equals("")) {
-                        mRecyclerView.smoothScrollToPosition(position);
-                        break;
+                mToDoListAdapter.submitList(list, () -> {
+                    if (getContext() == null) return;
+                    // 初期表示の時は先頭位置にする
+                    if (!isInitPositionSet) {
+                        mRecyclerView.scrollToPosition(0);
+                        isInitPositionSet = true;
                     }
+                    // 新規作成時は対象のセルにフォーカスされるようにスクロールする
+                    if (list != null) {
+                        for (int position = 0; position < list.size(); position++) {
+                            if (list.get(position).toDo != null && list.get(position).toDo.getContents().equals("")) {
+                                scrollToNewItemAndFocus(position);
+                                break;
+                            }
+                        }
+                    }
+                });
+            }
+        };
+    }
+
+    /**
+     * 新規作成アイテムの位置までスクロールし、スクロール完了後にフォーカスを当てる
+     * @param targetPosition 対象の項目位置
+     */
+    private void scrollToNewItemAndFocus(int targetPosition) {
+        RecyclerView.OnScrollListener scrollListener = new RecyclerView.OnScrollListener() {
+            @Override
+            public void onScrollStateChanged(@NonNull RecyclerView recyclerView, int newState) {
+                super.onScrollStateChanged(recyclerView, newState);
+                if (newState == RecyclerView.SCROLL_STATE_IDLE) {
+                    recyclerView.removeOnScrollListener(this);
+                    focusItemAt(targetPosition);
                 }
             }
         };
+
+        LinearLayoutManager layoutManager = (LinearLayoutManager) mRecyclerView.getLayoutManager();
+        if (layoutManager != null) {
+            int firstVisible = layoutManager.findFirstCompletelyVisibleItemPosition();
+            int lastVisible = layoutManager.findLastCompletelyVisibleItemPosition();
+
+            // ターゲットが既に完全に見えている場合
+            if (targetPosition >= firstVisible && targetPosition <= lastVisible) {
+                focusItemAt(targetPosition);
+                return;
+            }
+        }
+
+        // スクロールが必要な場合
+        mRecyclerView.addOnScrollListener(scrollListener);
+        mRecyclerView.smoothScrollToPosition(targetPosition);
+    }
+
+    /**
+     * 指定位置のアイテムにフォーカスを当てる
+     * @param position 対象の項目位置
+     */
+    private void focusItemAt(int position) {
+        mRecyclerView.post(() -> {
+            if (getContext() == null) return;
+            RecyclerView.ViewHolder holder = mRecyclerView.findViewHolderForAdapterPosition(position);
+            if (holder instanceof ToDoViewHolder) {
+                View contentsView = ((ToDoViewHolder) holder).getTodoContents();
+                onToDoContentsClicked(contentsView);
+            } else {
+                mRecyclerView.postDelayed(() -> {
+                    if (getContext() == null) return;
+                    RecyclerView.ViewHolder retryHolder = mRecyclerView.findViewHolderForAdapterPosition(position);
+                    if (retryHolder instanceof ToDoViewHolder) {
+                        View contentsView = ((ToDoViewHolder) retryHolder).getTodoContents();
+                        onToDoContentsClicked(contentsView);
+                    }
+                }, 100);
+            }
+        });
     }
 
     /**

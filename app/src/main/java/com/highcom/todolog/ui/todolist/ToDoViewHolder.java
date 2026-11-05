@@ -91,11 +91,10 @@ public class ToDoViewHolder extends RecyclerView.ViewHolder {
         mTodoLogDate.setText(dateFormat.format(toDoAndLog.log.getDate()));
         mToDoLogIcon.setColorFilter(toDoAndLog.log.getLogIconColor());
         mTodoLogOperation.setText(StringsResource.get().mLogOperationItems.get(toDoAndLog.log.getOperation()));
+    }
 
-        // 内容が空の場合、新規に作成されたものなので編集状態にする
-        if (toDoAndLog.toDo.getContents().equals("")) {
-            mTodoContents.performClick();
-        }
+    public View getTodoContents() {
+        return mTodoContents;
     }
 
     static ToDoViewHolder create(ViewGroup parent, ToDoViewHolderListener toDoViewHolderListener) {
