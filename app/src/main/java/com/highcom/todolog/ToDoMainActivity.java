@@ -383,10 +383,7 @@ public class ToDoMainActivity extends AppCompatActivity {
         searchView.setOnCloseListener(() -> {
             // 文字列検索を終了する場合は新規作成ボタンを有効化する
             fab.setVisibility(View.VISIBLE);
-            fab.setOnClickListener(new FloatingButtonEditClickListener());
-            fab.setFocusable(true);
-            fab.setFocusableInTouchMode(true);
-            fab.requestFocus();
+            changeEditFloatingButton();
             return false;
         });
         return true;
@@ -457,6 +454,7 @@ public class ToDoMainActivity extends AppCompatActivity {
         }
         fab.setImageResource(R.drawable.ic_new_edit);
         fab.setOnClickListener(new FloatingButtonEditClickListener());
+        fab.setFocusableInTouchMode(false);
     }
 
     /**
